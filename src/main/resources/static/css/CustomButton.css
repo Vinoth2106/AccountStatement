@@ -1,0 +1,51 @@
+  .button-tab-group {
+    background-color: white;
+    padding: 4px 10px;
+    border-radius: 0.25rem;
+    display: flex;
+    gap: 10px;
+  }
+
+  .custom-tab-btn {
+    background: white;
+    color: black;
+    font-weight: 600;
+    border: 2px solid #6B7A8F;
+    padding: 8px 20px;
+    margin-right: 10px;
+    border-radius: 30px;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  .custom-tab-btn:hover {
+    background-color: #6B7A8F;
+    color: white;
+    border: 2px solid #6B7A8F;
+  }
+
+  .custom-tab-btn.active {
+    background-color: #6B7A8F;
+    color: white;
+  }
+  .modal-title{
+  background-color: #6B7A8F;
+  }
+  .custom-tab-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.card-header{
+	 background-color:#6B7A8F !important;
+    color: white;
+}
+
+body {
+  /*background-image: url('../images/rtbg.jpg'); /* Adjust path as per your project structure */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh; /* Ensures the image covers the full height */
+  font-family: Arial, sans-serif;
+}
