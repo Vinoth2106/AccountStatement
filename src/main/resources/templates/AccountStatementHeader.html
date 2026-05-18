@@ -1,0 +1,869 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Account Statement</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+	<meta content="Coderthemes" name="author">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="assets/images/favicon.ico">
+	<!-- App css -->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+
+	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+	
+	<script th:src="@{/js/bootstrap411.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	
+<!----------------------------------------Sidebar Layout ---------------------------------------->
+
+<style>
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 65px;
+    height: 100vh;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1a1d35 0%, #1e2139 60%, #1a1d35 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 3px 0 16px rgba(0,0,0,0.3);
+}
+.sidebar.expanded {
+    width: 240px;
+}
+
+/* Hamburger toggle row */
+.sb-toggle {
+    height: 64px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 0 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.sb-toggle:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+/* Logo icon / Hamburger — always visible when collapsed */
+.sb-logo-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sb-logo-icon img { width: 38px; height: 38px; object-fit: contain; }
+
+/* Hamburger icon */
+.sb-hamburger {
+    width: 22px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.sb-hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: rgba(255,255,255,0.85);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+.sidebar.expanded .sb-hamburger span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.sidebar.expanded .sb-hamburger span:nth-child(2) {
+    opacity: 0;
+}
+.sidebar.expanded .sb-hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Full logo — only visible when expanded */
+.sb-logo-full {
+    flex: 1;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.25s, max-width 0.3s;
+    white-space: nowrap;
+    padding-left: 6px;
+}
+.sidebar.expanded .sb-logo-full {
+    opacity: 1;
+    max-width: 160px;
+}
+.sb-logo-full img { height: 36px; object-fit: contain; }
+
+/* Nav list */
+.sb-nav {
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.sb-nav::-webkit-scrollbar { width: 3px; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+.sb-item { position: relative; }
+
+.sb-item > a {
+    display: flex;
+    align-items: center;
+    height: 46px;
+    color: rgba(255,255,255,0.65) !important;
+    text-decoration: none !important;
+    font-size: 13.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.sb-item > a:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,0.08);
+    text-decoration: none !important;
+}
+
+/* Icon — always 65px wide, always centered */
+.sb-icon {
+    width: 65px;
+    min-width: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Label text — hidden when not expanded */
+.sb-text {
+    flex: 1;
+    opacity: 0;
+    overflow: hidden;
+    max-width: 0;
+    transition: opacity 0.25s, max-width 0.3s;
+}
+.sidebar.expanded .sb-text {
+    opacity: 1;
+    max-width: 160px;
+}
+
+/* Caret */
+.sb-caret {
+    padding-right: 14px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+}
+.sidebar.expanded .sb-caret { opacity: 1; }
+.sb-item.open .sb-caret { transform: rotate(180deg); }
+
+/* Sub-menu (expanded sidebar — inline dropdown) */
+.sb-sub {
+    display: none;
+    background: rgba(0,0,0,0.18);
+    overflow: hidden;
+}
+.sb-item.open .sb-sub { display: block; }
+/* Hover also opens submenu when sidebar is expanded */
+.sidebar.expanded .sb-item:hover > .sb-sub { display: block; }
+.sidebar:not(.expanded) .sb-sub { display: none !important; }
+
+/* Flyout sub-menu (collapsed sidebar — CSS hover popout) */
+.sb-flyout {
+    display: none;
+    position: fixed;
+    left: 65px;
+    background: #2d3250;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 4px 4px 20px rgba(0,0,0,0.35);
+    min-width: 200px;
+    padding: 8px 0;
+    z-index: 9999;
+}
+/* Invisible bridge: extends flyout hitbox to the left so cursor doesn't lose hover crossing the gap */
+.sb-flyout::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 20px;
+    height: 100%;
+}
+/* Pure CSS hover — when sidebar is collapsed, hovering sb-item shows its flyout */
+.sidebar:not(.expanded) .sb-item:hover > .sb-flyout {
+    display: block;
+}
+.sb-flyout a {
+    display: block;
+    padding: 10px 18px;
+    color: rgba(255,255,255,0.7) !important;
+    text-decoration: none !important;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+}
+.sb-flyout a:hover {
+    color: #fff !important;
+    background: rgba(108,99,255,0.25);
+}
+.sb-flyout-title {
+    padding: 8px 18px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 4px;
+}
+
+.sb-sub a {
+    display: block;
+    padding: 9px 14px 9px 65px;
+    color: rgba(255,255,255,0.5) !important;
+    text-decoration: none !important;
+    font-size: 12.5px;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+}
+.sb-sub a:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,0.06);
+}
+
+/* Tooltip shown on hover when collapsed */
+.sb-tip {
+    position: absolute;
+    left: 72px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #2d3250;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 9999;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+    transition: opacity 0.15s;
+}
+.sidebar:not(.expanded) .sb-item > a:hover .sb-tip { opacity: 1; }
+.sidebar.expanded .sb-tip { display: none; }
+.sb-item.flyout-open > a .sb-tip { opacity: 0 !important; }
+
+/* Active nav item */
+.sb-item.sb-active > a {
+    background: rgba(108,99,255,0.18);
+    color: #fff !important;
+    border-radius: 0;
+    border-left: 3px solid #6c63ff;
+}
+.sb-item.sb-active > a .sb-icon { color: #6c63ff; }
+
+/* Need Help card */
+.sb-help-card {
+    flex-shrink: 0;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar.expanded .sb-help-card {
+    max-height: 80px;
+    opacity: 1;
+    padding: 10px 12px;
+}
+.sb-help-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(108,99,255,0.18);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+}
+.sb-help-icon { color: #fff; font-size: 16px; flex-shrink: 0; }
+.sb-help-text { flex: 1; display: flex; flex-direction: column; }
+.sb-help-title { color: #fff; font-size: 13px; font-weight: 600; }
+.sb-help-sub { color: rgba(255,255,255,0.5); font-size: 11px; }
+.sb-help-arrow { color: rgba(255,255,255,0.4); font-size: 11px; flex-shrink: 0; }
+
+/* ===== MAIN WRAPPER ===== */
+.main-wrapper {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    min-height: 100vh;
+    background: #f0f2f5;
+    transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+}
+.main-wrapper.expanded {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+.top-bar {
+    height: 64px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+.top-bar .tb-hamburger {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 8px;
+    color: #555;
+    font-size: 18px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+.top-bar .tb-hamburger:hover { background: #f1f5f9; }
+.top-bar .tb-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1b2e;
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+}
+/* Date Widget — modern date display */
+.tb-date-widget {
+    position: relative;
+    flex-shrink: 0;
+}
+.tb-date-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #f8f7ff 0%, #f0eeff 100%);
+    border: 1.5px solid #e4e0ff;
+    border-radius: 14px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+.tb-date-display:hover {
+    border-color: #6c63ff;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.15);
+    transform: translateY(-1px);
+}
+.tb-date-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #6c63ff, #8b83ff);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.tb-date-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+.tb-date-day {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c63ff;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-family: 'Inter', sans-serif;
+}
+.tb-date-full {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1b2e;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+}
+.tb-date-divider {
+    width: 1px;
+    height: 28px;
+    background: #d8d4f7;
+    margin: 0 2px;
+}
+.tb-date-picker-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #6c63ff;
+    font-size: 14px;
+    transition: background 0.2s, transform 0.2s;
+}
+.tb-date-display:hover .tb-date-picker-btn {
+    background: rgba(108,99,255,0.1);
+}
+.tb-date-hidden {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+.top-bar .tb-notif {
+    position: relative;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+.top-bar .tb-notif:hover { background: #f1f5f9; }
+.top-bar .tb-notif i { font-size: 19px; color: #555; }
+.top-bar .tb-notif .notif-badge {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: #6c63ff;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid white;
+}
+.top-bar .tb-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+.top-bar .tb-user:hover { background: #f1f5f9; }
+.top-bar .tb-user .tb-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e8e8e8;
+}
+.top-bar .tb-user .tb-uname {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #1a1b2e;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.top-bar .tb-user .tb-urole {
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.top-bar .tb-user .tb-chevron {
+    color: #aaa;
+    font-size: 11px;
+    margin-left: 2px;
+}
+</style>
+
+<script type="text/javascript">
+var sidebarHoverTimer = null;
+var sidebarLeaveTimer = null;
+var sidebarHoveredOpen = false;
+
+function setSidebarActive(el) {
+    document.querySelectorAll('.sb-item').forEach(function(li) { li.classList.remove('sb-active'); });
+    var li = el.closest('.sb-item');
+    if (li) li.classList.add('sb-active');
+}
+
+function toggleSideMenu(item) {
+    var sidebar = document.querySelector('.sidebar');
+    // If sidebar is collapsed, hover handles flyout — do nothing on click
+    if (!sidebar.classList.contains('expanded')) {
+        return;
+    }
+    // Expanded mode — inline dropdown toggle
+    document.querySelectorAll('.sb-item.open').forEach(function(el) {
+        if (el !== item) el.classList.remove('open');
+    });
+    item.classList.toggle('open');
+}
+
+function expandSidebar() {
+    var sidebar = document.querySelector('.sidebar');
+    var wrapper = document.querySelector('.main-wrapper');
+    var dashApp = document.querySelector('.dash-app');
+    sidebar.classList.add('expanded');
+    if (wrapper) wrapper.classList.add('expanded');
+    if (dashApp) dashApp.classList.add('expanded');
+}
+
+function collapseSidebar() {
+    var sidebar = document.querySelector('.sidebar');
+    var wrapper = document.querySelector('.main-wrapper');
+    var dashApp = document.querySelector('.dash-app');
+    sidebar.classList.remove('expanded');
+    if (wrapper) wrapper.classList.remove('expanded');
+    if (dashApp) dashApp.classList.remove('expanded');
+    document.querySelectorAll('.sb-item.open').forEach(function(el) {
+        el.classList.remove('open');
+    });
+}
+
+function toggleSidebar() {
+    var sidebar = document.querySelector('.sidebar');
+    if (sidebar.classList.contains('expanded')) {
+        collapseSidebar();
+        sidebarHoveredOpen = false;
+    } else {
+        expandSidebar();
+        sidebarHoveredOpen = false;
+    }
+}
+
+/* ===== FLYOUT BUILDER — builds flyout elements on page load, CSS handles show/hide ===== */
+function buildFlyouts() {
+    var sidebar = document.getElementById('mainSidebar');
+    if (!sidebar) return;
+    var items = sidebar.querySelectorAll('.sb-item');
+    items.forEach(function(item) {
+        var subMenu = item.querySelector('.sb-sub');
+        if (!subMenu) return;
+        /* Build flyout div with cloned links */
+        var flyout = document.createElement('div');
+        flyout.className = 'sb-flyout';
+        var titleText = item.querySelector('.sb-text');
+        if (titleText) {
+            var titleDiv = document.createElement('div');
+            titleDiv.className = 'sb-flyout-title';
+            titleDiv.textContent = titleText.textContent;
+            flyout.appendChild(titleDiv);
+        }
+        var links = subMenu.querySelectorAll('a');
+        links.forEach(function(link) {
+            var clone = link.cloneNode(true);
+            clone.style.padding = '10px 18px';
+            flyout.appendChild(clone);
+        });
+        item.appendChild(flyout);
+
+        /* Position flyout on hover using mouseenter — only for vertical alignment */
+        item.addEventListener('mouseenter', function() {
+            var iconLink = item.querySelector('a');
+            if (iconLink) {
+                var rect = iconLink.getBoundingClientRect();
+                flyout.style.top = rect.top + 'px';
+                /* Prevent going below viewport */
+                setTimeout(function() {
+                    var flyRect = flyout.getBoundingClientRect();
+                    if (flyRect.bottom > window.innerHeight) {
+                        flyout.style.top = (window.innerHeight - flyRect.height - 10) + 'px';
+                    }
+                }, 0);
+            }
+        });
+    });
+}
+
+/* ===== HOVER LOGIC ===== */
+document.addEventListener('DOMContentLoaded', function() {
+    var sidebar = document.getElementById('mainSidebar');
+    if (!sidebar) return;
+
+    /* Build all flyout elements so CSS :hover can show them */
+    buildFlyouts();
+
+    /* 1. Hover on hamburger (sb-toggle) → expand full sidebar */
+    var sbToggle = sidebar.querySelector('.sb-toggle');
+    if (sbToggle) {
+        sbToggle.addEventListener('mouseenter', function() {
+            clearTimeout(sidebarLeaveTimer);
+            if (!sidebar.classList.contains('expanded')) {
+                sidebarHoverTimer = setTimeout(function() {
+                    expandSidebar();
+                    sidebarHoveredOpen = true;
+                }, 200);
+            }
+        });
+    }
+
+    /* 2. Sidebar mouseleave → collapse if it was hover-opened */
+    sidebar.addEventListener('mouseleave', function() {
+        clearTimeout(sidebarHoverTimer);
+        sidebarLeaveTimer = setTimeout(function() {
+            if (sidebarHoveredOpen) {
+                collapseSidebar();
+                sidebarHoveredOpen = false;
+            }
+        }, 300);
+    });
+
+    /* 3. Keep sidebar open while cursor is still on it */
+    sidebar.addEventListener('mouseenter', function() {
+        clearTimeout(sidebarLeaveTimer);
+    });
+});
+
+
+function contentLoad(a) {
+	//document.getElementById('loadingModal').style.display = 'flex'; // Show the loading modal
+	location.href = "/AccountStatement/" + a.id;
+}
+</script>
+
+
+	
+	
+</head>
+
+
+<body>
+
+	<div class="sidebar" id="mainSidebar">
+    <!-- Logo Row (always visible) — click to toggle -->
+    <div class="sb-toggle" onclick="toggleSidebar();">
+        <div class="sb-logo-icon">
+            <div class="sb-hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="sb-logo-full">
+            <img th:src="@{/images/Bornfire.png}" alt="BAS" style="height:32px; margin-right:8px;" onerror="this.style.display='none'">
+            <span style="color:white; font-size:18px; font-weight:800; letter-spacing:1px; font-family:'Inter',sans-serif;">BAS</span>
+        </div>
+    </div>
+    <!-- Nav items -->
+    <ul class="sb-nav">
+        <li class="sb-item sb-active">
+            <a href="#" onclick="setSidebarActive(this); contentLoad(this); return false;" id="Dashboard">
+                <span class="sb-icon"><i class="fa fa-home"></i></span>
+                <span class="sb-text">Home</span>
+                <span class="sb-tip">Home</span>
+            </a>
+        </li>
+        <li class="sb-item" >
+            <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+                <span class="sb-icon"><i class="fa fa-shield"></i></span>
+                <span class="sb-text">Admin</span>
+                <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+                <span class="sb-tip">Admin</span>
+            </a>
+            <div class="sb-sub">
+                <a href="#" onclick="contentLoad(this); return false;" id="UserProfile">User Profile</a>
+                <a href="#" onclick="contentLoad(this); return false;" id="Leave_Form">Access and Roles</a>
+            </div>
+        </li>
+        
+     <li class="sb-item">
+
+	    <a href="#" onclick="contentLoad(this); return false;" id="Accounts">
+	
+	        <span class="sb-icon"> <i class="fa fa-bank"></i> </span>
+	
+	        <span class="sb-text">Accounts</span>
+	        <span class="sb-tip"> Accounts </span>
+	    </a>
+	    
+	    <div class="sb-sub">
+	    	
+	    </div>
+	    
+	
+	</li>
+	
+	
+	
+	<li class="sb-item">
+        <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+            <span class="sb-icon"><i class="fa fa-file-text"></i></span>
+            <span class="sb-text">Statement Request</span>
+            <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+            <span class="sb-tip">Statement Request</span>
+        </a>
+
+        <div class="sb-sub">
+            <a href="#" onclick="contentLoad(this); return false;" id="NewStatementRequest">New Statement Request</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="StatementPreview">Statement Preview</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="StatementHistory">Statement History</a>
+        </div>
+    </li>
+    
+    <!-- Schedule Statements -->
+    <li class="sb-item">
+        <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+            <span class="sb-icon"><i class="fa fa-calendar"></i></span>
+            <span class="sb-text">Schedule Statements</span>
+            <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+            <span class="sb-tip">Schedule Statements</span>
+        </a>
+
+        <div class="sb-sub">
+            <a href="#" onclick="contentLoad(this); return false;" id="DailySchedule">Daily Schedule</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="WeeklySchedule">Weekly Schedule</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="MonthlySchedule">Monthly Schedule</a>
+        </div>
+    </li>
+    
+    <!-- Templates Management -->
+    <li class="sb-item">
+        <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+            <span class="sb-icon"><i class="fa fa-copy"></i></span>
+            <span class="sb-text">Templates</span>
+            <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+            <span class="sb-tip">Templates</span>
+        </a>
+
+        <div class="sb-sub">
+            <a href="#" onclick="contentLoad(this); return false;" id="CreateTemplate">Create Template</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="ManageTemplate">Manage Template</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="TemplatePreview">Template Preview</a>
+        </div>
+    </li>
+    
+    <!-- Bulk Statement -->
+    <li class="sb-item">
+        <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+            <span class="sb-icon"><i class="fa fa-database"></i></span>
+            <span class="sb-text">Bulk Statements</span>
+            <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+            <span class="sb-tip">Bulk Statements</span>
+        </a>
+
+        <div class="sb-sub">
+            <a href="#" onclick="contentLoad(this); return false;" id="BulkGeneration">Bulk Generation</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="BulkHistory">Bulk History</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="BulkDownload">Bulk Download</a>
+        </div>
+    </li>
+    
+	
+        
+         <li class="sb-item" >
+            <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+                <span class="sb-icon"><i class="fa fa-history"></i></span>
+                <span class="sb-text">Audit Logs</span>
+                <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+                <span class="sb-tip">Audit Logs</span>
+            </a>
+            <div class="sb-sub">
+                <a href="#" onclick="contentLoad(this); return false;" id="">User Audit</a>
+                <a href="#" onclick="contentLoad(this); return false;" id="">Service Audit</a>
+            </div>
+        </li>
+        
+        
+        
+                
+        
+        <li class="sb-item" th:if="${role_menu?.role_id=='ADM'}">
+            <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+                <span class="sb-icon"><i class="fa fa-bar-chart"></i></span>
+                <span class="sb-text">Reports</span>
+                <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+                <span class="sb-tip">Reports</span>
+            </a>
+            <div class="sb-sub">
+                <a href="#" onclick="contentLoad(this); return false;" id="BHMSDaytoDayBilling">Day to Day Billing</a>
+                <a href="#" onclick="contentLoad(this); return false;" id="saleReport">Sale Report</a>
+            </div>
+        </li>
+        
+        <!-- Notifications -->
+    <li class="sb-item">
+        <a href="javascript:void(0);" onclick="toggleSideMenu(this.parentElement)">
+            <span class="sb-icon"><i class="fa fa-envelope"></i></span>
+            <span class="sb-text">Email Notification</span>
+            <span class="sb-caret"><i class="fa fa-chevron-down"></i></span>
+            <span class="sb-tip">Email Notification</span>
+        </a>
+
+        <div class="sb-sub">
+            <a href="#" onclick="contentLoad(this); return false;" id="SendMail">Send Mail</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="MailHistory">Mail History</a>
+            <a href="#" onclick="contentLoad(this); return false;" id="FailedMail">Failed Mail</a>
+        </div>
+    </li>
+       
+        <li class="sb-item">
+            <a href="#" onclick="contentLoad(this); return false;" id="logout">
+                <span class="sb-icon"><i class="fa fa-sign-out"></i></span>
+                <span class="sb-text">Logout</span>
+                <span class="sb-tip">Logout</span>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Need Help card — visible only when expanded -->
+    <div class="sb-help-card">
+        <div class="sb-help-inner">
+            <i class="fa fa-headphones sb-help-icon"></i>
+            <div class="sb-help-text">
+                <span class="sb-help-title">Need Help?</span>
+                <span class="sb-help-sub">Contact Support</span>
+            </div>
+            <i class="fa fa-chevron-right sb-help-arrow"></i>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
