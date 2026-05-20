@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+	<title>Account Statement</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+	<meta content="Coderthemes" name="author">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="assets/images/favicon.ico">
+	<!-- App css -->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+
+	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+	
+	<script th:src="@{/js/bootstrap411.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<style>
+
+body{
+    background:#f5f7fb;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.page-container{
+    padding:25px;
+}
+
+/* TOP HEADER */
+
+.top-header{
+    background:white;
+    padding:20px 25px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    color:#0b1c54;
+}
+
+.search-box{
+    width:350px;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+    border-radius:14px;
+    border:1px solid #ddd;
+    padding-left:45px;
+    outline:none;
+}
+
+.search-box i{
+    position:absolute;
+    left:16px;
+    top:15px;
+    color:gray;
+}
+
+/* CUSTOMER SECTION */
+
+.customer-section{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.section-title{
+    font-size:22px;
+    font-weight:700;
+    color:#0b1c54;
+    margin-bottom:20px;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+}
+
+
+table thead th {
+   background: #bdbdbd !important;
+    color: #000000 !important;
+    font-weight: bold;
+    font-size: 13px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 14px !important;
+    border-bottom: 2px solid var(--bm-border) !important;
+    border-top: none !important;
+    white-space: nowrap;
+   
+}
+
+table td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+    font-size: 12px !important;
+    vertical-align:middle;
+}
+
+/* STATUS */
+
+.status-active{
+    background:#d4f8df;
+    color:green;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.status-inactive{
+    background:#ffe0e0;
+    color:red;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+/* BUTTONS */
+
+.action-btn{
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:10px;
+    margin-right:5px;
+}
+
+.edit-btn{
+    background:#e7f1ff;
+    color:#0d6efd;
+}
+
+.delete-btn{
+    background:#ffe5e5;
+    color:red;
+}
+
+/* TOGGLE */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 55px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #dcdcdc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #0d6efd;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* ACCOUNT TABLE */
+
+.account-section{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* MOBILE */
+
+@media(max-width:991px){
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+        margin-top:15px;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+
+}
+
+
+
+
+
+</style>
+
+</head>
+
+<body>
+
+<div th:insert="AccountStatementHeader :: header"></div>
+
+<div class="main-wrapper" id="mainWrapper">
+
+<div class="page-container">
+
+    <!-- TOP HEADER -->
+
+    <div class="top-header">
+    
+    
+
+        <div class="page-title">
+           <i class="fa fa-bars"></i> Customer Account List
+        </div>
+
+        <div class="search-box">
+
+            <i class="bi bi-search"></i>
+
+            <input type="text"
+                   id="searchInput"
+                   placeholder="Search Customer..."
+                   onkeyup="searchCustomer()">
+
+        </div>
+
+    </div>
+
+    <!-- CUSTOMER TABLE -->
+
+    <div class="customer-section">
+
+        <div class="section-title">
+            Customer Details
+        </div>
+
+        <div class="table-responsive">
+
+            <table class=" align-middle" id="customerTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Customer ID</th>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Mobile No</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>Type</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                
+                <tr th:each="custlistdata : ${custlist }" >
+                	<td th:text="${custlistdata?.orgkey}"></td>
+                	<td th:text="${custlistdata?.cust_last_name}"></td>
+                	<td th:text="${#dates.format(custlistdata?.cust_dob, 'dd-MM-yyyy')}"></td>
+                	<td th:text="${custlistdata?.phone_cell}"></td>
+                	<td th:text="${custlistdata?.preferredemail}"></td>
+                	<td th:text="${custlistdata?.country}"></td>
+                	<td th:text="${custlistdata?.cust_type_code}"></td>
+                	
+                	<td>
+
+                            <label class="switch">
+
+                                <input type="checkbox" th:data-orgkey="${custlistdata?.orgkey}"
+       								onchange="toggleAccounts(this,this.dataset.orgkey)">
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </td>
+                </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+        
+         
+        
+        
+        
+
+    </div>
+
+    <!-- ACCOUNT TABLE -->
+
+    <div class="account-section">
+
+        <div class="section-title">
+            Account Details
+        </div>
+
+        <div class="table-responsive">
+
+            <table class=" align-middle">
+            
+            
+										
+
+                <thead>
+
+                    <tr>
+						<th>Account Number</th>
+						<th>Name</th>
+						<th>Scheme Code</th>
+						<th>Scheme Type</th>
+						<th>Open Date</th>
+						<th>Currency</th>
+						<th>Customer ID</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="accountTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+
+
+let currentToggle = null;
+
+function toggleAccounts(toggle, customerId){
+	
+
+    if(currentToggle && currentToggle !== toggle){
+
+        currentToggle.checked = false;
+
+    }
+
+    currentToggle = toggle;
+	
+
+    const tbody = document.getElementById("accountTableBody");
+
+    tbody.innerHTML = "";
+
+    if(toggle.checked){
+
+        $.ajax({
+
+            url: './getCustomerAccounts',
+            type: 'GET',
+            data: {
+                cust_id : customerId
+            },
+
+            success: function(response){
+
+                let data = response;
+
+                if(data.length > 0){
+
+                    data.forEach(acc => {
+
+                        //let statusClass = acc.status === "Active" ? "status-active" : "status-inactive";
+
+                        tbody.innerHTML += `
+
+                            <tr>
+
+                                <td>${acc.acct_number}</td>
+
+                                <td>${acc.acct_name}</td>
+
+                                <td>${acc.schm_type}</td>
+
+                                <td>${acc.schm_type}</td>
+
+                                <td>${acc.acct_opn_date}</td>
+                                
+                                <td>${acc.acct_crncy_code}</td>
+                                
+                                <td>${acc.cust_id}</td>
+                               
+                                
+                            </tr>
+                        `;
+                    });
+
+                }else{
+
+                    tbody.innerHTML = `
+
+                        <tr>
+
+                            <td colspan="7"
+                                style="text-align:center;color:red;">
+
+                                No Accounts Found
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+
+            },
+
+            error: function(){
+
+                alert("Error loading account details");
+
+            }
+
+        });
+
+    }
+
+}
+
+function searchCustomer(){
+
+    let input =
+        document.getElementById("searchInput")
+        .value
+        .toUpperCase();
+
+    let table =
+        document.getElementById("customerTable");
+
+    let tr = table.getElementsByTagName("tr");
+
+    for(let i=1; i<tr.length; i++){
+
+        let td = tr[i].getElementsByTagName("td")[1];
+
+        if(td){
+
+            let txtValue =
+                td.textContent || td.innerText;
+            
+
+            if(txtValue.toUpperCase().indexOf(input) > -1){
+
+                tr[i].style.display = "";
+
+            }else{
+
+                tr[i].style.display = "none";
+
+            }
+
+        }
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

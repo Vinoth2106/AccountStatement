@@ -1,23 +1,573 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-
-<html lang="en"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Dashboard</title>
+	<title>Account Statement</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+	<meta content="Coderthemes" name="author">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="assets/images/favicon.ico">
+	<!-- App css -->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+
+	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+	
+	<script th:src="@{/js/bootstrap411.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap-icons/bootstrap-icons.css}">
+	<script th:src="@{/js/chart.js}"></script>
+	
+
+
+<style>
+
+.dashboard-container{
+	
+	padding:20px;
+}
+/* ================= STAT CARDS ================= */
+
+.stat-card{
+	background:white;
+	border-radius:15px;
+	padding:22px;
+	box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+	height:100%;
+	transition:0.3s;
+}
+
+.stat-card:hover{
+	transform:translateY(-5px);
+}
+
+.stat-title{
+	font-size:15px;
+	color:#7b8ba1;
+	margin-bottom:10px;
+}
+
+.stat-value{
+	font-size:34px;
+	font-weight:bold;
+	color:#1d3557;
+}
+
+.stat-growth{
+	margin-top:10px;
+	font-size:14px;
+	font-weight:bold;
+}
+
+.growth-green{
+	color:#16a34a;
+}
+
+.growth-red{
+	color:#dc2626;
+}
+
+/* ================= BOX ================= */
+
+.dashboard-box{
+	background:white;
+	border-radius:15px;
+	padding:22px;
+	box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+}
+
+.box-title{
+	font-size:22px;
+	font-weight:bold;
+	color:#1d3557;
+	margin-bottom:20px;
+}
+
+/* ================= CHART ================= */
+
+.chart-container{
+	height:320px;
+}
+
+/* ================= ACTIVITY ================= */
+
+.activity-item{
+	display:flex;
+	align-items:center;
+	padding-bottom:18px;
+	margin-bottom:18px;
+	border-bottom:1px solid #eeeeee;
+}
+
+.activity-dot{
+	width:12px;
+	height:12px;
+	border-radius:50%;
+	margin-right:15px;
+}
+
+.blue{
+	background:#0d6efd;
+}
+
+.green{
+	background:#16a34a;
+}
+
+.red{
+	background:#dc2626;
+}
+
+.orange{
+	background:#f97316;
+}
+
+.activity-content{
+	flex:1;
+}
+
+.activity-text{
+	font-size:14px;
+	font-weight:600;
+	color:#1d3557;
+}
+
+.activity-time{
+	font-size:12px;
+	color:#7b8ba1;
+	margin-top:5px;
+}
+
+/* ================= TABLE ================= */
+
+.table-box{
+	background:white;
+	border-radius:15px;
+	padding:22px;
+	box-shadow:0px 2px 10px rgba(0,0,0,0.08);
+	margin-top:25px;
+}
+
+.table-title{
+	font-size:22px;
+	font-weight:bold;
+	color:#1d3557;
+	margin-bottom:20px;
+}
+
+.table thead{
+	background:#0d6efd;
+	color:white;
+}
+
+.status-success{
+	color:#16a34a;
+	font-weight:bold;
+}
+
+.status-pending{
+	color:#f97316;
+	font-weight:bold;
+}
+
+.status-failed{
+	color:#dc2626;
+	font-weight:bold;
+}
+
+</style>
+
+
+
+
+
+	
 </head>
-
 <body>
+<div th:insert="AccountStatementHeader :: header"></div>
+<div class="main-wrapper" id="mainWrapper">
+<!-- Top Bar -->
+<div class="top-bar" id="topBar">
+    <div class="tb-hamburger" onclick="toggleSidebar()">
+        <i class="fa fa-bars"></i>
+    </div>
+    <div class="tb-title">Home</div>
+    <div class="tb-date-widget" id="dateWidget">
+        <div class="tb-date-display" onclick="document.getElementById('searchDate').showPicker()">
+            <div class="tb-date-icon"><i class="bi bi-calendar3"></i></div>
+            <div class="tb-date-info">
+                <span class="tb-date-day" id="dateDayName">Tuesday</span>
+                <span class="tb-date-full" id="dateFullText">13 May 2026</span>
+            </div>
+            <div class="tb-date-divider"></div>
+            <div class="tb-date-picker-btn"><i class="bi bi-chevron-down"></i></div>
+        </div>
+        <input type="date" id="searchDate" class="tb-date-hidden" />
+    </div>
+    <div class="tb-notif">
+        <i class="fa fa-bell-o"></i>
+        <span class="notif-badge" >3</span>
+    </div>
+    <div class="tb-user" id="userdtl" onclick="showpassmenu()">
+        <img th:src="@{/images/doctor.png}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="tb-avatar" alt="Doctor">
+        <div class="tb-avatar" style="display:none; background: linear-gradient(135deg,#6c63ff,#8b83ff); color:white; font-size:14px; font-weight:700; align-items:center; justify-content:center;" >VK</div>
+        <div>
+            <div class="tb-uname"><span >Vinoth kumar</span></div>
+            <div class="tb-urole" ></div>
+        </div>
+        <i class="fa fa-chevron-down tb-chevron"></i>
+    </div>
+</div>
 
-	<div th:insert="AccountStatementHeader :: header"></div>
-	
-	
-	<div class="container">
-		
+<!-- ================= STAT CARDS ================= -->
+<div class="dashboard-container">
+
+	<div class="row">
+
+		<div class="col-lg-3 col-md-6 mb-4">
+
+			<div class="stat-card">
+
+				<div class="stat-title">
+					Total Accounts
+				</div>
+
+				<div class="stat-value">
+					12,458
+				</div>
+
+				<div class="stat-growth growth-green">
+					+8.6% From Last Month
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-3 col-md-6 mb-4">
+
+			<div class="stat-card">
+
+				<div class="stat-title">
+					Statements Generated
+				</div>
+
+				<div class="stat-value">
+					8,756
+				</div>
+
+				<div class="stat-growth growth-green">
+					+4.3% From Last Month
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-3 col-md-6 mb-4">
+
+			<div class="stat-card">
+
+				<div class="stat-title">
+					Requests Pending
+				</div>
+
+				<div class="stat-value">
+					320
+				</div>
+
+				<div class="stat-growth growth-red">
+					-3.4% From Last Month
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-3 col-md-6 mb-4">
+
+			<div class="stat-card">
+
+				<div class="stat-title">
+					Failed Statements
+				</div>
+
+				<div class="stat-value">
+					12
+				</div>
+
+				<div class="stat-growth growth-red">
+					-2.1% From Last Month
+				</div>
+
+			</div>
+
+		</div>
+
 	</div>
 
-</body>
+	<!-- ================= GRAPH + ACTIVITY ================= -->
 
-</html>
+	<div class="row">
+
+		<div class="col-lg-8">
+
+			<div class="dashboard-box">
+
+				<div class="box-title">
+					Statement Generation Overview
+				</div>
+
+				<div class="chart-container">
+					<canvas id="statementChart"></canvas>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="col-lg-4">
+
+			<div class="dashboard-box">
+
+				<div class="box-title">
+					Recent Activities
+				</div>
+
+				<div class="activity-item">
+
+					<div class="activity-dot blue"></div>
+
+					<div class="activity-content">
+
+						<div class="activity-text">
+							Statement generated for 112233445566
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 10:30 AM
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="activity-item">
+
+					<div class="activity-dot green"></div>
+
+					<div class="activity-content">
+
+						<div class="activity-text">
+							Bulk statements generated for 150 accounts
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 09:15 AM
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="activity-item">
+
+					<div class="activity-dot orange"></div>
+
+					<div class="activity-content">
+
+						<div class="activity-text">
+							Statement request received
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 08:45 AM
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="activity-item">
+
+					<div class="activity-dot red"></div>
+
+					<div class="activity-content">
+
+						<div class="activity-text">
+							Statement generation failed for 2 accounts
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 07:20 AM
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- ================= TABLE ================= -->
+
+	<div class="table-box">
+
+		<div class="table-title">
+			Recent Statement Reports
+		</div>
+
+		<div class="table-responsive">
+
+			<table class="table table-bordered table-hover">
+
+				<thead>
+
+					<tr>
+
+						<th>Account Number</th>
+						<th>Customer Name</th>
+						<th>Statement Type</th>
+						<th>Date</th>
+						<th>Status</th>
+
+					</tr>
+
+				</thead>
+
+				<tbody>
+
+					<tr>
+
+						<td>1122334455</td>
+						<td>Rakesh Kumar</td>
+						<td>Savings Statement</td>
+						<td>18-05-2026</td>
+						<td class="status-success">Completed</td>
+
+					</tr>
+
+					<tr>
+
+						<td>2233445566</td>
+						<td>Arun Kumar</td>
+						<td>Loan Statement</td>
+						<td>18-05-2026</td>
+						<td class="status-pending">Pending</td>
+
+					</tr>
+
+					<tr>
+
+						<td>3344556677</td>
+						<td>Vignesh</td>
+						<td>Current Account</td>
+						<td>17-05-2026</td>
+						<td class="status-failed">Failed</td>
+
+					</tr>
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+	</div>
+
+
+
+
+</div>
+
+<!-- ================= CHART SCRIPT ================= -->
+
+<script>
+
+const ctx = document.getElementById('statementChart');
+
+new Chart(ctx, {
+
+	type: 'line',
+
+	data: {
+
+		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+
+		datasets: [{
+
+			label: 'Statements Generated',
+
+			data: [7000, 9500, 14500, 11000, 15000, 18500],
+
+			borderColor: '#0d6efd',
+
+			backgroundColor: 'rgba(13,110,253,0.1)',
+
+			fill: true,
+
+			tension: 0.4,
+
+			borderWidth: 4,
+
+			pointBackgroundColor: '#0d6efd',
+
+			pointRadius: 5
+
+		}]
+	},
+
+	options: {
+
+		responsive: true,
+
+		maintainAspectRatio: false,
+
+		plugins: {
+
+			legend: {
+				display: false
+			}
+
+		},
+
+		scales: {
+
+			y: {
+
+				beginAtZero: true
+
+			}
+
+		}
+
+	}
+
+});
+
+</script>
+
+</body>
+</html>	
