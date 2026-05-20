@@ -241,8 +241,61 @@ input:checked + .slider:before {
 }
 
 
+/* PAGINATION */
 
+.page-btn{
 
+    border:none;
+    padding:8px 14px;
+    margin:0 4px;
+    border-radius:8px;
+    background:#e5e7eb;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+}
+
+.page-btn:hover{
+    background:#0d6efd;
+    color:white;
+}
+
+.active-page{
+    background:#0d6efd !important;
+    color:white;
+}
+
+.page-btn:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
+}
+/* PAGINATION WRAPPER */
+
+.pagination-wrapper{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+/* RECORD INFO */
+
+.record-info{
+
+    font-size:14px;
+    color:#555;
+    font-weight:500;
+}
+
+/* RIGHT BUTTON AREA */
+
+.pagination-buttons{
+
+    display:flex;
+    align-items:center;
+}
 
 </style>
 
@@ -393,21 +446,15 @@ input:checked + .slider:before {
 
 <script>
 
-
-
 let currentToggle = null;
 
 function toggleAccounts(toggle, customerId){
-	
 
     if(currentToggle && currentToggle !== toggle){
-
         currentToggle.checked = false;
-
     }
 
     currentToggle = toggle;
-	
 
     const tbody = document.getElementById("accountTableBody");
 
@@ -431,8 +478,6 @@ function toggleAccounts(toggle, customerId){
 
                     data.forEach(acc => {
 
-                        //let statusClass = acc.status === "Active" ? "status-active" : "status-inactive";
-
                         tbody.innerHTML += `
 
                             <tr>
@@ -446,12 +491,11 @@ function toggleAccounts(toggle, customerId){
                                 <td>${acc.schm_type}</td>
 
                                 <td>${acc.acct_opn_date}</td>
-                                
+
                                 <td>${acc.acct_crncy_code}</td>
-                                
+
                                 <td>${acc.cust_id}</td>
-                               
-                                
+
                             </tr>
                         `;
                     });
@@ -472,9 +516,7 @@ function toggleAccounts(toggle, customerId){
                         </tr>
 
                     `;
-
                 }
-
             },
 
             error: function(){
@@ -509,7 +551,6 @@ function searchCustomer(){
 
             let txtValue =
                 td.textContent || td.innerText;
-            
 
             if(txtValue.toUpperCase().indexOf(input) > -1){
 
@@ -527,8 +568,166 @@ function searchCustomer(){
 
 }
 
-</script>
 
+
+/* ================= PAGINATION ================= */
+
+const rowsPerPage = 5;
+const table = document.getElementById("customerTable");
+const tbody = table.getElementsByTagName("tbody")[0];
+const rows = tbody.getElementsByTagName("tr");
+
+let currentPage = 1;
+
+function displayTableRows(page){
+
+    currentPage = page;
+
+    let start = (page - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+
+    for(let i = 0; i < rows.length; i++){
+
+        if(i >= start && i < end){
+            rows[i].style.display = "";
+        }else{
+            rows[i].style.display = "none";
+        }
+    }
+
+    setupPagination();
+}
+
+function setupPagination(){
+
+    let pageCount = Math.ceil(rows.length / rowsPerPage);
+
+    let pagination = document.getElementById("paginationContainer");
+
+    if(!pagination){
+
+        pagination = document.createElement("div");
+
+        pagination.id = "paginationContainer";
+
+        table.parentNode.appendChild(pagination);
+    }
+
+    pagination.innerHTML = "";
+
+    /* MAIN CONTAINER */
+
+    let wrapper = document.createElement("div");
+
+    wrapper.className = "pagination-wrapper";
+
+
+
+    /* LEFT SIDE RECORD INFO */
+
+    let recordInfo = document.createElement("div");
+
+    recordInfo.className = "record-info";
+
+    let startRecord = ((currentPage - 1) * rowsPerPage) + 1;
+
+    let endRecord = startRecord + rowsPerPage - 1;
+
+    if(endRecord > rows.length){
+        endRecord = rows.length;
+    }
+
+    recordInfo.innerHTML =
+        `Showing ${startRecord} to ${endRecord} of ${rows.length} records`;
+
+
+
+    /* RIGHT SIDE PAGINATION */
+
+    let paginationBtns = document.createElement("div");
+
+    paginationBtns.className = "pagination-buttons";
+
+
+
+    /* PREV BUTTON */
+
+    let prevBtn = document.createElement("button");
+
+    prevBtn.innerText = "Prev";
+
+    prevBtn.className = "page-btn";
+
+    prevBtn.disabled = currentPage === 1;
+
+    prevBtn.onclick = function(){
+
+        if(currentPage > 1){
+            displayTableRows(currentPage - 1);
+        }
+    };
+
+    paginationBtns.appendChild(prevBtn);
+
+
+
+    /* PAGE BUTTONS */
+
+    for(let i = 1; i <= pageCount; i++){
+
+        let btn = document.createElement("button");
+
+        btn.innerText = i;
+
+        btn.className = "page-btn";
+
+        if(i === currentPage){
+            btn.classList.add("active-page");
+        }
+
+        btn.onclick = function(){
+            displayTableRows(i);
+        };
+
+        paginationBtns.appendChild(btn);
+    }
+
+
+
+    /* NEXT BUTTON */
+
+    let nextBtn = document.createElement("button");
+
+    nextBtn.innerText = "Next";
+
+    nextBtn.className = "page-btn";
+
+    nextBtn.disabled = currentPage === pageCount;
+
+    nextBtn.onclick = function(){
+
+        if(currentPage < pageCount){
+            displayTableRows(currentPage + 1);
+        }
+    };
+
+    paginationBtns.appendChild(nextBtn);
+
+
+
+    /* APPEND BOTH */
+
+    wrapper.appendChild(recordInfo);
+
+    wrapper.appendChild(paginationBtns);
+
+    pagination.appendChild(wrapper);
+}
+/* INITIAL LOAD */
+
+displayTableRows(1);
+
+</script>
 </body>
 
 </html>
