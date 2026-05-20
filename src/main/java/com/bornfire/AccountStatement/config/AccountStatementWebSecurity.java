@@ -46,6 +46,7 @@ import com.bornfire.AccountStatement.entities.UserAuditRepo;
 import com.bornfire.AccountStatement.entities.UserProfile;
 import com.bornfire.AccountStatement.entities.UserProfileRep;
 import com.bornfire.AccountStatement.services.LoginServices;
+import com.bornfire.AccountStatement.services.AuditService;
 
 
 @Configuration
@@ -69,6 +70,8 @@ public class AccountStatementWebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserAuditRepo userAuditRepo;
 
+	@Autowired 
+	AuditService auditService;
 
 //	private static final Logger logger = LoggerFactory.getLogger(XBRLReportsController.class);
 
@@ -260,8 +263,8 @@ public class AccountStatementWebSecurity extends WebSecurityConfigurerAdapter {
 				request.getSession().setAttribute("BRANCHNAME", user.getBranch_name());
 				//request.getSession().setAttribute("MENULIST", menus); 
 				//request.getSession().setAttribute("DEPARTMENT",  user.getDepartment());
-
-				//auditService.createLoginAudit(user.getUserid() , "Login",null , null, "XBRL_USER_PROFILE_TABLE",user);				
+				
+				auditService.createLoginAudit(user.getUserid() , "Login",null , null, "XBRL_USER_PROFILE_TABLE",user);				
 				
 				response.sendRedirect("Dashboard");
 				
@@ -282,7 +285,7 @@ public class AccountStatementWebSecurity extends WebSecurityConfigurerAdapter {
 
 				Optional<UserProfile> up = userProfileRep.findById(authentication.getName());
 				UserProfile user = up.get();
-				//auditService.createLoginAudit(user.getUserid(), "Logout", null, null, "XBRL_USER_PROFILE_TABLE",user);
+				auditService.createLoginAudit(user.getUserid(), "Logout", null, null, "XBRL_USER_PROFILE_TABLE",user);
 
 				response.sendRedirect("login?logout");
 

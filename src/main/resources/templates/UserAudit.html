@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Logs</title>
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.audit-page-wrapper * {
+	box-sizing: border-box;
+}
+
+.audit-page-wrapper {
+	background: #f5f7fb;
+	padding: 20px 25px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #1e293b;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.audit-main-title {
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 20px;
+}
+
+.audit-breadcrumb {
+	font-size: 14px;
+	color: #64748b;
+	margin-bottom: 20px;
+}
+
+.audit-card {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 25px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.audit-header {
+	margin-bottom: 20px;
+}
+
+.audit-header-title {
+	font-size: 24px;
+	font-weight: 700;
+	margin-bottom: 5px;
+}
+
+.audit-header-subtitle {
+	font-size: 14px;
+	color: #64748b;
+}
+
+/* Toolbar Elements */
+.audit-toolbar {
+	display: flex;
+	justify-content: flex-end; /* Pushes the search box to the right */
+	align-items: center;
+	margin-bottom: 24px;
+}
+
+.audit-search-box {
+	width: 300px;
+	position: relative;
+}
+
+.audit-search-icon {
+	position: absolute;
+	left: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #94a3b8;
+	width: 16px;
+	height: 16px;
+}
+
+.audit-search-input {
+	width: 100%;
+	padding: 10px 14px 10px 38px;
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
+	outline: none;
+	font-size: 14px;
+	transition: all 0.2s ease;
+}
+
+.audit-search-input:focus {
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.audit-table-container {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+
+.audit-table {
+	width: 100%;
+	border-collapse: collapse;
+	min-width: 700px;
+	background: #ffffff;
+}
+
+.audit-table th {
+	text-align: left;
+	padding: 16px 20px;
+	background: #bdbdbd ;
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: #000000 ;
+	border-bottom: 1px solid #e2e8f0;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+.audit-table td {
+	padding: 16px 20px;
+	font-size: 14px;
+	color: #334155;
+	border-bottom: 1px solid #f1f5f9;
+	transition: background-color 0.2s ease;
+}
+
+.audit-table tbody tr:hover td {
+	background-color: #f8fafc;
+}
+
+.audit-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+/* Badges */
+.audit-badge {
+	display: inline-block;
+	padding: 6px 12px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.audit-success {
+	background: #dcfce7;
+	color: #15803d;
+}
+
+.audit-warning {
+	background: #fef3c7;
+	color: #b45309;
+}
+
+.audit-danger {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+/* Footer / Pagination */
+.audit-footer {
+	margin-top: 24px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 15px;
+	font-size: 14px;
+	color: #64748b;
+}
+
+/* Converted to style <a> tags for Thymeleaf routing */
+.audit-page-btn {
+	width: 36px;
+	height: 36px;
+	border: 1px solid #e2e8f0;
+	background: #fff;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	color: #475569;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.audit-page-btn:hover:not(.active):not(.disabled) {
+	background: #f1f5f9;
+}
+
+.audit-page-btn.active {
+	background: #2563eb;
+	color: #fff;
+	border-color: #2563eb;
+}
+
+.audit-page-btn.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+	background: #f8fafc;
+}
+
+.audit-loader-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(2px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+}
+
+.audit-table-wrapper {
+	flex: 1;
+	position: relative;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.audit-spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px solid #cbd5e1;
+	border-top: 4px solid #2563eb;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin { 0% {
+	transform: rotate(0deg);
+}
+
+100%
+{
+transform
+:
+rotate(
+360deg
+);
+}
+}
+.hidden {
+	display: none !important;
+}
+
+.audit-page-dots {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 4px;
+	color: #64748b;
+	font-weight: 600;
+	letter-spacing: 2px;
+}
+</style>
+</head>
+<body>
+
+	<div th:insert="AccountStatementHeader :: header"></div>
+
+	<div class="main-wrapper" id="mainWrapper">
+		<div class="audit-page-wrapper">
+
+
+			<div class="audit-card">
+				<div class="audit-header">
+					<div class="audit-header-title">User Audit Logs</div>
+					<div class="audit-header-subtitle">Track all Login activities</div>
+				</div>
+
+				<div class="audit-toolbar">
+					<form id="searchForm" th:action="@{/UserAudit}" method="get"
+						class="audit-search-box">
+						<svg class="audit-search-icon" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+
+						<input type="text" id="searchInput" name="keyword"
+							th:value="${keyword}" class="audit-search-input"
+							placeholder="Search logs...">
+					</form>
+				</div>
+				<div class="audit-table-wrapper">
+					<div id="tableLoader" class="audit-loader-overlay hidden">
+						<div class="audit-spinner"></div>
+					</div>
+					<div class="audit-table-container">
+
+						<table class="audit-table">
+							<thead>
+								<tr>
+									<th>User ID</th>
+									<th>User Name</th>
+									<th>Date</th>
+									<th>Time</th>
+									<th>Function</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="log : ${page?.content}">
+									<td th:text="${log.entry_user}"></td>
+									<td th:text="${log.event_name}"></td>
+									<td th:text="${#dates.format(log.audit_date, 'dd-MM-yyyy')}">
+									</td>
+									<td th:text="${#dates.format(log.audit_date, 'hh:mm a')}">
+									</td>
+									<td th:text="${log.func_code}"></td>
+									<td th:text="${log.remarks}"></td>
+								</tr>
+
+								<tr th:if="${#lists.isEmpty(page?.content)}">
+									<td colspan="6"
+										style="text-align: center; padding: 30px; color: #64748b;">No
+										matching logs found.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="audit-footer"
+					th:if="${page != null and page.totalElements > 0}">
+					<div>
+						Showing <span th:text="${page.number * page.size + 1}">1</span> to
+						<span th:text="${page.number * page.size + page.numberOfElements}">4</span>
+						of <span th:text="${page.totalElements}">158</span> entries
+					</div>
+
+					<div class="audit-pagination" style="display: flex; gap: 8px;"
+						th:if="${page.totalPages > 1}">
+
+						<a
+							th:href="@{/UserAudit(page=${page.number - 1}, keyword=${keyword})}"
+							th:class="${page.first ? 'audit-page-btn disabled' : 'audit-page-btn'}">&lt;</a>
+
+						<th:block th:if="${page.totalPages <= 5}">
+							<a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+								th:href="@{/UserAudit(page=${i}, keyword=${keyword})}"
+								th:text="${i + 1}"
+								th:class="${page.number == i ? 'audit-page-btn active' : 'audit-page-btn'}">1</a>
+						</th:block>
+
+						<th:block th:if="${page.totalPages > 5}">
+
+							<a th:href="@{/UserAudit(page=0, keyword=${keyword})}"
+								th:text="1"
+								th:class="${page.number == 0 ? 'audit-page-btn active' : 'audit-page-btn'}">1</a>
+
+							<span th:if="${page.number > 2}" class="audit-page-dots">...</span>
+
+
+							<th:block
+								th:with="
+            start=${page.number <= 2 ? 1 : (page.number >= page.totalPages - 3 ? page.totalPages - 4 : page.number - 1)},
+            end=${page.number <= 2 ? 3 : (page.number >= page.totalPages - 3 ? page.totalPages - 2 : page.number + 1)}
+        ">
+								<a th:each="i : ${#numbers.sequence(start, end)}"
+									th:href="@{/UserAudit(page=${i}, keyword=${keyword})}"
+									th:text="${i + 1}"
+									th:class="${page.number == i ? 'audit-page-btn active' : 'audit-page-btn'}"></a>
+							</th:block>
+
+							<span th:if="${page.number < page.totalPages - 3}"
+								class="audit-page-dots">...</span>
+
+							<a
+								th:href="@{/UserAudit(page=${page.totalPages - 1}, keyword=${keyword})}"
+								th:text="${page.totalPages}"
+								th:class="${page.number == page.totalPages - 1 ? 'audit-page-btn active' : 'audit-page-btn'}"></a>
+
+						</th:block>
+
+						<a
+							th:href="@{/UserAudit(page=${page.number + 1}, keyword=${keyword})}"
+							th:class="${page.last ? 'audit-page-btn disabled' : 'audit-page-btn'}">&gt;</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+(function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchForm = document.getElementById('searchForm');
+    const tableLoader = document.getElementById('tableLoader');
+    let typingTimer;
+    const doneTypingInterval = 500; 
+
+    function showLoader() {
+        if(tableLoader) {
+            tableLoader.classList.remove('hidden');
+        }
+    }
+
+    searchInput.addEventListener('input', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+            showLoader(); 
+            const url = new URL(searchForm.action, window.location.origin);
+            url.searchParams.set('keyword', searchInput.value);
+            window.location.replace(url.toString()); 
+        }, doneTypingInterval);
+    });
+
+    document.querySelectorAll('.audit-page-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            
+            if(!this.classList.contains('disabled') && !this.classList.contains('active')) {
+                showLoader();                
+                const targetUrl = this.getAttribute('href');                
+                window.location.replace(targetUrl);
+            }
+        });
+    });
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (searchInput.value) {
+            searchInput.focus();
+            const val = searchInput.value;
+            searchInput.value = '';
+            searchInput.value = val;
+        }
+    });
+})();
+</script>
+</body>
+</html>

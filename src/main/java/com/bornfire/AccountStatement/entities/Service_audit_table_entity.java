@@ -1,30 +1,26 @@
 package com.bornfire.AccountStatement.entities;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name = "AS_USER_AUDIT")
-public class AuditServicesEntity {
-
+@Table(name = "AS_SERVICE_AUDIT_TABLE")
+public class Service_audit_table_entity {
 	@Id
 	private String audit_ref_no;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date audit_date;
 	private String audit_table;
 	private String audit_screen;
 	private String event_id;
 	private String event_name;
+	@Lob
 	private String modi_details;
 	private String entry_user;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
@@ -34,9 +30,9 @@ public class AuditServicesEntity {
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date auth_time;
 	private String func_code;
-	private String change_details;
-	// New Columns
-	private String report_id;
+	private String old_value;
+	private String new_value;
+	private String domain_id;
 	private String entry_user_name;
 	private String auth_user_name;
 
@@ -144,20 +140,28 @@ public class AuditServicesEntity {
 		this.func_code = func_code;
 	}
 
-	public String getChange_details() {
-		return change_details;
+	public String getOld_value() {
+		return old_value;
 	}
 
-	public void setChange_details(String change_details) {
-		this.change_details = change_details;
+	public void setOld_value(String old_value) {
+		this.old_value = old_value;
 	}
 
-	public String getReport_id() {
-		return report_id;
+	public String getNew_value() {
+		return new_value;
 	}
 
-	public void setReport_id(String report_id) {
-		this.report_id = report_id;
+	public void setNew_value(String new_value) {
+		this.new_value = new_value;
+	}
+
+	public String getDomain_id() {
+		return domain_id;
+	}
+
+	public void setDomain_id(String domain_id) {
+		this.domain_id = domain_id;
 	}
 
 	public String getEntry_user_name() {
@@ -176,23 +180,34 @@ public class AuditServicesEntity {
 		this.auth_user_name = auth_user_name;
 	}
 
-	@Override
-	public String toString() {
-		return "AuditServicesEntity [audit_ref_no=" + audit_ref_no + ", audit_date=" + audit_date + ", audit_table="
-				+ audit_table + ", audit_screen=" + audit_screen + ", event_id=" + event_id + ", event_name="
-				+ event_name + ", modi_details=" + modi_details + ", entry_user=" + entry_user + ", entry_time="
-				+ entry_time + ", remarks=" + remarks + ", auth_user=" + auth_user + ", auth_time=" + auth_time
-				+ ", func_code=" + func_code + ", change_details=" + change_details + ", report_id=" + report_id
-				+ ", entry_user_name=" + entry_user_name + ", auth_user_name=" + auth_user_name + ", getAudit_ref_no()="
-				+ getAudit_ref_no() + ", getAudit_date()=" + getAudit_date() + ", getAudit_table()=" + getAudit_table()
-				+ ", getAudit_screen()=" + getAudit_screen() + ", getEvent_id()=" + getEvent_id() + ", getEvent_name()="
-				+ getEvent_name() + ", getModi_details()=" + getModi_details() + ", getEntry_user()=" + getEntry_user()
-				+ ", getEntry_time()=" + getEntry_time() + ", getRemarks()=" + getRemarks() + ", getAuth_user()="
-				+ getAuth_user() + ", getAuth_time()=" + getAuth_time() + ", getFunc_code()=" + getFunc_code()
-				+ ", getChange_details()=" + getChange_details() + ", getReport_id()=" + getReport_id()
-				+ ", getEntry_user_name()=" + getEntry_user_name() + ", getAuth_user_name()=" + getAuth_user_name()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+	public Service_audit_table_entity(String audit_ref_no, Date audit_date, String audit_table, String audit_screen,
+			String event_id, String event_name, String modi_details, String entry_user, Date entry_time, String remarks,
+			String auth_user, Date auth_time, String func_code, String old_value, String new_value, String domain_id,
+			String entry_user_name, String auth_user_name) {
+		super();
+		this.audit_ref_no = audit_ref_no;
+		this.audit_date = audit_date;
+		this.audit_table = audit_table;
+		this.audit_screen = audit_screen;
+		this.event_id = event_id;
+		this.event_name = event_name;
+		this.modi_details = modi_details;
+		this.entry_user = entry_user;
+		this.entry_time = entry_time;
+		this.remarks = remarks;
+		this.auth_user = auth_user;
+		this.auth_time = auth_time;
+		this.func_code = func_code;
+		this.old_value = old_value;
+		this.new_value = new_value;
+		this.domain_id = domain_id;
+		this.entry_user_name = entry_user_name;
+		this.auth_user_name = auth_user_name;
+	}
+
+	public Service_audit_table_entity() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 }

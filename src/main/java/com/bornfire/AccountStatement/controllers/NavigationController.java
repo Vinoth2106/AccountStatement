@@ -2,12 +2,17 @@ package com.bornfire.AccountStatement.controllers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +25,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bornfire.AccountStatement.entities.AuditServicesEntity;
+import com.bornfire.AccountStatement.entities.AuditServicesRep;
 import com.bornfire.AccountStatement.entities.Cust_table_entity;
 import com.bornfire.AccountStatement.entities.Cust_table_rep;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbEntity;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbRep;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
 import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
+import com.bornfire.AccountStatement.entities.UserAuditLevel_Entity;
+import com.bornfire.AccountStatement.entities.UserAuditRepo;
 import com.bornfire.AccountStatement.services.ScheduleStatementService;
+import com.bornfire.AccountStatement.entities.Service_audit_table_Rep;
+import com.bornfire.AccountStatement.entities.Service_audit_table_entity;
 
 @Controller
 @ConfigurationProperties("default")
@@ -36,8 +47,12 @@ public class NavigationController {
 	Cust_table_rep cust_table_rep; 
 	
 	@Autowired
-	GeneralMasterTbRep generalMasterTbRepo;
-	
+	GeneralMasterTbRep generalMasterTbRepo;	
+
+	@Autowired
+	AuditServicesRep userAuditRepo;
+	@Autowired
+	Service_audit_table_Rep Service_audit_table_Rep;
 	
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
@@ -124,7 +139,50 @@ public class NavigationController {
 		return ScheduleStatementService.getHistory(scheduleId);
 	}
 
+	@RequestMapping(value = "UserAudit", method = RequestMethod.GET)
+	public String getAuditLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            Model model) {
+		Pageable pageable = PageRequest.of(page, size); 
 
+		Page<AuditServicesEntity> auditPage;
+
+		if (keyword != null && !keyword.trim().isEmpty()) {
+		    auditPage = userAuditRepo.searchByKeyword(keyword.trim(), pageable);
+		} else {
+		    auditPage = userAuditRepo.findAllByOrderByDateDesc(pageable);
+		}
+
+        model.addAttribute("page", auditPage);
+        model.addAttribute("keyword", keyword);
+
+		return "UserAudit";
+	}
+	@RequestMapping(value = "ServiceAudit", method = RequestMethod.GET)
+	public String getServiceAuditLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            Model model) {
+		Pageable pageable = PageRequest.of(page, size); 
+
+		Page<Service_audit_table_entity> auditPage;
+
+		if (keyword != null && !keyword.trim().isEmpty()) {
+		    auditPage = Service_audit_table_Rep.searchByKeyword(keyword.trim(), pageable);
+		} else {
+		    auditPage = Service_audit_table_Rep.findAllByOrderByDateDesc(pageable);
+		}
+
+        model.addAttribute("page", auditPage);
+        model.addAttribute("keyword", keyword);
+
+		return "ServiceAudit";
+	}
+	
+	
 	@RequestMapping(value = "StatementHistory", method = { RequestMethod.GET, RequestMethod.POST })
 	public String StatementHistory(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {
@@ -137,9 +195,4 @@ public class NavigationController {
 	
 	
 	
-	
-	
-	
-
-
 }
