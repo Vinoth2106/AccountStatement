@@ -1,5 +1,6 @@
 package com.bornfire.AccountStatement.entities;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,8 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 		       nativeQuery = true)
 		List<GeneralMasterTbEntity> findByCustIds(
 		        @Param("custIds") List<String> custIds);
+	
+	@Query(value = "SELECT SUM(ACCT_BALANCE_AMT_AC) FROM GENERAL_MASTER_TB WHERE Acct_number = ?1 AND report_date BETWEEN ?2 AND ?3",
+		       nativeQuery = true)
+		BigDecimal getSumBalanceBetweenDates(String Accountnum, String fd, String td);
 }

@@ -1,6 +1,8 @@
 package com.bornfire.AccountStatement.controllers;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -35,6 +37,8 @@ import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
 import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
 import com.bornfire.AccountStatement.entities.UserAuditLevel_Entity;
 import com.bornfire.AccountStatement.entities.UserAuditRepo;
+import com.bornfire.AccountStatement.entities.TransactionInquiry;
+import com.bornfire.AccountStatement.entities.TransactionInquiryRep;
 import com.bornfire.AccountStatement.services.ScheduleStatementService;
 import com.bornfire.AccountStatement.entities.Service_audit_table_Rep;
 import com.bornfire.AccountStatement.entities.Service_audit_table_entity;
@@ -51,8 +55,12 @@ public class NavigationController {
 
 	@Autowired
 	AuditServicesRep userAuditRepo;
+	
+	@Autowired
+	TransactionInquiryRep transactionInquiryRep;
 	@Autowired
 	Service_audit_table_Rep Service_audit_table_Rep;
+
 	
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
@@ -92,13 +100,53 @@ public class NavigationController {
 	
 	
 	@RequestMapping(value = "NewStatementRequest", method = { RequestMethod.GET, RequestMethod.POST })
-	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency, Model md,
-			HttpServletRequest req) {
+	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency,
+			@RequestParam(name = "formmode", required = false) String formmode, Model md,@RequestParam(name = "Account", required = false) String Account
+			,@RequestParam(name = "Accountnum", required = false) String Accountnum,@RequestParam(name = "accountname", required = false) String accountname,
+			@RequestParam(value = "fd",required = false) String fromdate,
+			@RequestParam(value = "td",required = false) String todate,HttpServletRequest req) throws ParseException {
 		
-		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
-		md.addAttribute("custlist", custlist);
-		md.addAttribute( "accountTypes",cust_table_rep.getDistinctAccountTypes()
-			    );
+		if(formmode==null) {
+			List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
+			md.addAttribute("custlist", custlist);
+			md.addAttribute( "accountTypes",cust_table_rep.getDistinctAccountTypes());
+			md.addAttribute("formmode","StatementRequest");
+			
+		}else if(formmode.equals("Preview")) {
+			
+			md.addAttribute("formmode",formmode);
+			md.addAttribute("tranInquiry", transactionInquiryRep.findAllCustomind(Account));
+			
+			
+			
+			if (fromdate!=null & todate!=null) {
+				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MMM/yyyy");
+				SimpleDateFormat output = new SimpleDateFormat("dd-MM-yyyy");
+				Date fromDateValue = inputFormat.parse(fromdate);
+				Date toDateValue = inputFormat.parse(todate);
+				fromdate = outputFormat.format(fromDateValue).toUpperCase();
+				todate = outputFormat.format(toDateValue).toUpperCase();
+				md.addAttribute("opr_datefd",output.format(fromDateValue).toUpperCase());
+				md.addAttribute("opr_datetd",output.format(toDateValue).toUpperCase());
+			}
+		
+			
+			List<TransactionInquiry> tranlist =transactionInquiryRep.findAllCustominddate(Account,fromdate,todate);
+			System.out.println("tranlistsize="+tranlist.size());
+			md.addAttribute("tranInquiry", tranlist);
+			
+			BigDecimal closingBalance =
+				    generalMasterTbRepo.getSumBalanceBetweenDates(Accountnum, fromdate, todate);
+			md.addAttribute("closingBalance",closingBalance);
+			md.addAttribute("acid",Account);
+			md.addAttribute("accountnumber",Accountnum);
+			md.addAttribute("Acctname",accountname);
+			
+			
+		}
+		
+		
 		return "StatementRequest";
 	}
 	
