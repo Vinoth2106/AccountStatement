@@ -65,6 +65,17 @@ public class NavigationController {
 
 	}
 	
+	@GetMapping("/getCustomerAccountsbytype")
+	@ResponseBody
+	public List<Object> getCustomerAccountsbytype(
+	        @RequestParam("accountType") String accountType){
+
+	    return generalMasterTbRepo.findAllCustombytype(accountType);
+
+	}
+	
+	
+	
 	@RequestMapping(value = "NewStatementRequest", method = { RequestMethod.GET, RequestMethod.POST })
 	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {

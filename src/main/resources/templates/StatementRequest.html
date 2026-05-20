@@ -1483,8 +1483,8 @@ function changeSelectionMode(){
 
 /* FILTER ACCOUNT TYPE */
 
-function filterAccountType(type){
-
+/*function filterAccountType(type){
+alert("hi");
     $("#accountTableBody tr").show();
 
     if(type == ""){
@@ -1492,7 +1492,7 @@ function filterAccountType(type){
         return;
 
     }
-
+	alert("hi");
     $("#accountTableBody tr").each(function(){
 
         let accountType =
@@ -1501,7 +1501,7 @@ function filterAccountType(type){
         .find("td:eq(4)")
         .text()
         .trim();
-
+		alert("hi");
         if(accountType != type){
 
             $(this).hide();
@@ -1510,6 +1510,80 @@ function filterAccountType(type){
 
     });
 
+}*/
+
+
+
+function filterAccountType(type){
+	
+	var type = type;
+	alert(type);
+	
+	const tbody = document.getElementById("accountTableBody");
+
+	    tbody.innerHTML = "";
+	$.ajax({
+
+	           url: './getCustomerAccountsbytype',
+	           type: 'GET',
+	           data: {
+	               accountType : type
+	           },
+
+	           success: function(response){
+
+	               let data = response;
+
+	               if(data.length > 0){
+
+	                   data.forEach(acc => {
+
+	                       tbody.innerHTML += `
+
+	                           <tr>
+
+	                               <td>${acc[0]}</td>
+
+	                               <td>${acc[1]}</td>
+
+	                               <td>${acc[2]}</td>
+
+	                               <td>${acc[3]}</td>
+
+	                               <td>${acc[4]}</td>
+
+
+	                           </tr>
+	                       `;
+	                   });
+
+	               }else{
+
+	                   tbody.innerHTML = `
+
+	                       <tr>
+
+	                           <td colspan="7"
+	                               style="text-align:center;color:red;">
+
+	                               No Accounts Found
+
+	                           </td>
+
+	                       </tr>
+
+	                   `;
+	               }
+	           },
+
+	           error: function(){
+
+	               alert("Error loading account details");
+
+	           }
+
+	       });
+	
 }
 
 /* FILTER CUSTOMER */

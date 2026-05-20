@@ -14,6 +14,9 @@ public interface Cust_table_rep extends JpaRepository<Cust_table_entity, String>
 	@Query(value = "SELECT DISTINCT cust_type_code FROM CUST_TABLE WHERE cust_type_code IS NOT NULL",
 		       nativeQuery = true)
 		List<String> getDistinctAccountTypes();
-	
+	@Query(value =
+		       "select orgkey from cust_table where cust_type_code=?1",
+		       nativeQuery = true)
+		List<String> getCustomerIdsByType(String type);
 
 }
