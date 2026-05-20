@@ -327,7 +327,7 @@
                             <th><div class="th-content">Generated Date  <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 3)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Format <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Status <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 5)"></i><div class="filter-dropdown"></div></div></th>
-                            <th>Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -338,14 +338,7 @@
                             <td th:text="${custlistdata?.phone_cell}"></td>
                             <td th:text="${custlistdata?.preferredemail}"></td>
                             <td th:text="${custlistdata?.country}"></td>
-                            <td>
-                                <a href="javascript:void(0)" 
-                                   th:attr="onclick=|downloadStatement('${custlistdata?.orgkey}')|"
-                                   class="action-icon" 
-                                   title="Download">
-                                    <i class="fa fa-download"></i>
-                                </a>
-                            </td>
+                          
                         </tr>
                     </tbody>
                 </table>
