@@ -70,7 +70,8 @@ public class NavigationController {
 		
 		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
 		md.addAttribute("custlist", custlist);
-
+		md.addAttribute( "accountTypes",cust_table_rep.getDistinctAccountTypes()
+			    );
 		return "StatementRequest";
 	}
 	

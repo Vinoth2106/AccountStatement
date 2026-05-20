@@ -378,6 +378,157 @@ table.dataTable thead .sorting:after{
 
 }
 
+/* SELECTED TABLE */
+
+.selected-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.selected-table thead{
+    background:#f3f7fd;
+}
+
+.selected-table thead th{
+    padding:18px 16px;
+    font-size:14px;
+    font-weight:700;
+    color:#0b1c54;
+    border-bottom:1px solid #dbeafe;
+}
+
+.selected-table tbody td{
+    padding:18px 16px;
+    vertical-align:middle;
+    border-bottom:1px solid #eef2f7;
+    font-size:14px;
+}
+
+.selected-table tbody tr:hover{
+    background:#f8fbff;
+}
+
+/* REMOVE DATATABLE EXTRA SPACE */
+
+#selectedTable_wrapper .dataTables_filter,
+#selectedTable_wrapper .dataTables_info,
+#selectedTable_wrapper .dataTables_paginate,
+#selectedTable_wrapper .dataTables_length{
+    display:none !important;
+}
+
+/* EMPTY TABLE */
+
+#selectedBody:empty::after{
+    content:"No Accounts Selected";
+    display:block;
+    text-align:center;
+    padding:25px;
+    color:#94a3b8;
+    font-weight:600;
+}
+
+/* DATATABLE TOP AREA */
+
+#accountTable_wrapper .dataTables_filter{
+
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    margin-bottom:20px;
+
+}
+
+#accountTable_wrapper .dataTables_filter label{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+    color:#0b1c54;
+    margin:0;
+
+}
+
+#accountTable_wrapper .dataTables_filter input{
+
+    width:260px;
+    height:44px !important;
+    border-radius:12px !important;
+    border:1px solid #dbeafe !important;
+    padding:0 14px !important;
+    outline:none !important;
+    margin-left:0 !important;
+    background:white;
+
+}
+
+/* TABLE INFO + PAGINATION */
+
+#accountTable_wrapper .dataTables_info{
+
+    float:left;
+    padding-top:18px;
+    font-size:14px;
+    color:#64748b;
+
+}
+
+#accountTable_wrapper .dataTables_paginate{
+
+    float:right;
+    padding-top:10px;
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    #accountTable_wrapper .dataTables_filter{
+
+        justify-content:flex-start;
+        margin-top:15px;
+
+    }
+
+    #accountTable_wrapper .dataTables_filter input{
+
+        width:100%;
+
+    }
+
+}
+.schedule-group{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:nowrap;
+}
+
+.schedule-group .radio-box{
+    padding:10px 18px;
+    min-width:auto;
+}
+
+.schedule-group{
+    display:flex;
+    align-items:center;
+    gap:200px;
+}
+
+.schedule-group .radio-box{
+    padding:10px 18px;
+    min-width:auto;
+    margin-bottom:0;
+}
+
+#scheduleDetails .form-control{
+    height: 42px;
+    border-radius: 8px;
+}
 </style>
 
 </head>
@@ -459,56 +610,77 @@ table.dataTable thead .sorting:after{
 
             <div class="row">
 
-                <div class="col-lg-4 mb-3">
+				<div class="col-lg-4 mb-3">
 
-                    <label class="form-label">
-                        Customer ID
-                    </label>
-                    
-                    <select class="form-select">
-                    	<option value=''>Select  Customer ID</option>
+				    <label class="form-label">
+				        Customer ID
+				    </label>
 
-					    <option th:each="custlistdata : ${custlist}"
-					            th:value="${custlistdata.orgkey}"
-					            th:text="${custlistdata.orgkey + ' - ' + custlistdata.cust_last_name}">
+					<select class="form-select"
+					        id="customerId"
+					        onchange="getCustomerAccounts()">
+
+				        <option value="">
+				            Select Customer ID
+				        </option>
+
+						<option th:each="custlistdata : ${custlist}"
+						          th:value="${custlistdata.orgkey}"
+						          th:text="${custlistdata.orgkey + ' - ' + custlistdata.cust_last_name}">
+						  </option>
+
+				    </select>
+
+				</div>
+
+				<div class="col-lg-4 mb-3">
+
+				    <label class="form-label">
+				        Account Number
+				    </label>
+
+					<select class="form-select"
+					        id="accountNumber"
+					        onchange="setAccountData()">
+
+					    <option value="">
+					        Select Account
 					    </option>
-					
+
 					</select>
 
-                   
+				</div>
 
-                </div>
+				<div class="col-lg-4 mb-3">
 
-                <div class="col-lg-4 mb-3">
+				    <label class="form-label">
+				        Currency
+				    </label>
 
-                    <label class="form-label">
-                        Account Number
-                    </label>
+					<input type="text"
+					       class="form-control"
+					       id="currency"
+					       readonly>
 
-                    <select class="form-select">
+				</div>
+				<!-- ACCOUNT DETAILS -->
 
-                        <option>10001234567</option>
-                        <option>10004567891</option>
+				<div class="col-lg-4 mb-3">
 
-                    </select>
+				    <label class="form-label">
+				        Available Balance
+				    </label>
 
-                </div>
+					<input type="text"
+					       class="form-control"
+					       id="availableBalance"
+					       readonly>
 
-                <div class="col-lg-4 mb-3">
+				</div>
 
-                    <label class="form-label">
-                        Currency
-                    </label>
+				<!-- STATEMENT PERIOD -->
 
-                    <select class="form-select">
-
-                        <option>INR</option>
-                        <option>USD</option>
-
-                    </select>
-
-                </div>
-
+				
             </div>
 
         </div>
@@ -548,6 +720,115 @@ table.dataTable thead .sorting:after{
                 </label>
 
             </div>	
+			<!-- Want To Schedule -->
+			<div class="row align-items-end mt-3">
+
+			    <!-- Want To Schedule -->
+
+			    <div class="col-lg-12">
+
+			        <div class="sub-title mb-2">
+			            Schedule
+			        </div>
+
+			        <div class="schedule-group d-flex gap-2">
+
+			            <label class="radio-box mb-0">
+
+							<input type="radio"
+							       name="wantSchedule"
+							       value="yes"
+							       onchange="toggleScheduleFields()">
+
+			                <span>Yes</span>
+
+			            </label>
+
+			            <label class="radio-box mb-0">
+
+							<input type="radio"
+							       name="wantSchedule"
+							       value="no"
+							       checked
+							       onchange="toggleScheduleFields()">
+
+			                <span>No</span>
+
+			            </label>
+
+			        </div>
+					<!-- Schedule Details -->
+
+					<div class="row mt-3"
+					     id="scheduleDetails"
+					     style="display:none;">
+
+					    <!-- Schedule Name -->
+					    <div class="col-lg-12 col-md-4 col-11 mb-3">
+
+					        <label class="form-label">
+					            Schedule Name
+					        </label>
+
+					        <input type="text"
+					               class="form-control"
+					               id="scheduleName"
+					               placeholder="Enter Schedule Name">
+								   
+								   <label class="form-label">
+								   					            Schedule Date
+								   					        </label>
+
+								   					        <input type="date"
+								   					               class="form-control"
+								   					               id="scheduleDate">
+								   								   
+								   								   <label class="form-label">
+								   								   				            Schedule Time
+								   								   				        </label>
+
+								   								   				        <input type="time"
+								   								   				               class="form-control"
+								   								   				               id="scheduleTime">	   
+
+					    </div>
+
+					    
+
+					</div>
+
+			    </div>
+				
+
+			    <!-- Offer Alert -->
+
+			    <div class="col-lg-7">
+
+			        <div class="sub-title mb-2"> Marketing collaterals</div>
+
+			        <div class="schedule-group d-flex gap-2">
+
+			            <label class="radio-box mb-0">
+
+			                <input type="radio" name="offerAlert" value="yes">
+
+			                <span>Yes</span>
+
+			            </label>
+
+			            <label class="radio-box mb-0">
+
+			                <input type="radio" name="offerAlert" value="no" checked>
+
+			                <span>No</span>
+
+			            </label>
+
+			        </div>
+
+			    </div>
+
+			</div>
         	 	
         </div>
         
@@ -560,74 +841,48 @@ table.dataTable thead .sorting:after{
                 		 Account Type
             		</div>
 
-                    <select class="form-select"
-                    onchange="filterAccountType(this.value)">
+					<select class="form-select"
+					        onchange="filterAccountType(this.value)">
 
-                        <option value="">
-                            All Accounts
-                        </option>
+					    <option value="">
+					        All Accounts
+					    </option>
 
-                        <option value="Savings">
-                            Savings
-                        </option>
+					    <option th:each="type : ${accountTypes}"
+					            th:value="${type}"
+					            th:text="${type}">
+					    </option>
 
-                        <option value="Current">
-                            Current
-                        </option>
-
-                    </select>
+					</select>
 
                 </div>
                 
-               <div class="col-lg-4 mb-3" id="customerWiseDiv" style="display:none;">
-                
-                <div class="sub-title">
-                		 Select Customer
-            		</div>
+				<div class="col-lg-4 mb-3"
+				     id="customerWiseDiv"
+				     style="display:none;">
 
-                    
+				    <div class="sub-title">
+				        Select Customer
+				    </div>
 
-                    <select class="form-select"
-                    onchange="filterCustomer(this.value)">
+				    <select class="form-select"
+				            onchange="filterCustomer(this.value)">
 
-                        <option value="">
-                            All Customers
-                        </option>
+				        <option value="">
+				            All Customers
+				        </option>
 
-                        <option value="CUST1001">
-                            CUST1001 - John David
-                        </option>
+				        <option th:each="cust : ${custlist}"
+				                th:value="${cust.orgkey}"
+				                th:text="${cust.orgkey + ' - ' + cust.cust_last_name}">
+				        </option>
 
-                        <option value="CUST1002">
-                            CUST1002 - Michael Raj
-                        </option>
+				    </select>
 
-                    </select>
+				</div>
 
-                </div> 
-        
-        
-        	 	
-        	 
-        	
         	 
         	 </div>
-
-            
-
-            
-
-            <div class="row">
-
-                <!-- ACCOUNT TYPE -->
-
-                
-
-                <!-- CUSTOMER -->
-
-                
-
-            </div>
 
             <!-- TABLE -->
 
@@ -653,84 +908,490 @@ table.dataTable thead .sorting:after{
 
                     </thead>
 
+					<tbody id="accountTableBody">
+
+					</tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+	<!-- STATEMENT SETTINGS CARD -->
+
+	<div class="selected-card">
+
+	    <div class="section-title">
+	        Statement Settings
+	    </div>
+
+	    <!-- STATEMENT PERIOD -->
+
+	    <div class="sub-title">
+	        Statement Period
+	    </div>
+
+	    <div class="row">
+
+	        <div class="col-lg-4 mb-3">
+
+	            <label class="form-label">
+	                From Date
+	            </label>
+
+	            <input type="date"
+	                   class="form-control"
+	                   id="fromDate">
+
+	        </div>
+
+	        <div class="col-lg-4 mb-3">
+
+	            <label class="form-label">
+	                To Date
+	            </label>
+
+	            <input type="date"
+	                   class="form-control"
+	                   id="toDate">
+
+	        </div>
+
+	        <div class="col-lg-4 mb-3">
+
+	            <label class="form-label">
+	                Format
+	            </label>
+
+	            <select class="form-select"
+	                    id="statementFormat">
+
+	                <option value="PDF">
+	                    PDF
+	                </option>
+
+	                <option value="EXCEL">
+	                    EXCEL
+	                </option>
+
+	            </select>
+
+	        </div>
+
+	    </div>
+
+	    <!-- DELIVERY CHANNEL -->
+
+	    <div class="sub-title mt-4">
+	        Delivery Channel
+	    </div>
+
+	    <div class="radio-group">
+
+	        <label class="radio-box">
+
+	            <input type="radio"
+	                   name="deliveryChannel"
+	                   value="email"
+	                   checked
+	                   onchange="toggleDeliveryChannel()">
+
+	            <span>Email</span>
+
+	        </label>
+
+	        <label class="radio-box">
+
+	            <input type="radio"
+	                   name="deliveryChannel"
+	                   value="download"
+	                   onchange="toggleDeliveryChannel()">
+
+	            <span>Download</span>
+
+	        </label>
+
+	        <label class="radio-box">
+
+	            <input type="radio"
+	                   name="deliveryChannel"
+	                   value="both"
+	                   onchange="toggleDeliveryChannel()">
+
+	            <span>Both</span>
+
+	        </label>
+
+	    </div>
+
+	    <!-- EMAIL -->
+
+	    <div class="row"
+	         id="emailDiv">
+
+	        <div class="col-lg-6 mb-3">
+
+	            <label class="form-label">
+	                Email ID
+	            </label>
+
+	            <input type="email"
+	                   class="form-control"
+	                   id="emailId"
+	                   placeholder="Enter Email ID">
+
+	        </div>
+
+	    </div>
+
+	</div>
+    <!-- SELECTED -->
+	<div class="selected-card">
+
+	    <div class="section-title">
+	        Selected Accounts
+	    </div>
+
+	    <div class="table-container">
+
+	        <table id="selectedTable"
+	               class="table align-middle selected-table">
+
+	            <thead>
+
+	                <tr>
+
+	                    <th>Customer ID</th>
+	                    <th>Account Number</th>
+	                    <th>Currency</th>
+	                    <th class="text-center">
+	                        Action
+	                    </th>
+
+	                </tr>
+
+	            </thead>
+
+	            <tbody id="selectedBody">
+
+	            </tbody>
+
+	        </table>
+
+	    </div>
+
+	    <div class="btn-container">
+
+	        <button type="button"
+	                class="custom-btn cancel-btn">
+
+	            Cancel
+
+	        </button>
+
+			<button type="button"
+			        class="custom-btn generate-btn"
+			        onclick="openStatementPreview()">
+
+			    Generate Statement
+
+			</button>
+
+	    </div>
+
+	</div>
+</div>
+
+
+
+<!-- STATEMENT PREVIEW SCREEN -->
+
+<div id="statementPreviewScreen"
+     style="display:none; padding:25px;">
+
+    <div class="selected-card">
+
+        <!-- TOP -->
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+            flex-wrap:wrap;
+            gap:15px;">
+
+            <div>
+
+                <div class="section-title"
+                     style="margin-bottom:5px;">
+
+                    Statement Preview
+
+                </div>
+
+                <div style="color:#64748b;">
+                    Preview your account statement
+                </div>
+
+            </div>
+
+            <div style="
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;">
+
+                <button class="custom-btn generate-btn"
+                        style="min-width:140px; height:45px;">
+
+                    Download
+
+                </button>
+
+                <button class="custom-btn cancel-btn"
+                        style="min-width:120px; height:45px;"
+                        onclick="window.print()">
+
+                    Print
+
+                </button>
+
+                <button class="custom-btn cancel-btn"
+                        style="min-width:120px; height:45px;"
+                        onclick="closePreviewScreen()">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CUSTOMER CARD -->
+
+        <div class="main-card">
+
+            <div class="row align-items-center">
+
+                <!-- LEFT -->
+
+                <div class="col-lg-8">
+
+                    <div style="
+                        display:flex;
+                        align-items:center;">
+
+                        <div style="
+                            width:70px;
+                            height:70px;
+                            border-radius:18px;
+                            background:linear-gradient(135deg,#0d6efd,#003cbf);
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            color:white;
+                            font-size:28px;
+                            margin-right:18px;">
+
+                            <i class="fa fa-user"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div id="previewCustomerName"
+                                 style="
+                                 font-size:22px;
+                                 font-weight:700;
+                                 color:#0b1c54;">
+
+                                Customer Name
+
+                            </div>
+
+                            <div id="previewAccountNumber"
+                                 style="
+                                 color:#64748b;
+                                 margin-top:5px;">
+
+                                0000000000 - Savings Account
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+
+                <div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
+
+                    <div style="
+                        color:#64748b;
+                        font-size:14px;">
+
+                        Statement Period
+
+                    </div>
+
+                    <div id="previewDate"
+                         style="
+                         font-weight:700;
+                         color:#0b1c54;
+                         margin-top:5px;">
+
+                        01 Apr 2024  30 Apr 2024
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUMMARY -->
+
+            <div class="row text-center mt-4">
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Opening Balance
+                    </div>
+
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#0b1c54;">
+
+                        ₹ 3,45,678.00
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Total Credits
+                    </div>
+
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#16a34a;">
+
+                        ₹ 2,05,430.00
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Total Debits
+                    </div>
+
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#dc2626;">
+
+                        ₹ 1,56,008.00
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Closing Balance
+                    </div>
+
+                    <div style="
+                        font-size:22px;
+                        font-weight:700;
+                        color:#0b1c54;">
+
+                        ₹ 4,75,410.00
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="main-card mt-4">
+
+            <div class="section-title">
+                Transactions
+            </div>
+
+            <div class="table-container">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Ref No</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+
+                        </tr>
+
+                    </thead>
+
                     <tbody>
 
-                        <tr class="account-row" data-type="Savings" data-customer="CUST1001">
+                        <tr>
 
-                            <td>
-
-                                <input type="checkbox"
-                                class="account-checkbox"
-                                data-customer="CUST1001"
-                                data-account="10001234567"
-                                data-currency="INR">
-
-                            </td>
-
-                            <td>CUST1001</td>
-                            <td>John David</td>
-                            <td>10001234567</td>
-                            <td>Savings</td>
-
-                            <td>
-                                <span class="currency-badge">
-                                    INR
-                                </span>
-                            </td>
+                            <td>01 Apr 2024</td>
+                            <td>Opening Balance</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>3,45,678.00</td>
 
                         </tr>
 
-                        <tr class="account-row"
-                        data-type="Current"
-                        data-customer="CUST1001">
+                        <tr>
 
-                            <td>
-
-                                <input type="checkbox"
-                                class="account-checkbox"
-                                data-customer="CUST1001"
-                                data-account="10004567891"
-                                data-currency="USD">
-
+                            <td>02 Apr 2024</td>
+                            <td>NEFT Transfer</td>
+                            <td>NEFT24001</td>
+                            <td>-</td>
+                            <td style="color:#16a34a;">
+                                25,000.00
                             </td>
-
-                            <td>CUST1001</td>
-                            <td>John David</td>
-                            <td>10004567891</td>
-                            <td>Current</td>
-
-                            <td>
-                                <span class="currency-badge">
-                                    USD
-                                </span>
-                            </td>
+                            <td>3,70,678.00</td>
 
                         </tr>
 
-                        <tr class="account-row"
-                        data-type="Savings"
-                        data-customer="CUST1002">
+                        <tr>
 
-                            <td>
-
-                                <input type="checkbox"
-                                class="account-checkbox"
-                                data-customer="CUST1002"
-                                data-account="20001111222"
-                                data-currency="INR">
-
+                            <td>03 Apr 2024</td>
+                            <td>ATM Withdrawal</td>
+                            <td>ATM90878</td>
+                            <td style="color:#dc2626;">
+                                10,000.00
                             </td>
-
-                            <td>CUST1002</td>
-                            <td>Michael Raj</td>
-                            <td>20001111222</td>
-                            <td>Savings</td>
-
-                            <td>
-                                <span class="currency-badge">
-                                    INR
-                                </span>
-                            </td>
+                            <td>-</td>
+                            <td>3,60,678.00</td>
 
                         </tr>
 
@@ -744,80 +1405,35 @@ table.dataTable thead .sorting:after{
 
     </div>
 
-    <!-- SELECTED -->
-
-    <div class="selected-card">
-
-        <div class="section-title">
-            Selected Accounts
-        </div>
-
-        <div class="table-container">
-
-            <table id="selectedTable"
-            class="display">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Customer ID</th>
-                        <th>Account Number</th>
-                        <th>Currency</th>
-                        <th>Action</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="selectedBody">
-
-                </tbody>
-
-            </table>
-
-        </div>
-        
-        <div class="btn-container">
-
-            <button class="custom-btn cancel-btn">
-                Cancel
-            </button>
-
-            <button class="custom-btn generate-btn">
-                Generate Statement
-            </button>
-
-        </div>
-
-    </div>
-
 </div>
 </div>
-
 <script>
 
 /* DATATABLE */
 
-let accountTable =
-$('#accountTable').DataTable({
+let accountTable;
+let selectedTable;
 
-    pageLength:5,
-    lengthChange:false,
-    info:true,
-    ordering:false
+$(document).ready(function(){
+
+    /* SELECTED TABLE */
+
+    selectedTable =
+    $('#selectedTable').DataTable({
+
+        paging:false,
+        searching:false,
+        info:false,
+        ordering:false
+
+    });
+
+    /* LOAD ACCOUNT TABLE */
+
+ loadAccountTable("ALL");
 
 });
 
-let selectedTable =
-$('#selectedTable').DataTable({
-
-    pageLength:5,
-    lengthChange:false,
-    info:true,
-    ordering:false
-
-});
 
 /* STATEMENT TYPE */
 
@@ -869,9 +1485,30 @@ function changeSelectionMode(){
 
 function filterAccountType(type){
 
-    accountTable.column(4)
-    .search(type)
-    .draw();
+    $("#accountTableBody tr").show();
+
+    if(type == ""){
+
+        return;
+
+    }
+
+    $("#accountTableBody tr").each(function(){
+
+        let accountType =
+
+        $(this)
+        .find("td:eq(4)")
+        .text()
+        .trim();
+
+        if(accountType != type){
+
+            $(this).hide();
+
+        }
+
+    });
 
 }
 
@@ -879,9 +1516,21 @@ function filterAccountType(type){
 
 function filterCustomer(customer){
 
-    accountTable.column(1)
-    .search(customer)
-    .draw();
+    if(customer == ""){
+
+        $("#accountTableBody").empty();
+
+        if($.fn.DataTable.isDataTable('#accountTable')){
+
+            accountTable.clear().destroy();
+
+        }
+
+        return;
+
+    }
+
+    loadAccountTable(customer);
 
 }
 
@@ -985,7 +1634,313 @@ $("#selectAll").on("change", function(){
 
 });
 
-</script>
+/* DELIVERY CHANNEL */
 
+function toggleDeliveryChannel(){
+
+    let channel =
+    document.querySelector(
+    'input[name="deliveryChannel"]:checked'
+    ).value;
+
+    if(channel === "download"){
+
+        $("#emailDiv").hide();
+
+    }else{
+
+        $("#emailDiv").show();
+
+    }
+
+}
+
+function setAccountData(){
+
+    let customerId =
+    $("#customerId").val();
+
+    let selected =
+    $("#accountNumber option:selected");
+
+    let accountNumber =
+    selected.val();
+
+    let currency =
+    selected.data("currency");
+
+    let balance =
+    selected.data("balance");
+
+    $("#currency").val(currency);
+
+    $("#availableBalance").val(balance);
+
+    $("#selectedBody").html(
+
+        `<tr id="row_${accountNumber}">
+
+            <td>${customerId}</td>
+
+            <td>${accountNumber}</td>
+
+            <td>${currency}</td>
+
+            <td class="text-center">
+
+                <button class="remove-btn"
+                onclick="removeSelected('${accountNumber}')">
+
+                    <i class="fa fa-trash"></i>
+
+                </button>
+
+            </td>
+
+        </tr>`
+
+    );
+
+}
+
+function getCustomerData(){
+
+    let customer =
+    document.getElementById("customerId");
+
+    let selected =
+    customer.options[customer.selectedIndex];
+
+    let email =
+    selected.getAttribute("data-email");
+
+    let phone =
+    selected.getAttribute("data-phone");
+
+    let country =
+    selected.getAttribute("data-country");
+
+    console.log(email);
+    console.log(phone);
+    console.log(country);
+
+}
+function getCustomerAccounts(){
+
+    let cust_id =
+    $("#customerId").val();
+
+    if(cust_id == ""){
+
+        return;
+
+    }
+
+    $.ajax({
+
+        url : "./getCustomerAccounts",
+
+        type : "GET",
+
+        data : {
+            cust_id : cust_id
+        },
+
+        success : function(data){
+
+            $("#accountNumber").empty();
+
+            $("#accountNumber").append(
+                '<option value="">Select Account</option>'
+            );
+
+            $.each(data, function(index, value){
+
+                $("#accountNumber").append(
+
+                    '<option ' +
+
+                    'value="' + value.acct_number + '" ' +
+
+                    'data-currency="' + value.acct_crncy_code + '" ' +
+
+                    'data-balance="' + value.acct_balance_amt_ac + '">' +
+
+                    value.acct_number +
+
+                    '</option>'
+
+                );
+
+            });
+
+        }
+
+    });
+
+}
+
+function removeSelected(accountNumber){
+
+    $("#row_" + accountNumber).remove();
+
+    $("#accountNumber").val("");
+
+    $("#currency").val("");
+
+    $("#availableBalance").val("");
+
+}
+
+function loadAccountTable(cust_id){
+
+    $.ajax({
+
+        url : "./getCustomerAccounts",
+
+        type : "GET",
+
+        data : {
+            cust_id : cust_id
+        },
+
+        success : function(data){
+
+            if($.fn.DataTable.isDataTable('#accountTable')){
+
+                accountTable.clear().destroy();
+
+            }
+
+            $("#accountTableBody").empty();
+
+            $.each(data, function(index, acc){
+
+                let row =
+
+                `<tr>
+
+                    <td>
+
+                        <input type="checkbox"
+                        class="account-checkbox"
+
+                        data-customer="${acc.cust_id}"
+
+                        data-account="${acc.acct_number}"
+
+                        data-currency="${acc.acct_crncy_code}"
+
+                        data-balance="${acc.acct_balance_amt_ac}">
+
+                    </td>
+
+                    <td>${acc.cust_id}</td>
+
+                    <td>${acc.acct_name}</td>
+
+                    <td>${acc.acct_number}</td>
+
+                    <td>${acc.cust_type_code}</td>
+
+                    <td>
+
+                        <span class="currency-badge">
+
+                            ${acc.acct_crncy_code}
+
+                        </span>
+
+                    </td>
+
+                </tr>`;
+
+                $("#accountTableBody").append(row);
+
+            });
+
+            accountTable =
+            $('#accountTable').DataTable({
+
+                pageLength:5,
+                lengthChange:false,
+                info:true,
+                ordering:false
+
+            });
+
+        }
+
+    });
+
+}
+
+function toggleScheduleFields(){
+
+    let value =
+    document.querySelector(
+    'input[name="wantSchedule"]:checked'
+    ).value;
+
+    if(value === "yes"){
+
+        $("#scheduleDetails").slideDown();
+
+    }else{
+
+        $("#scheduleDetails").slideUp();
+
+    }
+
+}
+</script>
+<script>
+	function openStatementPreview(){
+
+	    let customerText =
+	    $("#customerId option:selected").text();
+
+	    let accountNumber =
+	    $("#accountNumber").val();
+
+	    let fromDate =
+	    $("#fromDate").val();
+
+	    let toDate =
+	    $("#toDate").val();
+
+	    if(accountNumber == ""){
+
+	        alert("Please select account");
+
+	        return;
+	    }
+
+	    $("#previewCustomerName").text(customerText);
+
+	    $("#previewAccountNumber").text(
+	        accountNumber + " - Savings Account"
+	    );
+
+	    $("#previewDate").text(
+	        fromDate + " to " + toDate
+	    );
+
+	    $(".main-container").hide();
+
+	    $("#statementPreviewScreen").show();
+
+	}
+
+	/* CLOSE SCREEN */
+
+	function closePreviewScreen(){
+
+	    $("#statementPreviewScreen").hide();
+
+	    $(".main-wrapper").show();
+
+	}
+</script>
 </body>
 </html>
