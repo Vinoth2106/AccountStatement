@@ -429,7 +429,7 @@ tbody tr:hover {
 <body>
 
 	<div th:insert="AccountStatementHeader :: header"></div>
-
+<div class="main-wrapper" id="mainWrapper">
 	<div class="container">
 		<div class="wrap">
 			<h2 class="sr-only"
@@ -590,11 +590,11 @@ tbody tr:hover {
 			</div>
 		</div>
 	</div>
-
+	</div>
 	<script>
 		function viewHist(scheduleId, scheduleName) {
 			document.getElementById('histTitle').textContent = scheduleName
-					+ ' — send history';
+					+ ' - History List';
 			document.getElementById('histBody').innerHTML = '<p style="text-align:center;color:#6c757d;padding:2rem 0;font-size:14px">Loading...</p>';
 			document.getElementById('histOverlay').classList.add('open');
 
@@ -611,12 +611,13 @@ tbody tr:hover {
 					if (!records || records.length === 0) {
 						b.innerHTML = '<p style="text-align:center;color:#6c757d;padding:3rem 0;font-size:14px">No statements have been generated yet.</p>';
 					} else {
-						var html = '<p class="sect-label">Recent sends</p>';
+						var html = '<p class="sect-label"></p>';
 						for (var i = 0; i < records.length; i++) {
 						    var h = records[i];
 						    var bc = h.deliveryStatus === 'Success' ? 'badge-ok' : 'badge-fail';
 						    
 						    var formattedDate = formatDate(h.dateSent); 
+						    console.log("Raw date received: " + h.dateSent);
 						    
 						    html += '<div class="hist-item">'
 						          + '<div>'
@@ -743,12 +744,17 @@ tbody tr:hover {
 		function formatDate(dateStr) {
 		    if (!dateStr || dateStr === "—") return "—";
 		    
-		    let datePart = dateStr.split(' ')[0]; 
+		    if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+		        return dateStr;
+		    }
+		    
+		    let datePart = dateStr.toString().split(' ')[0]; 
 		    const [y, m, d] = datePart.split('-');
+		    if (y && m && d) {
+		        return `${d}-${m}-${y}`;
+		    }
 		    
-		    if (!y || !m || !d) return dateStr;
-		    
-		    return `${d}-${m}-${y}`;
+		    return dateStr;
 		}
 
 		function formatTime(timeStr) {
