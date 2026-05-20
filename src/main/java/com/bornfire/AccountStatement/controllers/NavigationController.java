@@ -78,6 +78,7 @@ public class NavigationController {
 	
 
 
+
 	@Autowired
 	ScheduleStatementService ScheduleStatementService;
 
@@ -111,6 +112,23 @@ public class NavigationController {
 	public List<ScheduleHistory_Entity> getHistory(@RequestParam("scheduleId") BigDecimal scheduleId) {
 		return ScheduleStatementService.getHistory(scheduleId);
 	}
+
+
+	@RequestMapping(value = "StatementHistory", method = { RequestMethod.GET, RequestMethod.POST })
+	public String StatementHistory(@RequestParam(name = "frequency", required = false) String frequency, Model md,
+			HttpServletRequest req) {
+		
+		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
+		md.addAttribute("custlist", custlist);
+
+		return "StatementHistory";
+	}
+	
+	
+	
+	
+	
+	
 
 
 }
