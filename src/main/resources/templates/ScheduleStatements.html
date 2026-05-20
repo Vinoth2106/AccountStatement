@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Scheduled statements</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="shortcut icon" href="assets/images/favicon.ico">
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet"
+	href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
+<script th:src="@{/js/bootstrap411.js}"></script>
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+	th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+	th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+	th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js"
+	th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+<script
+	src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
+	th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+<style>
+/* 1. Global Resets & Typography */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Roboto, "Helvetica Neue", Arial, sans-serif;
+	color: #333333;
+	background-color: #f4f7f6;
+	line-height: 1.5;
+}
+
+/* 2. Main Layout */
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+.wrap {
+	background: #ffffff;
+	padding: 1.5rem 2rem;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	border: 1px solid #eaedf1;
+}
+
+/* 3. Header Styling */
+.ph {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+}
+
+.bread {
+	font-size: 13px;
+	color: #6c757d;
+	margin-bottom: 6px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bread span.cur {
+	color: #1a2551;
+	font-weight: 600;
+}
+
+h1 {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1a2551;
+	margin-bottom: 4px;
+	letter-spacing: -0.3px;
+}
+
+.sub {
+	font-size: 13px;
+	color: #6c757d;
+}
+
+/* 4. Primary Button */
+.btn-primary {
+	background-color: #0d6efd;
+	color: #ffffff;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+	background-color: #0b5ed7;
+}
+
+/* 5. Table Styling */
+.tbl-wrap {
+	border: 1px solid #eaedf1;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+thead {
+	background-color: #f8f9fa;
+}
+
+th {
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #4b5563;
+	border-bottom: 2px solid #eaedf1;
+}
+
+td {
+	padding: 14px 16px;
+	font-size: 14px;
+	border-bottom: 1px solid #eaedf1;
+	vertical-align: middle;
+}
+
+tbody tr:last-child td {
+	border-bottom: none;
+}
+
+tbody tr:hover {
+	background-color: #fcfcfc;
+}
+
+/* 6. Badges & Dots */
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.badge-active {
+	background-color: #10874f;
+	color: #0f5132;
+	border: 1px solid #badbcc;
+	font-weight: 700;
+}
+
+.badge-paused {
+	background-color: #fff3cd;
+	color: #856404;
+}
+
+.dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+/* 7. Action Buttons */
+.btn-view {
+	background: transparent;
+	border: 1px solid #d1d5db;
+	color: #4b5563;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	transition: all 0.2s;
+}
+
+.btn-view:hover {
+	border-color: #0d6efd;
+	color: #0d6efd;
+	background-color: #f8f9fa;
+}
+
+.empty {
+	text-align: center;
+	padding: 3rem;
+	color: #6c757d;
+	font-size: 14px;
+}
+
+.overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 9999 !important;
+	align-items: center;
+	justify-content: center;
+}
+
+.overlay.open {
+	display: flex;
+}
+
+.statement-modal-box {
+	background: #ffffff;
+	border-radius: 8px;
+	width: 90%;
+	max-width: 520px;
+	display: flex;
+	flex-direction: column;
+	max-height: 85vh;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.mh {
+	padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid #eaedf1;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.mh h2 {
+	font-size: 16px;
+	font-weight: 600;
+	color: #1a2551;
+}
+
+.btn-x {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #6c757d;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.btn-x:hover {
+	color: #dc3545;
+}
+
+.mb {
+	padding: 1.5rem;
+	overflow-y: auto;
+	flex: 1;
+}
+
+.mf {
+	padding: 1.25rem 1.5rem;
+	border-top: 1px solid #eaedf1;
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	background: #f8f9fa;
+	border-radius: 0 0 8px 8px;
+}
+
+/* 9. Forms */
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.form-full {
+	grid-column: 1/-1;
+}
+
+.field label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #4b5563;
+	margin-bottom: 6px;
+}
+
+.field input, .field select {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #333333;
+	outline: none;
+	transition: border-color 0.2s;
+}
+
+.field input:focus, .field select:focus {
+	border-color: #0d6efd;
+	box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.hint {
+	font-size: 12px;
+	color: #6c757d;
+	margin-top: 4px;
+}
+
+.btn-cancel {
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	color: #4b5563;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.btn-cancel:hover {
+	background: #f8f9fa;
+}
+
+/* 10. Success UI & History Table Elements */
+.success-icon {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	padding: 2rem 0;
+	color: #059669;
+}
+
+.success-icon i {
+	font-size: 48px;
+}
+
+.success-icon p {
+	font-size: 14px;
+	color: #4b5563;
+	text-align: center;
+	margin-top: 4px;
+}
+
+.badge-ok {
+	background: #d1e7dd;
+	color: #0f5132 ! important;
+}
+
+.badge-fail {
+	background: #f8d7da;
+	color: #842029 ! important;
+}
+
+.sect-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #6c757d;
+	margin-bottom: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.hist-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 0;
+	border-bottom: 1px solid #eaedf1;
+}
+
+.hist-item:last-child {
+	border-bottom: none;
+}
+
+.hist-meta {
+	font-size: 13px;
+	color: #6c757d;
+	margin-top: 2px;
+}
+
+.hist-date {
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.statement-modal {
+	background: #ffffff;
+	border-radius: 8px;
+	width: 90%;
+	max-width: 520px;
+	display: flex;
+	flex-direction: column;
+	max-height: 85vh;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+	position: relative;
+	z-index: 1001;
+}
+</style>
+</head>
+<body>
+
+	<div th:insert="AccountStatementHeader :: header"></div>
+
+	<div class="container">
+		<div class="wrap">
+			<h2 class="sr-only"
+				style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0)">Scheduled
+				statements management page</h2>
+
+			<div class="ph">
+				<div>
+
+					<h1>Scheduled statements</h1>
+					<p class="sub">Manage and automate recurring statement
+						generation</p>
+				</div>
+				<button class="btn-primary" onclick="openNew()">+ New
+					schedule</button>
+			</div>
+
+			<div class="tbl-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Frequency</th>
+							<th>Time</th>
+							<th>Start date</th>
+							<th>Format</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody id="tBody">
+						<tr th:if="${#lists.isEmpty(scheduleList)}">
+							<td colspan="7" class="empty">No schedules configured yet.</td>
+						</tr>
+						<tr th:each="r : ${scheduleList}">
+							<td><strong style="font-weight: 600; color: #1a2551;"
+								th:text="${r.scheduleName}"></strong></td>
+							<td th:text="${r.dayDesc}"></td>
+							<td><span th:text="${r.runTime}"></span></td>
+							<td th:text="${r.startDate}"></td>
+							<td><span
+								style="font-size: 13px; color: #6c757d; font-weight: 500;"
+								th:text="${r.outputFormat}"></span></td>
+							<td><span class="badge"
+								th:classappend="${r.status == 'Active'} ? 'badge-active' : 'badge-paused'">
+									<span class="dot"></span> <span th:text="${r.status}"></span>
+							</span></td>
+							<td>
+								<button class="btn-view" th:data-id="${r.id}"
+									th:data-name="${r.scheduleName}"
+									onclick="viewHist(this.getAttribute('data-id'), this.getAttribute('data-name'))">
+									View history</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="overlay" id="histOverlay"
+		onclick="bgClose(event,'histOverlay')">
+		<div class="statement-modal-box">
+			<div class="mh">
+				<h2 id="histTitle">Statement history</h2>
+				<button class="btn-x" onclick="closeHist()" aria-label="Close">&times;</button>
+			</div>
+			<div class="mb" id="histBody"></div>
+			<div class="mf">
+				<button class="btn-cancel" onclick="closeHist()">Close</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="overlay" id="newOverlay"
+		onclick="bgClose(event,'newOverlay')">
+		<div class="statement-modal-box">
+			<div class="mh">
+				<h2 id="newModalTitle">New schedule</h2>
+				<button class="btn-x" onclick="closeNew()" aria-label="Close">&times;</button>
+			</div>
+			<div class="mb">
+				<div id="formStep">
+					<div class="form-grid">
+						<div class="field form-full">
+							<label>Schedule name</label> <input type="text" id="f_name"
+								placeholder="e.g. Corporate monthly report">
+						</div>
+						<div class="field">
+							<label>Frequency</label> <select id="f_freq"
+								onchange="toggleFreq()">
+								<option value="daily">Daily</option>
+								<option value="weekly">Weekly</option>
+								<option value="monthly">Monthly</option>
+								<option value="quarterly">Quarterly</option>
+							</select>
+						</div>
+						<div class="field" id="dayField" style="display: none">
+							<label>Day of week</label> <select id="f_day">
+								<option>Monday</option>
+								<option>Tuesday</option>
+								<option>Wednesday</option>
+								<option>Thursday</option>
+								<option>Friday</option>
+								<option>Saturday</option>
+								<option>Sunday</option>
+							</select>
+						</div>
+						<div class="field" id="dateField" style="display: none">
+							<label>Day of month</label> <select id="f_mday">
+								<option value="1">1st</option>
+								<option value="5">5th</option>
+								<option value="10">10th</option>
+								<option value="15">15th</option>
+								<option value="20">20th</option>
+								<option value="25">25th</option>
+								<option value="28">28th</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>Time</label> <input type="time" id="f_time" value="02:00">
+						</div>
+						<div class="field">
+							<label>Format</label> <select id="f_format">
+								<option>PDF</option>
+								<option>CSV</option>
+								<option>XLSX</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>Start date</label> <input type="date" id="f_start">
+						</div>
+						<div class="field">
+							<label>Status</label> <select id="f_status">
+								<option value="Active">Active</option>
+								<option value="Paused">Paused</option>
+							</select>
+						</div>
+						<div class="field form-full">
+							<label>Recipients (emails)</label> <input type="text"
+								id="f_email" placeholder="e.g. ops@bank.com, finance@bank.com">
+							<p class="hint">Separate multiple emails with a comma</p>
+						</div>
+					</div>
+				</div>
+				<div id="successStep" style="display: none">
+					<div class="success-icon">
+						<strong style="font-size: 18px; color: #1a2551;">Schedule
+							created</strong>
+						<p id="successMsg"></p>
+					</div>
+				</div>
+			</div>
+			<div class="mf" id="formFoot">
+				<button class="btn-cancel" onclick="closeNew()">Cancel</button>
+				<button class="btn-primary" onclick="saveSchedule()">Save
+					schedule</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function viewHist(scheduleId, scheduleName) {
+			document.getElementById('histTitle').textContent = scheduleName
+					+ ' — send history';
+			document.getElementById('histBody').innerHTML = '<p style="text-align:center;color:#6c757d;padding:2rem 0;font-size:14px">Loading...</p>';
+			document.getElementById('histOverlay').classList.add('open');
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'historyScheduleStatements', true);
+			xhr.setRequestHeader('Content-Type',
+					'application/x-www-form-urlencoded');
+
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var records = JSON.parse(xhr.responseText);
+					var b = document.getElementById('histBody');
+
+					if (!records || records.length === 0) {
+						b.innerHTML = '<p style="text-align:center;color:#6c757d;padding:3rem 0;font-size:14px">No statements have been generated yet.</p>';
+					} else {
+						var html = '<p class="sect-label">Recent sends</p>';
+						for (var i = 0; i < records.length; i++) {
+						    var h = records[i];
+						    var bc = h.deliveryStatus === 'Success' ? 'badge-ok' : 'badge-fail';
+						    
+						    var formattedDate = formatDate(h.dateSent); 
+						    
+						    html += '<div class="hist-item">'
+						          + '<div>'
+						          + '<div class="hist-date">' + formattedDate + '</div>' // Use formatted date
+						          + '<div class="hist-meta">Format delivered: ' + h.outputFormat + '</div>'
+						          + '</div>'
+						          + '<span class="badge ' + bc + '">' + h.deliveryStatus + '</span>' 
+						          + '</div>';
+						}
+						b.innerHTML = html;
+					}
+				}
+			};
+			xhr.send('scheduleId=' + scheduleId);
+		}
+
+		function closeHist() {
+			document.getElementById('histOverlay').classList.remove('open');
+		}
+
+		function openNew() {
+			location.href = "/AccountStatement/NewStatementRequest";
+			/*
+			document.getElementById('formStep').style.display = 'block';
+			document.getElementById('successStep').style.display = 'none';
+			document.getElementById('formFoot').style.display = 'flex';
+			document.getElementById('newModalTitle').textContent = 'New schedule';
+			document.getElementById('f_name').value = '';
+			document.getElementById('f_email').value = '';
+			document.getElementById('f_start').value = new Date().toISOString()
+					.split('T')[0];
+			toggleFreq();
+			document.getElementById('newOverlay').classList.add('open');
+			*/
+		}
+
+		function closeNew() {
+			document.getElementById('newOverlay').classList.remove('open');
+		}
+
+		function toggleFreq() {
+			var v = document.getElementById('f_freq').value;
+			document.getElementById('dayField').style.display = (v === 'weekly') ? 'block'
+					: 'none';
+			document.getElementById('dateField').style.display = (v === 'monthly' || v === 'quarterly') ? 'block'
+					: 'none';
+		}
+
+		function saveSchedule() {
+			var name = document.getElementById('f_name').value.trim();
+			if (!name) {
+				document.getElementById('f_name').focus();
+				document.getElementById('f_name').style.borderColor = '#dc3545';
+				return;
+			}
+			document.getElementById('f_name').style.borderColor = '#d1d5db';
+
+			var freq = document.getElementById('f_freq').value;
+			var freqMap = {
+				daily : 'Daily',
+				weekly : 'Weekly',
+				monthly : 'Monthly',
+				quarterly : 'Quarterly'
+			};
+
+			var day = 'Daily';
+			if (freq === 'weekly') {
+				day = 'Every ' + document.getElementById('f_day').value;
+			} else if (freq === 'monthly' || freq === 'quarterly') {
+				var d = document.getElementById('f_mday').value;
+				var sfx = [ 'st', 'nd', 'rd' ];
+				day = d + (sfx[d - 1] || 'th') + ' of month';
+			}
+
+			var params = 'scheduleName='
+					+ encodeURIComponent(name)
+					+ '&frequency='
+					+ encodeURIComponent(freqMap[freq])
+					+ '&dayDesc='
+					+ encodeURIComponent(day)
+					+ '&runTime='
+					+ encodeURIComponent(document.getElementById('f_time').value)
+					+ '&startDate='
+					+ encodeURIComponent(document.getElementById('f_start').value)
+					+ '&outputFormat='
+					+ encodeURIComponent(document.getElementById('f_format').value)
+					+ '&status='
+					+ encodeURIComponent(document.getElementById('f_status').value)
+					+ '&recipients='
+					+ encodeURIComponent(document.getElementById('f_email').value);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'saveScheduleStatements', true);
+			xhr.setRequestHeader('Content-Type',
+					'application/x-www-form-urlencoded');
+
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var res = JSON.parse(xhr.responseText);
+					if (res.status === 'success') {
+						document.getElementById('formStep').style.display = 'none';
+						document.getElementById('formFoot').style.display = 'none';
+						document.getElementById('newModalTitle').textContent = 'Schedule created';
+						document.getElementById('successMsg').textContent = '"'
+								+ name + '" has been scheduled from '
+								+ document.getElementById('f_start').value
+								+ '.';
+						document.getElementById('successStep').style.display = 'block';
+
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
+					}
+				}
+			};
+			xhr.send(params);
+		}
+
+		function bgClose(e, id) {
+			if (e.target === document.getElementById(id)) {
+				document.getElementById(id).classList.remove('open');
+			}
+		}
+		function formatDate(dateStr) {
+		    if (!dateStr || dateStr === "—") return "—";
+		    
+		    let datePart = dateStr.split(' ')[0]; 
+		    const [y, m, d] = datePart.split('-');
+		    
+		    if (!y || !m || !d) return dateStr;
+		    
+		    return `${d}-${m}-${y}`;
+		}
+
+		function formatTime(timeStr) {
+		    if (!timeStr) return "—";
+		    let [h, m] = timeStr.split(':');
+		    let ampm = h >= 12 ? 'PM' : 'AM';
+		    h = h % 12 || 12;
+		    return `${h}:${m} ${ampm}`;
+		}
+		
+		document.addEventListener("DOMContentLoaded", function() {
+		    document.querySelectorAll('#tBody tr').forEach(row => {
+		        let dateCell = row.cells[3]; 
+		        let timeCell = row.cells[2];
+		        
+		        dateCell.textContent = formatDate(dateCell.textContent.trim());
+		        timeCell.textContent = formatTime(timeCell.textContent.trim());
+		    });
+		});
+		
+	</script>
+</body>
+</html>

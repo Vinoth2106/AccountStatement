@@ -24,8 +24,9 @@ import com.bornfire.AccountStatement.entities.Cust_table_entity;
 import com.bornfire.AccountStatement.entities.Cust_table_rep;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbEntity;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbRep;
-
-
+import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
+import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
+import com.bornfire.AccountStatement.services.ScheduleStatementService;
 
 @Controller
 @ConfigurationProperties("default")
@@ -75,10 +76,41 @@ public class NavigationController {
 		return "StatementRequest";
 	}
 	
-	
-	
-	
-	
-	
+
+
+	@Autowired
+	ScheduleStatementService ScheduleStatementService;
+
+	@RequestMapping(value = "ScheduleStatements", method = { RequestMethod.GET, RequestMethod.POST })
+	public String ScheduleStatements(Model md, HttpServletRequest req) {
+		md.addAttribute("scheduleList", ScheduleStatementService.getAllSchedules());
+		return "ScheduleStatements";
+	}
+
+	@RequestMapping(value = "saveScheduleStatements", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveSchedule(@RequestParam("scheduleName") String scheduleName,
+			@RequestParam("frequency") String frequency, @RequestParam("dayDesc") String dayDesc,
+			@RequestParam("runTime") String runTime, @RequestParam("startDate") String startDate,
+			@RequestParam("outputFormat") String outputFormat, @RequestParam("status") String status,
+			@RequestParam(value = "recipients", required = false, defaultValue = "") String recipients) {
+		ScheduledStatement_Entity s = new ScheduledStatement_Entity();
+		s.setScheduleName(scheduleName);
+		s.setFrequency(frequency);
+		s.setDayDesc(dayDesc);
+		s.setRunTime(runTime);
+		s.setStartDate(startDate);
+		s.setOutputFormat(outputFormat);
+		s.setStatus(status);
+		s.setRecipients(recipients);
+		return ScheduleStatementService.saveSchedule(s);
+	}
+
+	@RequestMapping(value = "historyScheduleStatements", method = RequestMethod.POST)
+	@ResponseBody
+	public List<ScheduleHistory_Entity> getHistory(@RequestParam("scheduleId") BigDecimal scheduleId) {
+		return ScheduleStatementService.getHistory(scheduleId);
+	}
+
 
 }
