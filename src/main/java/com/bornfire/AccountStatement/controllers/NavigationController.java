@@ -193,6 +193,17 @@ public class NavigationController {
 		return "StatementHistory";
 	}
 	
+	@RequestMapping(value = "BulkHistory", method = { RequestMethod.GET, RequestMethod.POST })
+	public String BulkHistory(@RequestParam(name = "frequency", required = false) String frequency, Model md,
+			HttpServletRequest req) {
+		
+		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
+		md.addAttribute("custlist", custlist);
+
+		return "BulkHistory";
+	}
+	
+	
 	
 	
 }
