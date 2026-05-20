@@ -2,303 +2,292 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <title>Account Statement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- App css -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+    <link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+    
+    <script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap411.js}"></script>
 
-<meta charset="UTF-8">
-	<title>Account Statement</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
-	<meta content="Coderthemes" name="author">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- App favicon -->
-	<link rel="shortcut icon" href="assets/images/favicon.ico">
-	<!-- App css -->
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+    <style>
+        body {
+            background: #f5f7fb;
+            font-family: 'Segoe UI', sans-serif;
+        }
 
-	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
-	
-	<script th:src="@{/js/bootstrap411.js}"></script>
-	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+        .page-container {
+            padding: 25px;
+        }
 
-	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
-	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-<style>
+        /* TOP HEADER */
+        .top-header {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-body{
-    background:#f5f7fb;
-    font-family:'Segoe UI',sans-serif;
-}
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0b1c54;
+        }
 
-.page-container{
-    padding:25px;
-}
+        /* SEARCH & FILTER GROUP */
+        .search-filter-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
 
-/* TOP HEADER */
+        .search-box {
+            width: 350px;
+            position: relative;
+        }
 
-.top-header{
-    background:white;
-    padding:20px 25px;
-    border-radius:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
+        .search-box input {
+            width: 100%;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid #ddd;
+            padding-left: 45px;
+            outline: none;
+        }
 
-.page-title{
-    font-size:28px;
-    font-weight:700;
-    color:#0b1c54;
-}
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 15px;
+            color: gray;
+        }
 
-.search-box{
-    width:350px;
-    position:relative;
-}
+        .filter-btn {
+            height: 48px;
+            padding: 0 20px;
+            background-color: #f0f4fc;
+            color: #0b1c54;
+            border: 1px solid #dce4f2;
+            border-radius: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-.search-box input{
-    width:100%;
-    height:48px;
-    border-radius:14px;
-    border:1px solid #ddd;
-    padding-left:45px;
-    outline:none;
-}
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #e2ecf9;
+            border-color: #bcd1ee;
+        }
 
-.search-box i{
-    position:absolute;
-    left:16px;
-    top:15px;
-    color:gray;
-}
+        /* CUSTOMER SECTION */
+        .customer-section {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-/* CUSTOMER SECTION */
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0b1c54;
+            margin-bottom: 20px;
+        }
 
-.customer-section{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    margin-bottom:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
+        /* TABLE */
+        table {
+            width: 100%;
+        }
 
-.section-title{
-    font-size:22px;
-    font-weight:700;
-    color:#0b1c54;
-    margin-bottom:20px;
-}
+        table thead th {
+            background: #bdbdbd !important;
+            color: #000000 !important;
+            font-weight: bold;
+            font-size: 13px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 14px !important;
+            border-bottom: 2px solid #ddd !important;
+            white-space: nowrap;
+            position: relative; 
+        }
 
-/* TABLE */
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 12px !important;
+            vertical-align: middle;
+        }
 
-table{
-    width:100%;
-}
+        /* EXCEL HEADER FILTERS */
+        .th-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
 
+        .filter-icon {
+            display: none !important; /* Force hidden state baseline on initialization/refresh */
+            cursor: pointer;
+            color: #555;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: background 0.15s ease;
+        }
 
-table thead th {
-   background: #bdbdbd !important;
-    color: #000000 !important;
-    font-weight: bold;
-    font-size: 13px !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 12px 14px !important;
-    border-bottom: 2px solid var(--bm-border) !important;
-    border-top: none !important;
-    white-space: nowrap;
-   
-}
+        .filter-icon:hover {
+            background-color: rgba(0,0,0,0.15);
+            color: #000;
+        }
 
-table td{
-    padding:15px;
-    border-bottom:1px solid #eee;
-    font-size: 12px !important;
-    vertical-align:middle;
-}
+        .filter-icon.has-filter {
+            color: #0d6efd !important;
+            font-weight: bold;
+        }
 
-/* STATUS */
+        .filter-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 10px;
+            z-index: 1000;
+            text-transform: none; 
+            font-weight: normal;
+            min-width: 190px;
+            max-height: 290px;
+        }
 
-.status-active{
-    background:#d4f8df;
-    color:green;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:13px;
-}
+        .dropdown-search-wrapper {
+            position: relative;
+            margin-bottom: 8px;
+        }
 
-.status-inactive{
-    background:#ffe0e0;
-    color:red;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:13px;
-}
+        .dropdown-search-wrapper input {
+            width: 100%;
+            height: 30px;
+            font-size: 12px;
+            padding: 4px 8px 4px 24px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
 
-/* BUTTONS */
+        .dropdown-search-wrapper i {
+            position: absolute;
+            left: 8px;
+            top: 9px;
+            font-size: 11px;
+            color: #888;
+        }
 
-.action-btn{
-    width:35px;
-    height:35px;
-    border:none;
-    border-radius:10px;
-    margin-right:5px;
-}
+        .filter-dropdown label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #333;
+            white-space: nowrap;
+        }
 
-.edit-btn{
-    background:#e7f1ff;
-    color:#0d6efd;
-}
+        .filter-dropdown input[type="checkbox"] {
+            cursor: pointer;
+        }
 
-.delete-btn{
-    background:#ffe5e5;
-    color:red;
-}
+        .filter-dropdown-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+        }
 
-/* TOGGLE */
+        .filter-dropdown-buttons button {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 55px;
-    height: 28px;
-}
+        .filter-dropdown-buttons .apply-btn {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+        /* PAGINATION INTERFACE ELEMENTS */
+        .page-btn {
+            border: none;
+            padding: 8px 14px;
+            margin: 0 4px;
+            border-radius: 8px;
+            background: #e5e7eb;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-.slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #dcdcdc;
-    transition: .4s;
-    border-radius: 34px;
-}
+        .page-btn:hover {
+            background: #0d6efd;
+            color: white;
+        }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
+        .active-page {
+            background: #0d6efd !important;
+            color: white;
+        }
 
-input:checked + .slider {
-    background-color: #0d6efd;
-}
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-input:checked + .slider:before {
-    transform: translateX(24px);
-}
+        .pagination-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
 
-/* ACCOUNT TABLE */
+        .record-info {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
 
-.account-section{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* MOBILE */
-
-@media(max-width:991px){
-
-    .top-header{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .search-box{
-        width:100%;
-        margin-top:15px;
-    }
-
-    .table-responsive{
-        overflow-x:auto;
-    }
-
-}
-
-
-/* PAGINATION */
-
-.page-btn{
-
-    border:none;
-    padding:8px 14px;
-    margin:0 4px;
-    border-radius:8px;
-    background:#e5e7eb;
-    cursor:pointer;
-    font-size:14px;
-    font-weight:600;
-}
-
-.page-btn:hover{
-    background:#0d6efd;
-    color:white;
-}
-
-.active-page{
-    background:#0d6efd !important;
-    color:white;
-}
-
-.page-btn:disabled{
-    opacity:0.5;
-    cursor:not-allowed;
-}
-/* PAGINATION WRAPPER */
-
-.pagination-wrapper{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:20px;
-    flex-wrap:wrap;
-}
-
-/* RECORD INFO */
-
-.record-info{
-
-    font-size:14px;
-    color:#555;
-    font-weight:500;
-}
-
-/* RIGHT BUTTON AREA */
-
-.pagination-buttons{
-
-    display:flex;
-    align-items:center;
-}
-
-</style>
-
+        .pagination-buttons {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -306,379 +295,362 @@ input:checked + .slider:before {
 <div th:insert="AccountStatementHeader :: header"></div>
 
 <div class="main-wrapper" id="mainWrapper">
+    <div class="page-container">
 
-<div class="page-container">
+        <!-- TOP HEADER -->
+        <div class="top-header">
+            <div class="page-title">
+               <i class="fa fa-bars"></i> Statement History
+            </div>
 
-    <!-- TOP HEADER -->
-
-    <div class="top-header">
-    
-    
-
-        <div class="page-title">
-           <i class="fa fa-bars"></i> Statement History
+            <div class="search-filter-group">
+                <div class="search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search Customer..." onkeyup="searchCustomer()">
+                </div>
+                <button type="button" id="mainFilterBtn" class="filter-btn" onclick="toggleExcelFilters()">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
+            </div>
         </div>
 
-        <div class="search-box">
-
-            <i class="bi bi-search"></i>
-
-            <input type="text"
-                   id="searchInput"
-                   placeholder="Search Customer..."
-                   onkeyup="searchCustomer()">
-
-        </div>
-
-    </div>
-
-    <!-- CUSTOMER TABLE -->
-
-    <div class="customer-section">
-
-        <div class="section-title">
-            Customer Details
-        </div>
-
-        <div class="table-responsive">
-
-            <table class=" align-middle" id="customerTable">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Customer ID</th>
-                        <th>Name</th>
-                        <th>DOB</th>
-                        <th>Mobile No</th>
-                        <th>Email</th>
-                        <th>Country</th>
-                        <th>Type</th>
-                        <th>Action</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-                
-                <tr th:each="custlistdata : ${custlist }" >
-                	<td th:text="${custlistdata?.orgkey}"></td>
-                	<td th:text="${custlistdata?.cust_last_name}"></td>
-                	<td th:text="${#dates.format(custlistdata?.cust_dob, 'dd-MM-yyyy')}"></td>
-                	<td th:text="${custlistdata?.phone_cell}"></td>
-                	<td th:text="${custlistdata?.preferredemail}"></td>
-                	<td th:text="${custlistdata?.country}"></td>
-                	<td th:text="${custlistdata?.cust_type_code}"></td>
-                	
-                	<td>
-
-                            <label class="switch">
-
-                                <input type="checkbox" th:data-orgkey="${custlistdata?.orgkey}"
-       								onchange="toggleAccounts(this,this.dataset.orgkey)">
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </td>
-                </tr>
-
-
-                </tbody>
-
-            </table>
-
-        </div>
-        
-         
-        
-        
-        
-
-    </div>
-
-    <!-- ACCOUNT TABLE -->
-
-    <div class="account-section">
-
-        <div class="section-title">
-            Account Details
-        </div>
-
-        <div class="table-responsive">
-
-            <table class=" align-middle">
+        <!-- CUSTOMER TABLE -->
+        <div class="customer-section">
+            <div class="section-title">Customer Details</div>
+            <div class="table-responsive">
+                <table class="align-middle" id="customerTable">
+                    <thead>
+                        <tr>
+                            <th><div class="th-content">Customer ID <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 0)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Account Number <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 1)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Period <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 2)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Requested On <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 3)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Format <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Status <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 5)"></i><div class="filter-dropdown"></div></div></th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="custlistdata : ${custlist}">
+                            <td th:text="${custlistdata?.orgkey}"></td>
+                            <td th:text="${custlistdata?.cust_last_name}"></td>
+                            <td th:text="${#dates.format(custlistdata?.cust_dob, 'dd-MM-yyyy')}"></td>
+                            <td th:text="${custlistdata?.phone_cell}"></td>
+                            <td th:text="${custlistdata?.preferredemail}"></td>
+                            <td th:text="${custlistdata?.country}"></td>
+                            <td>
+                                <a href="javascript:void(0)" 
+                                   th:attr="onclick=|downloadStatement('${custlistdata?.orgkey}')|"
+                                   class="action-icon" 
+                                   title="Download">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             
-            
-										
-
-                <thead>
-
-                    <tr>
-						<th>Account Number</th>
-						<th>Name</th>
-						<th>Scheme Code</th>
-						<th>Scheme Type</th>
-						<th>Open Date</th>
-						<th>Currency</th>
-						<th>Customer ID</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="accountTableBody">
-
-                </tbody>
-
-            </table>
-
+            <div id="paginationContainer"></div>
         </div>
-
     </div>
-
-</div>
-
 </div>
 
 <script>
-
-let currentToggle = null;
-
-function toggleAccounts(toggle, customerId){
-
-    if(currentToggle && currentToggle !== toggle){
-        currentToggle.checked = false;
-    }
-
-    currentToggle = toggle;
-
-    const tbody = document.getElementById("accountTableBody");
-
-    tbody.innerHTML = "";
-
-    if(toggle.checked){
-
-        $.ajax({
-
-            url: './getCustomerAccounts',
-            type: 'GET',
-            data: {
-                cust_id : customerId
-            },
-
-            success: function(response){
-
-                let data = response;
-
-                if(data.length > 0){
-
-                    data.forEach(acc => {
-
-                        tbody.innerHTML += `
-
-                            <tr>
-
-                                <td>${acc.acct_number}</td>
-
-                                <td>${acc.acct_name}</td>
-
-                                <td>${acc.schm_type}</td>
-
-                                <td>${acc.schm_type}</td>
-
-                                <td>${acc.acct_opn_date}</td>
-
-                                <td>${acc.acct_crncy_code}</td>
-
-                                <td>${acc.cust_id}</td>
-
-                            </tr>
-                        `;
-                    });
-
-                }else{
-
-                    tbody.innerHTML = `
-
-                        <tr>
-
-                            <td colspan="7"
-                                style="text-align:center;color:red;">
-
-                                No Accounts Found
-
-                            </td>
-
-                        </tr>
-
-                    `;
-                }
-            },
-
-            error: function(){
-
-                alert("Error loading account details");
-
-            }
-
-        });
-
-    }
-
-}
-
-function searchCustomer(){
-
-    let input =
-        document.getElementById("searchInput")
-        .value
-        .toUpperCase();
-
-    let table =
-        document.getElementById("customerTable");
-
-    let tr = table.getElementsByTagName("tr");
-
-    for(let i=1; i<tr.length; i++){
-
-        let td = tr[i].getElementsByTagName("td")[1];
-
-        if(td){
-
-            let txtValue =
-                td.textContent || td.innerText;
-
-            if(txtValue.toUpperCase().indexOf(input) > -1){
-
-                tr[i].style.display = "";
-
-            }else{
-
-                tr[i].style.display = "none";
-
-            }
-
-        }
-
-    }
-
-}
-
-
-
-/* ================= PAGINATION ================= */
-
+/* Global runtime active filters matrix cache */
+let activeFilters = {};
 const rowsPerPage = 5;
-const table = document.getElementById("customerTable");
-const tbody = table.getElementsByTagName("tbody")[0];
-const rows = tbody.getElementsByTagName("tr");
-
 let currentPage = 1;
 
-function displayTableRows(page){
+function searchCustomer(){
+    clearAllFilters();
+    
+    let input = document.getElementById("searchInput").value.toUpperCase();
+    let table = document.getElementById("customerTable");
+    let tr = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
 
+    for(let i=0; i<tr.length; i++){
+        let td = tr[i].getElementsByTagName("td")[0]; 
+        if(td){
+            let txtValue = td.textContent || td.innerText;
+            if(txtValue.toUpperCase().indexOf(input) > -1){
+                tr[i].setAttribute("data-search-visible", "true");
+            }else{
+                tr[i].setAttribute("data-search-visible", "false");
+            }
+        }
+    }
+    displayTableRows(1);
+}
+
+function toggleExcelFilters() {
+    const mainBtn = document.getElementById("mainFilterBtn");
+    const icons = document.querySelectorAll(".filter-icon");
+    
+    mainBtn.classList.toggle("active");
+    
+    icons.forEach(icon => {
+        if (mainBtn.classList.contains("active")) {
+            icon.style.setProperty("display", "inline-block", "important");
+        } else {
+            icon.style.setProperty("display", "none", "important");
+            const dropdown = icon.nextElementSibling;
+            if(dropdown) dropdown.style.display = "none";
+        }
+    });
+
+    if (!mainBtn.classList.contains("active")) {
+        clearAllFilters();
+    }
+}
+
+function toggleDropdown(event, colIndex) {
+    event.stopPropagation();
+    
+    document.querySelectorAll(".filter-dropdown").forEach(div => {
+        if (div !== event.target.nextElementSibling) {
+            div.style.display = "none";
+        }
+    });
+
+    const dropdown = event.target.nextElementSibling;
+    
+    if (dropdown.style.display === "block") {
+        dropdown.style.display = "none";
+        return;
+    }
+
+    const table = document.getElementById("customerTable");
+    const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    let uniqueValues = new Set();
+
+    for (let i = 0; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[colIndex];
+        if (td) {
+            uniqueValues.add(td.textContent.trim() || td.innerText.trim());
+        }
+    }
+
+    const totalItemsCount = uniqueValues.size;
+    const currentlyCheckedCount = Array.from(uniqueValues).filter(val => 
+        !activeFilters[colIndex] || activeFilters[colIndex].includes(val)
+    ).length;
+    const isAllChecked = totalItemsCount === currentlyCheckedCount;
+
+    let dropdownHtml = `
+        <div class="dropdown-search-wrapper" onclick="event.stopPropagation()">
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Search..." onkeyup="filterDropdownList(this)">
+        </div>
+        <div class="checkbox-container" style="max-height:150px; overflow-y:auto;">
+            <label class="dropdown-item-label master-select-label" style="font-weight: 600; border-bottom: 1px solid #eee; padding-bottom: 6px; margin-bottom: 6px;">
+                <input type="checkbox" class="select-all-cb" ${isAllChecked ? 'checked' : ''} onchange="toggleSelectAllDropdown(this)">
+                <span>(Select All)</span>
+            </label>
+    `;
+        
+    uniqueValues.forEach(val => {
+        const isChecked = !activeFilters[colIndex] || activeFilters[colIndex].includes(val);
+        dropdownHtml += `
+            <label class="dropdown-item-label">
+                <input type="checkbox" class="item-cb" value="${val}" ${isChecked ? 'checked' : ''} data-col="${colIndex}" onchange="handleItemCheckboxChange(this)">
+                <span>${val || '(Blank)'}</span>
+            </label>`;
+    });
+    dropdownHtml += `</div>`;
+    dropdownHtml += `
+        <div class="filter-dropdown-buttons" onclick="event.stopPropagation()">
+            <button class="clear-btn" onclick="clearColumnFilter(event, ${colIndex})">Reset</button>
+            <button class="apply-btn" onclick="applyColumnFilter(event, ${colIndex})">OK</button>
+        </div>`;
+
+    dropdown.innerHTML = dropdownHtml;
+    dropdown.style.display = "block";
+}
+
+function toggleSelectAllDropdown(masterCheckbox) {
+    const container = masterCheckbox.closest(".checkbox-container");
+    const itemCheckboxes = container.querySelectorAll(".item-cb");
+    
+    itemCheckboxes.forEach(cb => {
+        if (cb.closest(".dropdown-item-label").style.display !== "none") {
+            cb.checked = masterCheckbox.checked;
+        }
+    });
+}
+
+function handleItemCheckboxChange(itemCheckbox) {
+    const container = itemCheckbox.closest(".checkbox-container");
+    const masterCheckbox = container.querySelector(".select-all-cb");
+    const visibleItems = Array.from(container.querySelectorAll(".item-cb")).filter(cb => 
+        cb.closest(".dropdown-item-label").style.display !== "none"
+    );
+    
+    const allChecked = visibleItems.every(cb => cb.checked);
+    if (masterCheckbox) {
+        masterCheckbox.checked = allChecked;
+    }
+}
+
+function filterDropdownList(inputField) {
+    let filterText = inputField.value.toUpperCase();
+    let container = inputField.closest(".filter-dropdown").querySelector(".checkbox-container");
+    let labels = container.getElementsByClassName("dropdown-item-label");
+
+    for (let i = 0; i < labels.length; i++) {
+        if (labels[i].classList.contains("master-select-label")) continue;
+
+        let spanText = labels[i].querySelector("span").textContent || labels[i].querySelector("span").innerText;
+        if (spanText.toUpperCase().indexOf(filterText) > -1) {
+            labels[i].style.display = "flex";
+        } else {
+            labels[i].style.display = "none";
+        }
+    }
+}
+
+function applyColumnFilter(event, colIndex) {
+    const dropdown = event.target.closest(".filter-dropdown");
+    const checkboxes = dropdown.querySelectorAll(`.checkbox-container input[class="item-cb"]`);
+    const icon = dropdown.previousElementSibling;
+    
+    let selectedValues = [];
+    checkboxes.forEach(cb => {
+        if (cb.checked) selectedValues.push(cb.value);
+    });
+
+    activeFilters[colIndex] = selectedValues;
+    icon.classList.add("has-filter");
+    
+    dropdown.style.display = "none";
+    runCombinedFilters();
+}
+
+function clearColumnFilter(event, colIndex) {
+    const dropdown = event.target.closest(".filter-dropdown");
+    const icon = dropdown.previousElementSibling;
+    
+    delete activeFilters[colIndex];
+    icon.classList.remove("has-filter");
+    
+    dropdown.style.display = "none";
+    runCombinedFilters();
+}
+
+function clearAllFilters() {
+    activeFilters = {};
+    document.querySelectorAll(".filter-icon").forEach(icon => icon.classList.remove("has-filter"));
+    document.querySelectorAll(".filter-dropdown").forEach(div => div.style.display = "none");
+    runCombinedFilters();
+}
+
+function runCombinedFilters() {
+    const table = document.getElementById("customerTable");
+    const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+    for (let i = 0; i < rows.length; i++) {
+        let rowMatchesExcel = true;
+
+        for (let colIndex in activeFilters) {
+            let td = rows[i].getElementsByTagName("td")[colIndex];
+            if (td) {
+                let cellText = td.textContent.trim() || td.innerText.trim();
+                if (!activeFilters[colIndex].includes(cellText)) {
+                    rowMatchesExcel = false;
+                    break;
+                }
+            }
+        }
+
+        if (rowMatchesExcel) {
+            rows[i].setAttribute("data-filter-visible", "true");
+        } else {
+            rows[i].setAttribute("data-filter-visible", "false");
+        }
+    }
+    displayTableRows(1);
+}
+
+document.addEventListener("click", function(e) {
+    if (!e.target.closest(".th-content")) {
+        document.querySelectorAll(".filter-dropdown").forEach(div => div.style.display = "none");
+    }
+});
+
+/* ================= PAGINATION SCRIPT MATRIX ================= */
+function displayTableRows(page){
+    const table = document.getElementById("customerTable");
+    const tbody = table.getElementsByTagName("tbody")[0];
+    const rows = tbody.getElementsByTagName("tr");
+    
     currentPage = page;
+    let validIndex = 0;
+    let visibleCount = 0;
 
     let start = (page - 1) * rowsPerPage;
     let end = start + rowsPerPage;
 
     for(let i = 0; i < rows.length; i++){
+        let searchVisible = rows[i].getAttribute("data-search-visible") !== "false";
+        let filterVisible = rows[i].getAttribute("data-filter-visible") !== "false";
 
-        if(i >= start && i < end){
-            rows[i].style.display = "";
-        }else{
+        if(searchVisible && filterVisible) {
+            visibleCount++;
+            if(validIndex >= start && validIndex < end) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+            validIndex++;
+        } else {
             rows[i].style.display = "none";
         }
     }
-
-    setupPagination();
+    setupPagination(visibleCount);
 }
 
-function setupPagination(){
-
-    let pageCount = Math.ceil(rows.length / rowsPerPage);
-
+function setupPagination(totalFilteredRows){
+    let pageCount = Math.ceil(totalFilteredRows / rowsPerPage);
     let pagination = document.getElementById("paginationContainer");
 
-    if(!pagination){
-
-        pagination = document.createElement("div");
-
-        pagination.id = "paginationContainer";
-
-        table.parentNode.appendChild(pagination);
+    pagination.innerHTML = "";
+    if (totalFilteredRows === 0) {
+        pagination.innerHTML = `<div class="pagination-wrapper"><div class="record-info">No matching records found</div></div>`;
+        return;
     }
 
-    pagination.innerHTML = "";
-
-    /* MAIN CONTAINER */
-
     let wrapper = document.createElement("div");
-
     wrapper.className = "pagination-wrapper";
 
-
-
-    /* LEFT SIDE RECORD INFO */
-
     let recordInfo = document.createElement("div");
-
     recordInfo.className = "record-info";
 
     let startRecord = ((currentPage - 1) * rowsPerPage) + 1;
-
     let endRecord = startRecord + rowsPerPage - 1;
 
-    if(endRecord > rows.length){
-        endRecord = rows.length;
+    if(endRecord > totalFilteredRows){
+        endRecord = totalFilteredRows;
     }
 
-    recordInfo.innerHTML =
-        `Showing ${startRecord} to ${endRecord} of ${rows.length} records`;
-
-
-
-    /* RIGHT SIDE PAGINATION */
+    recordInfo.innerHTML = `Showing ${startRecord} to ${endRecord} of ${totalFilteredRows} records`;
 
     let paginationBtns = document.createElement("div");
-
     paginationBtns.className = "pagination-buttons";
 
-
-
-    /* PREV BUTTON */
-
     let prevBtn = document.createElement("button");
-
     prevBtn.innerText = "Prev";
-
     prevBtn.className = "page-btn";
-
     prevBtn.disabled = currentPage === 1;
-
     prevBtn.onclick = function(){
-
         if(currentPage > 1){
             displayTableRows(currentPage - 1);
         }
     };
-
     paginationBtns.appendChild(prevBtn);
 
-
-
-    /* PAGE BUTTONS */
-
     for(let i = 1; i <= pageCount; i++){
-
         let btn = document.createElement("button");
-
         btn.innerText = i;
-
         btn.className = "page-btn";
 
         if(i === currentPage){
@@ -688,46 +660,28 @@ function setupPagination(){
         btn.onclick = function(){
             displayTableRows(i);
         };
-
         paginationBtns.appendChild(btn);
     }
 
-
-
-    /* NEXT BUTTON */
-
     let nextBtn = document.createElement("button");
-
     nextBtn.innerText = "Next";
-
     nextBtn.className = "page-btn";
-
     nextBtn.disabled = currentPage === pageCount;
-
     nextBtn.onclick = function(){
-
         if(currentPage < pageCount){
             displayTableRows(currentPage + 1);
         }
     };
-
     paginationBtns.appendChild(nextBtn);
 
-
-
-    /* APPEND BOTH */
-
     wrapper.appendChild(recordInfo);
-
     wrapper.appendChild(paginationBtns);
-
     pagination.appendChild(wrapper);
 }
-/* INITIAL LOAD */
 
+/* INITIAL EXECUTION LIFECYCLE RUNNER */
 displayTableRows(1);
-
 </script>
-</body>
 
+</body>
 </html>
