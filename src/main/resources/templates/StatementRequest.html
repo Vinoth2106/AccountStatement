@@ -1340,22 +1340,23 @@ table.dataTable thead .sorting:after{
 
 				</div>
 
-                <div class="col-lg-3">
+				<!-- Closing Balance -->
+				<div class="col-lg-3">
 
-                    <div style="color:#64748b;">
-                        Closing Balance
-                    </div>
+				    <div style="color:#64748b;">
+				        Closing Balance
+				    </div>
 
-                    <div style="
-                        font-size:22px;
-                        font-weight:700;
-                        color:#0b1c54;">
+				    <div style="
+				        font-size:22px;
+				        font-weight:700;
+				        color:#0b1c54;">
 
-                       <span th:text="${closingBalance}"></span>
+				        <span th:text="${#numbers.formatDecimal(totalCredit - totalDebit,1,'COMMA',2,'POINT')}"></span>
 
-                    </div>
+				    </div>
 
-                </div>
+				</div>
 
             </div>
 
@@ -1378,7 +1379,8 @@ table.dataTable thead .sorting:after{
 				<input type="hidden" id="Acctname" th:value="${Acctname}">
 				<input type="hidden" id="fromdate" th:value="${opr_datefd}">
 				<input type="hidden" id="todatehd" th:value="${opr_datetd}">
-            
+				<input type="hidden" id="customerId" th:value="${customerId}">
+
 
                 <table class="table align-middle">
                     <thead>
@@ -2146,7 +2148,7 @@ function openStatementPreview() {
 	    var Acctname = document.getElementById('Acctname').value;
 		
 		var customerId = document.getElementById('customerId').value;
-		
+		alert(customerId)
 		var currency = document.getElementById('currency').value;
 
 	  

@@ -103,7 +103,7 @@ public class NavigationController {
 	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency,
 			@RequestParam(name = "formmode", required = false) String formmode, Model md,@RequestParam(name = "Account", required = false) String Account
 			,@RequestParam(name = "Accountnum", required = false) String Accountnum,@RequestParam(name = "accountname", required = false) String accountname,
-			@RequestParam(value = "fd",required = false) String fromdate,
+			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "customerId", required = false) String customerId,
 			@RequestParam(value = "td",required = false) String todate,HttpServletRequest req) throws ParseException {
 		
 		if(formmode==null) {
@@ -142,6 +142,8 @@ public class NavigationController {
 			md.addAttribute("acid",Account);
 			md.addAttribute("accountnumber",Accountnum);
 			md.addAttribute("Acctname",accountname);
+			md.addAttribute("customerId", customerId);
+			
 			BigDecimal totalCredit = BigDecimal.ZERO;
 			BigDecimal totalDebit = BigDecimal.ZERO;
 
