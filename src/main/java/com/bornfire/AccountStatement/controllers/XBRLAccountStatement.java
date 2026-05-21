@@ -447,6 +447,7 @@ public class XBRLAccountStatement {
 
 		try {
 			List<TransactionInquiry> tranList = transactionInquiryRep.findAllCustominddate(acid, fromdate, todate);
+			BigDecimal openingBalance =transactionInquiryRep.getOpeningBalance(acid, fromdate);
 			String accountName = Acctname;
 			String accountNumber = accountnumber;
 			String filePrefix = arabic ? "Account_Statement_Ar_" : "Account_Statement_";
@@ -541,9 +542,9 @@ public class XBRLAccountStatement {
 
 			String lblSno = arabic ? "\u0645" : "S.No";
 			String lblValueDate = arabic ? "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0642\u064a\u0645\u0629" : "Value Date";
-			String lblTranDate = arabic ? "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Tran Date";
-			String lblTranId = arabic ? "\u0631\u0642\u0645 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Tran ID";
-			String lblParticular = arabic ? "\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Tran Particular";
+			String lblTranDate = arabic ? "\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Transaction Date";
+			String lblTranId = arabic ? "\u0631\u0642\u0645 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Reference Number";
+			String lblParticular = arabic ? "\u062a\u0641\u0627\u0635\u064a\u0644 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629" : "Particulars";
 			String lblDebit = arabic ? "\u0645\u0628\u0644\u063a \u0645\u062f\u064a\u0646" : "Debit Amount";
 			String lblCredit = arabic ? "\u0645\u0628\u0644\u063a \u062f\u0627\u0626\u0646" : "Credit Amount";
 			String lblClosing = arabic ? "\u0627\u0644\u0631\u0635\u064a\u062f \u0627\u0644\u062e\u062a\u0627\u0645\u064a" : "Closing Balance";
@@ -564,6 +565,9 @@ public class XBRLAccountStatement {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 			for (TransactionInquiry t : tranList) {
+				if(sno==1) {
+					closingBalance=openingBalance.add(closingBalance);
+				}
 				addBodyCell(table, String.valueOf(sno++), normalFont, Element.ALIGN_CENTER, rtl, arabic, false);
 				addBodyCell(table, t.getValue_date() != null ? sdf.format(t.getValue_date()) : "-", normalFont,
 						textAlign, rtl, arabic, false);
@@ -581,6 +585,8 @@ public class XBRLAccountStatement {
 					addBodyCell(table, t.getTran_amt().toString(), normalFont, numberAlign, rtl, arabic, false);
 					closingBalance = closingBalance.add(t.getTran_amt());
 				}
+				
+				
 
 				addBodyCell(table, closingBalance.toString(), normalFont, numberAlign, rtl, arabic, false);
 			}
@@ -593,6 +599,8 @@ public class XBRLAccountStatement {
 				closingCell.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 			}
 			table.addCell(closingCell);
+			
+			
 
 			String closingAmountText = arabic ? formatArabicPdfValue(closingBalance.toString(), false)
 					: closingBalance.toString();

@@ -339,7 +339,8 @@
                             <!-- <td th:text="${custlistdata?.phone_cell}"></td> -->
                             <td th:text="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}"></td>
                             <td th:text="${custlistdata?.preferredemail}"></td>
-                            <td th:text="${custlistdata?.country}"></td>
+                            <!-- <td th:text="${custlistdata?.country}"></td> -->
+                            <td>Sucess</td>
                             <td>
                                 <a href="javascript:void(0)" 
                                    th:attr="onclick=|downloadStatement('${custlistdata?.orgkey}')|"
