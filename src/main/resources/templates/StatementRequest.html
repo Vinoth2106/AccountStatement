@@ -622,7 +622,7 @@ table.dataTable thead .sorting:after{
 
             <div class="row">
 
-				<div class="col-lg-4 mb-3">
+				<div class="col-lg-3 mb-3">
 
 				    <label class="form-label">
 				        Customer ID
@@ -641,13 +641,13 @@ table.dataTable thead .sorting:after{
 
 				</div>
 
-				<div class="col-lg-4 mb-3">
+				<div class="col-lg-3 mb-3">
 
 				    <label class="form-label">
 				        Account Number
 				    </label>
 
-					<select class="form-select"
+					<select class="form-control"
 					        id="accountNumber"
 					        onchange="setAccountData()">
 
@@ -659,7 +659,7 @@ table.dataTable thead .sorting:after{
 
 				</div>
 
-				<div class="col-lg-4 mb-3">
+				<div class="col-lg-3 mb-3">
 
 				    <label class="form-label">
 				        Currency
@@ -672,7 +672,7 @@ table.dataTable thead .sorting:after{
 				</div>
 				<!-- ACCOUNT DETAILS -->
 
-				<div class="col-lg-4 mb-3">
+				<div class="col-lg-3 mb-3">
 
 				    <label class="form-label">
 				        Available Balance
@@ -972,16 +972,16 @@ table.dataTable thead .sorting:after{
 	                Format
 	            </label>
 
-	            <select class="form-select"
+	            <select class="form-control"
 	                    id="statementFormat">
 
 	                <option value="PDF">
 	                    PDF
 	                </option>
 
-	                <option value="EXCEL">
+	                <!-- <option value="EXCEL">
 	                    EXCEL
-	                </option>
+	                </option> -->
 
 	            </select>
 
@@ -990,8 +990,10 @@ table.dataTable thead .sorting:after{
 	    </div>
 
 	    <!-- DELIVERY CHANNEL -->
-
-	    <div class="sub-title mt-4">
+	    
+	    <div class="row">
+	    	<div class="col-lg-4 mb-3">
+	    		<div class="sub-title mt-4">
 	        Delivery Channel
 	    </div>
 
@@ -1032,26 +1034,28 @@ table.dataTable thead .sorting:after{
 	        </label>
 
 	    </div>
-
-	    <!-- EMAIL -->
-
-	    <div class="row"
-	         id="emailDiv">
-
-	        <div class="col-lg-6 mb-3">
-
-	            <label class="form-label">
-	                Email ID
-	            </label>
-
+	    	
+	    	
+	    	</div>
+	    	
+	    	<div class="col-lg-4 mb-3" id="emailDiv">
+	    		
+				<div class="sub-title mt-4">
+	        Email ID
+	    </div>
 	            <input type="email"
 	                   class="form-control"
 	                   id="emailId"
 	                   placeholder="Enter Email ID">
-
-	        </div>
-
+	    	
+	    	</div>
+	    
+	    
 	    </div>
+
+	    
+
+	    
 
 	</div>
     <!-- SELECTED -->
@@ -1553,7 +1557,7 @@ alert("hi");
 function filterAccountType(type){
 	
 	var type = type;
-	alert(type);
+
 	
 	const tbody = document.getElementById("accountTableBody");
 
@@ -2121,7 +2125,7 @@ function openStatementPreview() {
 
 	}
 	function ReportDownloadPDF(type) {
-		alert("hi")
+	
 
 	    var fromDate = document.getElementById('fromdate').value;
 
