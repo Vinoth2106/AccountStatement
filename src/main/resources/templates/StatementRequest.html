@@ -668,6 +668,7 @@ table.dataTable thead .sorting:after{
 					<input type="text" class="form-control" id="currency" readonly>
 					<input type="hidden" class="form-control" id="acid" readonly>
 					<input type="hidden"  id="accountname" readonly>
+					
 
 				</div>
 				<!-- ACCOUNT DETAILS -->
@@ -1303,39 +1304,41 @@ table.dataTable thead .sorting:after{
 
                 </div>
 
-                <div class="col-lg-3">
+				<!-- Total Credits -->
+				<div class="col-lg-3">
 
-                    <div style="color:#64748b;">
-                        Total Credits
-                    </div>
+				    <div style="color:#64748b;">
+				        Total Credits
+				    </div>
 
-                    <div style="
-                        font-size:22px;
-                        font-weight:700;
-                        color:#16a34a;">
+				    <div style="
+				        font-size:22px;
+				        font-weight:700;
+				        color:#16a34a;">
 
-                         2,05,430.00
+				        <span th:text="${#numbers.formatDecimal(totalCredit,1,'COMMA',2,'POINT')}"></span>
 
-                    </div>
+				    </div>
 
-                </div>
+				</div>
 
-                <div class="col-lg-3">
+				<!-- Total Debits -->
+				<div class="col-lg-3">
 
-                    <div style="color:#64748b;">
-                        Total Debits
-                    </div>
+				    <div style="color:#64748b;">
+				        Total Debits
+				    </div>
 
-                    <div style="
-                        font-size:22px;
-                        font-weight:700;
-                        color:#dc2626;">
+				    <div style="
+				        font-size:22px;
+				        font-weight:700;
+				        color:#dc2626;">
 
-                         1,56,008.00
+				        <span th:text="${'-'+#numbers.formatDecimal(totalDebit,1,'COMMA',2,'POINT')}"></span>
 
-                    </div>
+				    </div>
 
-                </div>
+				</div>
 
                 <div class="col-lg-3">
 
@@ -1789,6 +1792,8 @@ function setAccountData(){
     let currency =
     selected.data("currency");
 
+
+		
     let balance =
     selected.data("balance");
     
@@ -2139,6 +2144,10 @@ function openStatementPreview() {
 	    var accountnumber = document.getElementById('accountnumberhd').value;
 
 	    var Acctname = document.getElementById('Acctname').value;
+		
+		var customerId = document.getElementById('customerId').value;
+		
+		var currency = document.getElementById('currency').value;
 
 	  
 		if(type=='normal'){
@@ -2151,7 +2160,9 @@ function openStatementPreview() {
 		        + '&userid=' + encodeURIComponent(acid)
 		        + '&acid=' + encodeURIComponent(acid)
 		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname);
+		        + '&Acctname=' + encodeURIComponent(Acctname)
+				+ '&currency=' + encodeURIComponent(currency)
+				+ '&customerId=' + encodeURIComponent(customerId);
 			}
 		else if(type=='arabic'){
 			
@@ -2164,7 +2175,9 @@ function openStatementPreview() {
 		        + '&userid=' + encodeURIComponent(acid)
 		        + '&acid=' + encodeURIComponent(acid)
 		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname);
+		        + '&Acctname=' + encodeURIComponent(Acctname)
+				+ '&currency=' + encodeURIComponent(currency)
+				+ '&customerId=' + encodeURIComponent(customerId);
 			
 		}
 		

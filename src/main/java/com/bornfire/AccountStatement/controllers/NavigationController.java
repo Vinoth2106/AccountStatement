@@ -142,6 +142,24 @@ public class NavigationController {
 			md.addAttribute("acid",Account);
 			md.addAttribute("accountnumber",Accountnum);
 			md.addAttribute("Acctname",accountname);
+			BigDecimal totalCredit = BigDecimal.ZERO;
+			BigDecimal totalDebit = BigDecimal.ZERO;
+
+			for(TransactionInquiry custInq : tranlist){
+
+			    if("C".equals(custInq.getPart_tran_type())){
+
+			        totalCredit = totalCredit.add(custInq.getTran_amt());
+
+			    }else if("D".equals(custInq.getPart_tran_type())){
+
+			        totalDebit = totalDebit.add(custInq.getTran_amt());
+
+			    }
+			}
+
+			md.addAttribute("totalCredit", totalCredit);
+			md.addAttribute("totalDebit", totalDebit);
 			
 			
 		}
