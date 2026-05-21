@@ -60,7 +60,7 @@ public class EmailServices {
 	        MimeMessage msg = new MimeMessage(session);
 	        msg.setFrom(new InternetAddress(user));
 	        msg.addRecipient(Message.RecipientType.TO,
-	                new InternetAddress("vinothkumarall4@gmail.com"));
+	                new InternetAddress("nandhini.j@bornfire.co.in"));
 
 	        msg.setSubject("Account Statement");
 	        msg.setSentDate(new Date());
