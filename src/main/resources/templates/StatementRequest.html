@@ -1181,9 +1181,9 @@ table.dataTable thead .sorting:after{
 
 </div>
 
-                <button class="custom-btn cancel-btn"
+                <button class="custom-btn cancel-btn" onclick="getEpdfDep()"
                         style="min-width:120px; height:45px;"
-                        onclick="window.print()">
+                        >
 
                     Generate
 
@@ -2613,6 +2613,35 @@ function toggleScheduleFields(){
 		}
 		
 	}
+	
+function getEpdfDep() {
+	
+	
+	 var fromDate = document.getElementById('fromdate').value;
+
+	    var toDate = document.getElementById('todatehd').value;
+
+	    var acid = document.getElementById('acidhd').value;
+
+	    var accountnumber = document.getElementById('accountnumberhd').value;
+
+	    var Acctname = document.getElementById('Acctname').value;
+	
+	
+	location.href =
+        'ReportsAccount/ReportDownloadPDFE?reportId=RISK_DEP'
+        + '&formmode=Preview'
+        + '&filetype=pdf'
+        + '&fromdate=' + encodeURIComponent(fromDate)
+        + '&todate=' + encodeURIComponent(toDate)
+        + '&userid=' + encodeURIComponent(acid)
+        + '&acid=' + encodeURIComponent(acid)
+        + '&accountnumber=' + encodeURIComponent(accountnumber)
+        + '&Acctname=' + encodeURIComponent(Acctname);
+	
+}
+		
+		
 	
 	function toggleUploadField() {
 

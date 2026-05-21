@@ -325,7 +325,8 @@
                             <th><div class="th-content">Account Number <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 1)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Period <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 2)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Requested On <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 3)"></i><div class="filter-dropdown"></div></div></th>
-                            <th><div class="th-content">Format <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th>
+                           <!--  <th><div class="th-content">Format <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th> -->
+                            <th><div class="th-content">Mail Id <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Status <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 5)"></i><div class="filter-dropdown"></div></div></th>
                             <th>Action</th>
                         </tr>
@@ -335,7 +336,8 @@
                             <td th:text="${custlistdata?.orgkey}"></td>
                             <td th:text="${custlistdata?.cust_last_name}"></td>
                             <td th:text="${#dates.format(custlistdata?.cust_dob, 'dd-MM-yyyy')}"></td>
-                            <td th:text="${custlistdata?.phone_cell}"></td>
+                            <!-- <td th:text="${custlistdata?.phone_cell}"></td> -->
+                            <td th:text="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}"></td>
                             <td th:text="${custlistdata?.preferredemail}"></td>
                             <td th:text="${custlistdata?.country}"></td>
                             <td>

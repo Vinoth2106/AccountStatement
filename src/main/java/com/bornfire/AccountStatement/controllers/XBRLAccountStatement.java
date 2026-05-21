@@ -282,7 +282,7 @@ public class XBRLAccountStatement {
 			throws IOException, SQLException, ParseException {
 		response.setContentType("application/octet-stream");
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
 
 		Date ConDateFromdate = dateFormat1.parse(fromdate);
