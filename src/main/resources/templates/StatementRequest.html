@@ -691,53 +691,98 @@ table.dataTable thead .sorting:after{
             </div>
 
         </div>
+        
+        
 
         <!-- MULTIPLE -->
 
         <div id="multipleAccountDiv" style="display:none;">
         
         	 <div class="row">
-        	 	<div class="col-lg-4 mb-3">
-        	 		 <div class="sub-title">
-                		Selection Mode
+	        	 	<div class="col-lg-4 mb-3">
+	        	 		 <div class="sub-title">
+	                		Selection Mode
+	            		</div>
+	            	<div class="radio-group">
+	
+	                <label class="radio-box">
+	
+	                    <input type="radio"
+	                    name="selectionMode"
+	                    value="accountwise"
+	                    checked
+	                    onchange="changeSelectionMode()">
+	
+	                    <span>Account Type Wise</span>
+	
+	                </label>
+	
+	                <label class="radio-box">
+	
+	                    <input type="radio"
+	                    name="selectionMode"
+	                    value="customerwise"
+	                    onchange="changeSelectionMode()">
+	
+	                    <span>Customer Wise</span>
+	
+	                </label>
+	
+	            </div>	
+            </div>
+            
+             <div class="col-lg-4  mb-3"
+                id="accountTypeDiv">
+
+              
+                    
+                     <div class="sub-title">
+                		 Account Type
             		</div>
-            	<div class="radio-group">
 
-                <label class="radio-box">
+					<select class="form-control"
+					        onchange="filterAccountType(this.value)">
 
-                    <input type="radio"
-                    name="selectionMode"
-                    value="accountwise"
-                    checked
-                    onchange="changeSelectionMode()">
+					    <option value="">
+					        All Accounts
+					    </option>
 
-                    <span>Account Type Wise</span>
+					    <option th:each="type : ${accountTypes}"
+					            th:value="${type}"
+					            th:text="${type}">
+					    </option>
 
-                </label>
+					</select>
 
-                <label class="radio-box">
+                </div>
+                
+                <div class="col-lg-4 mb-3" id="customerWiseDiv" style="display:none;">
 
-                    <input type="radio"
-                    name="selectionMode"
-                    value="customerwise"
-                    onchange="changeSelectionMode()">
+				    <div class="sub-title">
+				        Select Customer
+				    </div>
 
-                    <span>Customer Wise</span>
+				    <select class="form-control"
+				            onchange="filterCustomer(this.value)">
 
-                </label>
+				        <option value="">
+				            All Customers
+				        </option>
 
-            </div>	
-			<!-- Want To Schedule -->
-			<div class="row align-items-end mt-3">
+				        <option th:each="cust : ${custlist}"
+				                th:value="${cust.orgkey}"
+				                th:text="${cust.orgkey + ' - ' + cust.cust_last_name}">
+				        </option>
 
-			    <!-- Want To Schedule -->
+				    </select>
 
-			    <div class="col-lg-12">
-
-			        <div class="sub-title mb-2">
+				</div>
+				
+				<div class="col-lg-4 mb-3 ">
+					<div class="sub-title">
 			            Schedule
 			        </div>
-
+			        
 			        <div class="schedule-group d-flex gap-2">
 
 			            <label class="radio-box mb-0">
@@ -764,132 +809,80 @@ table.dataTable thead .sorting:after{
 			            </label>
 
 			        </div>
-					<!-- Schedule Details -->
+			        
+				</div>
+            
+            </div>
+            
+            <div class="row mb-3" id="scheduleDetails" style="display:none;">
+            	<div class="col-lg-4 mb-3 ">
+            		<label class="form-label"> Schedule Name </label>
 
-					<div class="row mt-3"
-					     id="scheduleDetails"
-					     style="display:none;">
-
-					    <!-- Schedule Name -->
-					    <div class="col-lg-12 col-md-4 col-11 mb-3">
-
-					        <label class="form-label">
-					            Schedule Name
-					        </label>
-
-					        <input type="text"
-					               class="form-control"
-					               id="scheduleName"
-					               placeholder="Enter Schedule Name">
-								   
-								   <label class="form-label">
-								   					            Schedule Date
-								   					        </label>
-
-								   					        <input type="date"
-								   					               class="form-control"
-								   					               id="scheduleDate">
-								   								   
-								   								   <label class="form-label">
-								   								   				            Schedule Time
-								   								   				        </label>
-
-								   								   				        <input type="time"
-								   								   				               class="form-control"
-								   								   				               id="scheduleTime">	   
-
-					    </div>
-
-					    
-
-					</div>
-
-			    </div>
-				
-
+					        <input type="text" class="form-control" id="scheduleName" placeholder="Enter Schedule Name">
+            	</div>
+            	
+            	<div class="col-lg-4  mb-3">
+            		 <label class="form-label"> Schedule Date </label>
+            		  <input type="date" class="form-control" id="scheduleDate">
+            		 
+            	</div>
+            	
+            	<div class="col-lg-4 mb-3 ">
+            		 <label class="form-label"> Schedule Time </label>
+            		 <input type="time" class="form-control" id="scheduleTime">	
+            		 
+            	</div>
+            
+            </div>
+            
+           
+			
 			    <!-- Offer Alert -->
 
-			    <div class="col-lg-7">
+			   <div class="col-lg-7">
 
-			        <div class="sub-title mb-2"> Marketing collaterals</div>
-
-			        <div class="schedule-group d-flex gap-2">
-
-			            <label class="radio-box mb-0">
-
-			                <input type="radio" name="offerAlert" value="yes">
-
-			                <span>Yes</span>
-
-			            </label>
-
-			            <label class="radio-box mb-0">
-
-			                <input type="radio" name="offerAlert" value="no" checked>
-
-			                <span>No</span>
-
-			            </label>
-
+			    <div class="sub-title mb-2">
+			        Marketing collaterals
+			    </div>
+			
+			    <div class="d-flex align-items-center gap-3 flex-wrap">
+			
+			        <!-- YES -->
+			        <label class="radio-box mb-0">
+			
+			            <input type="radio"
+			                   name="offerAlert"
+			                   value="yes"
+			                   onchange="toggleUploadField()">
+			
+			            <span>Yes</span>
+			
+			        </label>
+			
+			        <!-- NO -->
+			        <label class="radio-box mb-0">
+			
+			            <input type="radio"
+			                   name="offerAlert"
+			                   value="no"
+			                   checked
+			                   onchange="toggleUploadField()">
+			
+			            <span>No</span>
+			
+			        </label>
+			
+			        <!-- Upload Option -->
+			        <div id="uploadDiv" style="display:none;">
+			
+			            <input type="file" class="form-control" id="marketingFile">
+			
 			        </div>
-
+			
 			    </div>
 
-			</div>
-        	 	
-        </div>
-        
-        <div class="col-lg-4  mb-3"
-                id="accountTypeDiv">
+		</div>
 
-              
-                    
-                     <div class="sub-title">
-                		 Account Type
-            		</div>
-
-					<select class="form-select"
-					        onchange="filterAccountType(this.value)">
-
-					    <option value="">
-					        All Accounts
-					    </option>
-
-					    <option th:each="type : ${accountTypes}"
-					            th:value="${type}"
-					            th:text="${type}">
-					    </option>
-
-					</select>
-
-                </div>
-                
-				<div class="col-lg-4 mb-3"
-				     id="customerWiseDiv"
-				     style="display:none;">
-
-				    <div class="sub-title">
-				        Select Customer
-				    </div>
-
-				    <select class="form-select"
-				            onchange="filterCustomer(this.value)">
-
-				        <option value="">
-				            All Customers
-				        </option>
-
-				        <option th:each="cust : ${custlist}"
-				                th:value="${cust.orgkey}"
-				                th:text="${cust.orgkey + ' - ' + cust.cust_last_name}">
-				        </option>
-
-				    </select>
-
-				</div>
-
-        	 
-        	 </div>
 
             <!-- TABLE -->
 
@@ -1554,76 +1547,86 @@ alert("hi");
 
 
 
-function filterAccountType(type){
-	
-	var type = type;
+function filterAccountType(type) {
 
-	
-	const tbody = document.getElementById("accountTableBody");
+    const tbody = document.getElementById("accountTableBody");
 
-	    tbody.innerHTML = "";
-	$.ajax({
+    tbody.innerHTML = "";
 
-	           url: './getCustomerAccountsbytype',
-	           type: 'GET',
-	           data: {
-	               accountType : type
-	           },
+    $.ajax({
 
-	           success: function(response){
+        url: './getCustomerAccountsbytype',
 
-	               let data = response;
+        type: 'GET',
 
-	               if(data.length > 0){
+        data: {
+            accountType: type
+        },
 
-	                   data.forEach(acc => {
+        success: function(response) {
 
-	                       tbody.innerHTML += `
+            let data = response;
 
-	                           <tr>
+            if (data.length > 0) {
 
-	                               <td>${acc[0]}</td>
+                data.forEach(acc => {
 
-	                               <td>${acc[1]}</td>
+                    tbody.innerHTML += `
 
-	                               <td>${acc[2]}</td>
+                        <tr>
 
-	                               <td>${acc[3]}</td>
+                            <td>
+                                <input type="checkbox"
+                                       class="account-checkbox"
+                                       data-customer="${acc[0]}"
+                                       data-account="${acc[2]}"
+                                       data-currency="${acc[4]}">
+                            </td>
 
-	                               <td>${acc[4]}</td>
+                            <td>${acc[0]}</td>
 
+                            <td>${acc[1]}</td>
 
-	                           </tr>
-	                       `;
-	                   });
+                            <td>${acc[2]}</td>
 
-	               }else{
+                            <td>${acc[3]}</td>
 
-	                   tbody.innerHTML = `
+                            <td>${acc[4]}</td>
 
-	                       <tr>
+                        </tr>
 
-	                           <td colspan="7"
-	                               style="text-align:center;color:red;">
+                    `;
+                });
 
-	                               No Accounts Found
+            } else {
 
-	                           </td>
+                tbody.innerHTML = `
 
-	                       </tr>
+                    <tr>
 
-	                   `;
-	               }
-	           },
+                        <td colspan="6"
+                            style="text-align:center;color:red;">
 
-	           error: function(){
+                            No Accounts Found
 
-	               alert("Error loading account details");
+                        </td>
 
-	           }
+                    </tr>
 
-	       });
-	
+                `;
+            }
+        },
+
+        error: function(xhr, status, error) {
+
+            console.log(error);
+
+            alert("Error loading account details");
+
+        }
+
+    });
+
 }
 
 /* FILTER CUSTOMER */
@@ -2165,6 +2168,23 @@ function openStatementPreview() {
 			
 		}
 		
+	}
+	
+	function toggleUploadField() {
+
+	    var selectedValue = document.querySelector(
+	        'input[name="offerAlert"]:checked'
+	    ).value;
+
+	    if (selectedValue === "yes") {
+
+	        document.getElementById("uploadDiv").style.display = "block";
+
+	    } else {
+
+	        document.getElementById("uploadDiv").style.display = "none";
+
+	    }
 	}
 	
 </script>
