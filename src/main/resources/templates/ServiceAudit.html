@@ -70,7 +70,7 @@ html, body {
 	display: flex;
 	justify-content: flex-end; /* Pushes the search box to the right */
 	align-items: center;
-	margin-bottom: 24px;
+	/*margin-bottom: 24px;*/
 }
 
 .audit-search-box {
@@ -121,7 +121,7 @@ html, body {
 	text-align: left;
 	padding: 16px 20px;
 	background: #bdbdbd ;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
@@ -134,7 +134,7 @@ html, body {
 
 .audit-table td {
 	padding: 16px 20px;
-	font-size: 14px;
+	font-size: 12px;
 	color: #334155;
 	border-bottom: 1px solid #f1f5f9;
 	transition: background-color 0.2s ease;
@@ -277,6 +277,41 @@ rotate(
 	font-weight: 600;
 	letter-spacing: 2px;
 }
+
+
+@media(max-width:991px){
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+        margin-top:15px;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+
+}
+.top-header{
+    background:white;
+    padding:20px 25px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    color:#0b1c54;
+}
+
 </style>
 </head>
 <body>
@@ -285,14 +320,10 @@ rotate(
 
 	<div class="main-wrapper" id="mainWrapper">
 		<div class="audit-page-wrapper">
-
-
-			<div class="audit-card">
-				<div class="audit-header">
-					<div class="audit-header-title">Service Audit Logs</div>
-					<div class="audit-header-subtitle">Track all Usage activities</div>
+			<div class="top-header">
+				<div class="page-title">
+					<i class="fa fa-bars"></i>Service Audit Logs
 				</div>
-
 				<div class="audit-toolbar">
 					<form id="searchForm" th:action="@{/ServiceAudit}" method="get"
 						class="audit-search-box">
@@ -308,6 +339,15 @@ rotate(
 							placeholder="Search logs...">
 					</form>
 				</div>
+
+			</div>
+			<div class="audit-card">
+				<!-- <div class="audit-header">
+					<div class="audit-header-title">Service Audit Logs</div>
+					<div class="audit-header-subtitle">Track all Usage activities</div>
+				</div>
+ -->
+
 				<div class="audit-table-wrapper">
 					<div id="tableLoader" class="audit-loader-overlay hidden">
 						<div class="audit-spinner"></div>
