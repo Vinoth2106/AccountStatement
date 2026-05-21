@@ -505,13 +505,27 @@ public class XBRLAccountStatement {
 			String lblAccountNumber = arabic ? "\u0631\u0642\u0645 \u0627\u0644\u062d\u0633\u0627\u0628" : "Account Number";
 			String lblFromDate = arabic ? "\u0645\u0646 \u062a\u0627\u0631\u064a\u062e" : "From Date";
 			String lblToDate = arabic ? "\u0625\u0644\u0649 \u062a\u0627\u0631\u064a\u062e" : "To Date";
+			String lblCurrency = arabic ? "\u0627\u0644\u0639\u0645\u0644\u0629" : "Currency";
+			String lblAddress = arabic ? "\u0627\u0644\u0639\u0646\u0648\u0627\u0646" : "Address";
+
+			String currencyValue = currency != null ? currency : "AED";
+			String addressValue = "Dubai, UAE"; // replace with actual address variable
 
 			addDetailCell(detailTable, lblAccountName, headerFont, textAlign, true, rtl);
 			addDetailCell(detailTable, accountName, normalFont, textAlign, false, rtl, arabic, true);
+
 			addDetailCell(detailTable, lblAccountNumber, headerFont, textAlign, true, rtl);
 			addDetailCell(detailTable, accountNumber, normalFont, textAlign, false, rtl, arabic, false);
+
+			addDetailCell(detailTable, lblCurrency, headerFont, textAlign, true, rtl);
+			addDetailCell(detailTable, currencyValue, normalFont, textAlign, false, rtl, arabic, false);
+
+			addDetailCell(detailTable, lblAddress, headerFont, textAlign, true, rtl);
+			addDetailCell(detailTable, addressValue, normalFont, textAlign, false, rtl, arabic, true);
+
 			addDetailCell(detailTable, lblFromDate, headerFont, textAlign, true, rtl);
 			addDetailCell(detailTable, fromdate, normalFont, textAlign, false, rtl, arabic, false);
+
 			addDetailCell(detailTable, lblToDate, headerFont, textAlign, true, rtl);
 			addDetailCell(detailTable, todate, normalFont, textAlign, false, rtl, arabic, false);
 			document.add(detailTable);

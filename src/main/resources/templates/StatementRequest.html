@@ -2147,9 +2147,9 @@ function openStatementPreview() {
 
 	    var Acctname = document.getElementById('Acctname').value;
 		
-		var customerId = document.getElementById('customerId').value;
+		/* var customerId = document.getElementById('customerId').value;
 		alert(customerId)
-		var currency = document.getElementById('currency').value;
+		var currency = document.getElementById('currencyhd').value; */
 
 	  
 		if(type=='normal'){
@@ -2162,9 +2162,7 @@ function openStatementPreview() {
 		        + '&userid=' + encodeURIComponent(acid)
 		        + '&acid=' + encodeURIComponent(acid)
 		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname)
-				+ '&currency=' + encodeURIComponent(currency)
-				+ '&customerId=' + encodeURIComponent(customerId);
+		        + '&Acctname=' + encodeURIComponent(Acctname);
 			}
 		else if(type=='arabic'){
 			
@@ -2177,9 +2175,7 @@ function openStatementPreview() {
 		        + '&userid=' + encodeURIComponent(acid)
 		        + '&acid=' + encodeURIComponent(acid)
 		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname)
-				+ '&currency=' + encodeURIComponent(currency)
-				+ '&customerId=' + encodeURIComponent(customerId);
+		        + '&Acctname=' + encodeURIComponent(Acctname);
 			
 		}
 		
