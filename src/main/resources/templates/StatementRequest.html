@@ -815,26 +815,85 @@ table.dataTable thead .sorting:after{
             
             </div>
             
-            <div class="row mb-3" id="scheduleDetails" style="display:none;">
-            	<div class="col-lg-4 mb-3 ">
-            		<label class="form-label"> Schedule Name </label>
+			<div class="row mb-3"
+			     id="scheduleDetails"
+			     style="display:none;">
 
-					        <input type="text" class="form-control" id="scheduleName" placeholder="Enter Schedule Name">
-            	</div>
-            	
-            	<div class="col-lg-4  mb-3">
-            		 <label class="form-label"> Schedule Date </label>
-            		  <input type="date" class="form-control" id="scheduleDate">
-            		 
-            	</div>
-            	
-            	<div class="col-lg-4 mb-3 ">
-            		 <label class="form-label"> Schedule Time </label>
-            		 <input type="time" class="form-control" id="scheduleTime">	
-            		 
-            	</div>
-            
-            </div>
+			    <!-- ROW 1 -->
+
+			    <div class="col-lg-6 mb-3">
+
+			        <label class="form-label">
+			            Schedule Name
+			        </label>
+
+			        <input type="text"
+			               class="form-control"
+			               id="scheduleName"
+			               placeholder="Enter Schedule Name">
+
+			    </div>
+
+			    <div class="col-lg-6 mb-3">
+
+			        <label class="form-label">
+			            Frequency
+			        </label>
+
+			        <select class="form-control"
+			                id="Frequency">
+
+			            <option value="">
+			                -- Select Frequency --
+			            </option>
+
+			            <option value="Daily">
+			                Daily
+			            </option>
+
+			            <option value="Weekly">
+			                Weekly
+			            </option>
+
+			            <option value="Monthly">
+			                Monthly
+			            </option>
+
+			            <option value="Yearly">
+			                Yearly
+			            </option>
+
+			        </select>
+
+			    </div>
+
+			    <!-- ROW 2 -->
+
+			    <div class="col-lg-6 mb-3">
+
+			        <label class="form-label">
+			            Schedule Date
+			        </label>
+
+			        <input type="date"
+			               class="form-control"
+			               id="scheduleDate">
+
+			    </div>
+
+			    <div class="col-lg-6 mb-3">
+
+			        <label class="form-label">
+			            Schedule Time
+			        </label>
+
+			        <input type="time"
+			               class="form-control"
+			               id="scheduleTime">
+
+			    </div>
+
+			</div>
             
            
 			
@@ -1298,7 +1357,7 @@ table.dataTable thead .sorting:after{
                         font-weight:700;
                         color:#0b1c54;">
 
-                         3,45,678.00
+                        <span th:text="${#numbers.formatDecimal(openingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
 
                     </div>
 
@@ -1316,7 +1375,7 @@ table.dataTable thead .sorting:after{
 				        font-weight:700;
 				        color:#16a34a;">
 
-				        <span th:text="${#numbers.formatDecimal(totalCredit,1,'COMMA',2,'POINT')}"></span>
+				        <span th:text="${#numbers.formatDecimal(totalCredit,1,'COMMA',2,'POINT')} + ' AED' "></span>
 
 				    </div>
 
@@ -1334,7 +1393,7 @@ table.dataTable thead .sorting:after{
 				        font-weight:700;
 				        color:#dc2626;">
 
-				        <span th:text="${'-'+#numbers.formatDecimal(totalDebit,1,'COMMA',2,'POINT')}"></span>
+				       <span th:text=" ${#numbers.formatDecimal(totalDebit,1,'COMMA',2,'POINT')} + ' AED' "></span>
 
 				    </div>
 
@@ -1352,8 +1411,7 @@ table.dataTable thead .sorting:after{
 				        font-weight:700;
 				        color:#0b1c54;">
 
-				        <span th:text="${#numbers.formatDecimal(totalCredit - totalDebit,1,'COMMA',2,'POINT')}"></span>
-
+				        <span th:text="${#numbers.formatDecimal(closingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
 				    </div>
 
 				</div>
@@ -1385,11 +1443,11 @@ table.dataTable thead .sorting:after{
                 <table class="table align-middle">
                     <thead>
                     <tr>
-                    	<th>Tran Date</th>
-						<th>Tran ID</th>
+                    	<th>Transaction Date</th>
+						<th>Reference Number </th>
 						<th>Part Tran Type</th>
 						<th>Value Date</th>
-						<th>Tran Particular</th>
+						<th>particulars</th>
 						<th>Debit Amount</th>
 						<th>Credit Amount</th>
 						<th>Tran Currency</th>
@@ -1709,14 +1767,14 @@ table.dataTable thead .sorting:after{
 
                         <tr>
 
-                            <th>Tran Date</th>
-                            <th>Tran ID</th>
-                            <th>Part Tran Type</th>
-                            <th>Value Date</th>
-                            <th>Tran Particular</th>
-                            <th>Debit Amount</th>
-                            <th>Credit Amount</th>
-                            <th>Currency</th>
+							<th>Transaction Date</th>
+							<th>Reference Number </th>
+							<th>Part Tran Type</th>
+							<th>Value Date</th>
+							<th>particulars</th>
+							<th>Debit Amount</th>
+							<th>Credit Amount</th>
+							<th>Tran Currency</th>
 
                         </tr>
 
@@ -2866,8 +2924,7 @@ function getEpdfDep() {
 
 	    let closingBalance =
 
-	   
-	    totalCredit -
+		(openingBalance + totalCredit )-
 
 	    totalDebit;
 
@@ -2879,7 +2936,7 @@ function getEpdfDep() {
 
 	        openingBalance.toLocaleString()
 
-	        + ".00 "
+	        + ".00 "+"AED"
 
 	    );
 
@@ -2889,7 +2946,7 @@ function getEpdfDep() {
 
 	        totalCredit.toLocaleString()
 
-	        + ".00 "
+	        + ".00 "+"AED"
 
 	    );
 
@@ -2899,7 +2956,7 @@ function getEpdfDep() {
 
 	        totalDebit.toLocaleString()
 
-	        + ".00 "
+	        + ".00 " +"AED"
 
 	    );
 
@@ -2909,7 +2966,7 @@ function getEpdfDep() {
 
 	        closingBalance.toLocaleString()
 
-	        + ".00 "
+	        + ".00 " +"AED"
 
 	    );
 

@@ -137,9 +137,7 @@ public class NavigationController {
 			System.out.println("tranlistsize="+tranlist.size());
 			md.addAttribute("tranInquiry", tranlist);
 			
-			BigDecimal closingBalance =
-				    generalMasterTbRepo.getSumBalanceBetweenDates(Accountnum, fromdate, todate);
-			md.addAttribute("closingBalance",closingBalance);
+			
 			md.addAttribute("acid",Account);
 			md.addAttribute("accountnumber",Accountnum);
 			md.addAttribute("Acctname",accountname);
@@ -160,6 +158,14 @@ public class NavigationController {
 
 			    }
 			}
+			BigDecimal openingBalance =
+			        transactionInquiryRep.getOpeningBalance(Account, fromdate);
+
+			md.addAttribute("openingBalance", openingBalance);
+			BigDecimal closingBalance =
+			        openingBalance.add(totalCredit).subtract(totalDebit);
+
+			md.addAttribute("closingBalance", closingBalance);
 
 			md.addAttribute("totalCredit", totalCredit);
 			md.addAttribute("totalDebit", totalDebit);
