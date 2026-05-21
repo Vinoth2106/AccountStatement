@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +104,7 @@ public class NavigationController {
 	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency,
 			@RequestParam(name = "formmode", required = false) String formmode, Model md,@RequestParam(name = "Account", required = false) String Account
 			,@RequestParam(name = "Accountnum", required = false) String Accountnum,@RequestParam(name = "accountname", required = false) String accountname,
-			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "customerId", required = false) String customerId,
+			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "customerId", required = false) String customerId,  @RequestParam(required=false) String accounts,
 			@RequestParam(value = "td",required = false) String todate,HttpServletRequest req) throws ParseException {
 		
 		if(formmode==null) {
@@ -130,7 +131,7 @@ public class NavigationController {
 				md.addAttribute("opr_datefd",output.format(fromDateValue).toUpperCase());
 				md.addAttribute("opr_datetd",output.format(toDateValue).toUpperCase());
 			}
-		
+			
 			
 			List<TransactionInquiry> tranlist =transactionInquiryRep.findAllCustominddate(Account,fromdate,todate);
 			System.out.println("tranlistsize="+tranlist.size());
@@ -165,7 +166,20 @@ public class NavigationController {
 			
 			
 		}
-		
+		else if(formmode.equals("MultiPreview")) {
+
+		    md.addAttribute("formmode", formmode);
+
+		    List<String> accountList =
+		            Arrays.asList(accounts.split(","));
+
+		    md.addAttribute("accountList", accountList);
+
+		    md.addAttribute("fromDate", fromdate);
+
+		    md.addAttribute("toDate", todate);
+
+		}
 		
 		return "StatementRequest";
 	}
@@ -271,7 +285,128 @@ public class NavigationController {
 		return "BulkHistory";
 	}
 	
+
 	
 	
+	@GetMapping("/getPreviewData")
+	@ResponseBody
+	public Map<String,Object> getPreviewData(
+
+	        @RequestParam String accountNo,
+
+	        @RequestParam String fromDate,
+
+	        @RequestParam String toDate) throws Exception {
+
+	    Map<String,Object> response =
+	    new HashMap<>();
+
+	    GeneralMasterTbEntity account =
+	            generalMasterTbRepo
+	            .findByAcctNumber(accountNo);
+
+	    List<TransactionInquiry> tranlist =
+	            transactionInquiryRep
+	            .findAllCustominddate(
+	                    account.getAcid(),
+	                    fromDate,
+	                    toDate);
+
+	    BigDecimal totalCredit = BigDecimal.ZERO;
+
+	    BigDecimal totalDebit = BigDecimal.ZERO;
+
+	    for(TransactionInquiry txn : tranlist){
+
+	        if("C".equals(txn.getPart_tran_type())){
+
+	            totalCredit =
+	                    totalCredit.add(txn.getTran_amt());
+
+	        }else if("D".equals(txn.getPart_tran_type())){
+
+	            totalDebit =
+	                    totalDebit.add(txn.getTran_amt());
+
+	        }
+	    }
+
+	    response.put("customerName",
+	            account.getAcct_name());
+
+	    response.put("accountNumber",
+	            account.getAcct_number());
+
+	    response.put("currency",
+	            account.getAcct_crncy_code());
+
+	    response.put("openingBalance",
+	            account.getAcct_balance_amt_ac());
+
+	    response.put("closingBalance",
+	            account.getAcct_balance_amt_ac());
+
+	    response.put("acid",
+	            account.getAcid());
+
+	    response.put("customerId",
+	            account.getCust_id());
+
+	    response.put("totalCredit",
+	            totalCredit);
+
+	    response.put("totalDebit",
+	            totalDebit);
+
+	    List<Map<String,Object>> txns =
+	            new ArrayList<>();
+
+	    for(TransactionInquiry txn : tranlist){
+
+	        Map<String,Object> t =
+	                new HashMap<>();
+
+	        t.put("tranDate",
+	                new SimpleDateFormat("dd-MM-yyyy")
+	                .format(txn.getTran_date()));
+
+	        t.put("tranId",
+	                txn.getTran_id());
+
+	        t.put("partTranType",
+	                "C".equals(txn.getPart_tran_type())
+	                ? "Credit" : "Debit");
+
+	        t.put("valueDate",
+	                new SimpleDateFormat("dd-MM-yyyy")
+	                .format(txn.getValue_date()));
+
+	        t.put("particular",
+	                txn.getTran_particular());
+
+	        t.put("debit",
+	                "D".equals(txn.getPart_tran_type())
+	                ? txn.getTran_amt()
+	                : "-");
+
+	        t.put("credit",
+	                "C".equals(txn.getPart_tran_type())
+	                ? txn.getTran_amt()
+	                : "-");
+
+	        t.put("currency",
+	                txn.getTran_crncy_code());
+
+	        txns.add(t);
+
+	    }
+
+	    response.put("transactions", txns);
+
+	    return response;
+
+	}
+	
+
 	
 }

@@ -31,4 +31,11 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 	@Query(value = "SELECT SUM(ACCT_BALANCE_AMT_AC) FROM GENERAL_MASTER_TB WHERE Acct_number = ?1 AND report_date BETWEEN ?2 AND ?3",
 		       nativeQuery = true)
 		BigDecimal getSumBalanceBetweenDates(String Accountnum, String fd, String td);
+	
+	
+	@Query(value = "select * from GENERAL_MASTER_TB where ACCT_NUMBER=?1",
+	       nativeQuery = true)
+	GeneralMasterTbEntity findByAcctNumber(String acct_number);
+	
+
 }

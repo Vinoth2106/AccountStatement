@@ -1444,6 +1444,350 @@ table.dataTable thead .sorting:after{
     </div>
 
 </div>
+
+
+<div id="multiStatementPreviewScreen"
+     th:if="${formmode}=='MultiPreview'"
+     style="padding:25px;">
+
+    <div class="selected-card">
+
+        <!-- TOP -->
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+            flex-wrap:wrap;
+            gap:15px;">
+
+            <div>
+
+                <div class="section-title"
+                     style="margin-bottom:5px;">
+
+                    Multiple Statement Preview
+
+                </div>
+
+                <div style="color:#64748b;">
+
+                    Preview multiple account statements
+
+                </div>
+
+            </div>
+
+            <div style="
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;">
+
+                <!-- DOWNLOAD -->
+
+                <div class="dropdown">
+
+                    <button class="custom-btn generate-btn dropdown-toggle"
+                            type="button"
+                            data-toggle="dropdown"
+                            style="min-width:140px;height:45px;">
+
+                        Download
+
+                    </button>
+
+                    <div class="dropdown-menu">
+
+                        <a class="dropdown-item"
+                           href="javascript:void(0)"
+                           onclick="ReportDownloadPDF('normal')">
+
+                            Normal PDF
+
+                        </a>
+
+                        <a class="dropdown-item"
+                           href="javascript:void(0)"
+                           onclick="ReportDownloadPDF('arabic')">
+
+                            Arabic PDF
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- PRINT -->
+
+                <button class="custom-btn cancel-btn"
+                        style="min-width:120px;height:45px;"
+                        onclick="window.print()">
+
+                    Generate
+
+                </button>
+
+                <!-- CLOSE -->
+
+                <button class="custom-btn cancel-btn"
+                        style="min-width:120px;height:45px;"
+                        onclick="closePreviewScreen()">
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- ACCOUNT SELECT -->
+
+        <div class="row mb-4">
+
+            <div class="col-lg-4">
+
+                <label class="form-label">
+
+                    Select Account
+
+                </label>
+
+                <select class="form-control"
+                        id="accountDropdown"
+                        onchange="loadPreviewData()">
+
+                    <option th:each="acc : ${accountList}"
+                            th:value="${acc}"
+                            th:text="${acc}">
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <!-- CUSTOMER CARD -->
+
+        <div class="main-card">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                   
+                </div>
+
+                <!-- RIGHT -->
+
+                <div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
+
+                    <div style="
+                        color:#64748b;
+                        font-size:14px;">
+
+                        Statement Period
+
+                    </div>
+
+                    <div style="
+                        font-weight:700;
+                        color:#0b1c54;
+                        margin-top:5px;">
+
+                        <span th:text="${fromDate}"></span>
+
+                        <span style="color:#64748b;">
+                            →
+                        </span>
+
+                        <span th:text="${toDate}"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUMMARY -->
+
+            <div class="row text-center mt-4">
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Opening Balance
+                    </div>
+
+                    <div id="multiOpeningBalance"
+                         style="
+                         font-size:22px;
+                         font-weight:700;
+                         color:#0b1c54;">
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Total Credits
+                    </div>
+
+                    <div id="multiTotalCredit"
+                         style="
+                         font-size:22px;
+                         font-weight:700;
+                         color:#16a34a;">
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Total Debits
+                    </div>
+
+                    <div id="multiTotalDebit"
+                         style="
+                         font-size:22px;
+                         font-weight:700;
+                         color:#dc2626;">
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div style="color:#64748b;">
+                        Closing Balance
+                    </div>
+
+                    <div id="multiClosingBalance"
+                         style="
+                         font-size:22px;
+                         font-weight:700;
+                         color:#0b1c54;">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TRANSACTION TABLE -->
+
+        <div class="main-card mt-4">
+
+            <div class="section-title">
+
+                Transactions
+
+            </div>
+
+            <div class="table-container">
+
+                <input type="hidden" id="multiacid">
+                <input type="hidden" id="multiaccountnumber">
+                <input type="hidden" id="multicustomerId">
+                <input type="hidden" id="multicurrency">
+				<input type="hidden"
+				       id="fromdate"
+				       th:value="${fromDate}">
+
+				<input type="hidden"
+				       id="todate"
+				       th:value="${toDate}">
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Tran Date</th>
+                            <th>Tran ID</th>
+                            <th>Part Tran Type</th>
+                            <th>Value Date</th>
+                            <th>Tran Particular</th>
+                            <th>Debit Amount</th>
+                            <th>Credit Amount</th>
+                            <th>Currency</th>
+
+                        </tr>
+
+                    </thead>
+
+					<tbody id="transactionBody">
+
+					    <tr>
+
+					        <td>01-01-2025</td>
+					        <td>TXN1001</td>
+					        <td>Credit</td>
+					        <td>01-01-2025</td>
+					        <td>Salary Credit</td>
+					        <td>-</td>
+					        <td>25,000.00</td>
+					        <td>AED</td>
+
+					    </tr>
+
+					    <tr>
+
+					        <td>05-01-2025</td>
+					        <td>TXN1002</td>
+					        <td>Debit</td>
+					        <td>05-01-2025</td>
+					        <td>ATM Withdrawal</td>
+					        <td>5,000.00</td>
+					        <td>-</td>
+					        <td>AED</td>
+
+					    </tr>
+
+					    <tr>
+
+					        <td>10-01-2025</td>
+					        <td>TXN1003</td>
+					        <td>Debit</td>
+					        <td>10-01-2025</td>
+					        <td>Online Shopping</td>
+					        <td>2,500.00</td>
+					        <td>-</td>
+					        <td>AED</td>
+
+					    </tr>
+
+					    <tr>
+
+					        <td>15-01-2025</td>
+					        <td>TXN1004</td>
+					        <td>Credit</td>
+					        <td>15-01-2025</td>
+					        <td>Refund Credit</td>
+					        <td>-</td>
+					        <td>1,200.00</td>
+					        <td>AED</td>
+
+					    </tr>
+
+					</tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 </div>
 <script>
 
@@ -2034,57 +2378,146 @@ function toggleScheduleFields(){
 </script>
 <script>
 
-function openStatementPreview() {
+	function openStatementPreview(){
 
-    var fromDate = document.getElementById('fromDate').value;
-    var toDate = document.getElementById('toDate').value;
-    var acid = document.getElementById('acid').value;
-    var accountnumber = document.getElementById('accountNumber').value;
-    var accountname = document.getElementById('accountname').value;
-    
+	    var fromDate =
+	    document.getElementById('fromDate').value;
 
-    // From Date Validation
-    if (fromDate === '') {
-        alert("Please select From Date");
-        document.getElementById('fromDate').focus();
-        return false;
-    }
+	    var toDate =
+	    document.getElementById('toDate').value;
 
-    // To Date Validation
-    if (toDate === '') {
-        alert("Please select To Date");
-        document.getElementById('toDate').focus();
-        return false;
-    }
+	    // STATEMENT TYPE
 
-    // Account ID Validation
-    if (acid === '') {
-        alert("Please select Account");
-        document.getElementById('acid').focus();
-        return false;
-    }
+	    let statementType =
 
-    // Account Number Validation
-    if (accountnumber === '') {
-        alert("Please enter Account Number");
-        document.getElementById('accountNumber').focus();
-        return false;
-    }
+	    document.querySelector(
+	    'input[name="statementType"]:checked'
+	    ).value;
 
-    // Date Validation
-    if (new Date(fromDate) > new Date(toDate)) {
-        alert("From Date should not be greater than To Date");
-        document.getElementById('fromDate').focus();
-        return false;
-    }
+	    // COMMON VALIDATION
 
-    location.href = 'NewStatementRequest?formmode=Preview'
-        + '&fd=' + encodeURIComponent(fromDate)
-        + '&td=' + encodeURIComponent(toDate)
-        + '&Account=' + encodeURIComponent(acid)
-        + '&Accountnum=' + encodeURIComponent(accountnumber) + '&accountname=' + encodeURIComponent(accountname);
-}
+	    if(fromDate === ''){
 
+	        alert("Please select From Date");
+
+	        document.getElementById('fromDate').focus();
+
+	        return false;
+
+	    }
+
+	    if(toDate === ''){
+
+	        alert("Please select To Date");
+
+	        document.getElementById('toDate').focus();
+
+	        return false;
+
+	    }
+
+	    if(new Date(fromDate) > new Date(toDate)){
+
+	        alert(
+	        "From Date should not be greater than To Date"
+	        );
+
+	        document.getElementById('fromDate').focus();
+
+	        return false;
+
+	    }
+
+	    // SINGLE ACCOUNT
+
+	    if(statementType === "single"){
+
+	        var acid =
+	        document.getElementById('acid').value;
+
+	        var accountnumber =
+	        document.getElementById('accountNumber').value;
+
+	        var accountname =
+	        document.getElementById('accountname').value;
+
+	        if(acid === ''){
+
+	            alert("Please select Account");
+
+	            document.getElementById('acid').focus();
+
+	            return false;
+
+	        }
+
+	        if(accountnumber === ''){
+
+	            alert("Please enter Account Number");
+
+	            document.getElementById('accountNumber').focus();
+
+	            return false;
+
+	        }
+
+	        // SINGLE PREVIEW
+
+	        location.href =
+	        'NewStatementRequest?formmode=Preview'
+	        + '&fd=' + encodeURIComponent(fromDate)
+	        + '&td=' + encodeURIComponent(toDate)
+	        + '&Account=' + encodeURIComponent(acid)
+	        + '&Accountnum=' + encodeURIComponent(accountnumber)
+	        + '&accountname=' + encodeURIComponent(accountname);
+
+	    }
+
+	    // MULTIPLE ACCOUNT
+
+	    else{
+
+	        let accounts = [];
+
+	        $("#selectedBody tr").each(function(){
+
+	            let accountNo =
+
+	            $(this)
+	            .find("td:eq(1)")
+	            .text()
+	            .trim();
+
+	            if(accountNo != ""){
+
+	                accounts.push(accountNo);
+
+	            }
+
+	        });
+
+	        // VALIDATION
+
+	        if(accounts.length == 0){
+
+	            alert("Please select at least one account");
+
+	            return false;
+
+	        }
+
+	        // MULTI PREVIEW
+
+	        location.href =
+	        'NewStatementRequest?formmode=MultiPreview'
+	        + '&fd=' + encodeURIComponent(fromDate)
+	        + '&td=' + encodeURIComponent(toDate)
+	        + '&accounts='
+	        + encodeURIComponent(accounts.join(","));
+
+	    }
+
+	}
 
 	/* function openStatementPreview(){
 
@@ -2198,6 +2631,324 @@ function openStatementPreview() {
 	    }
 	}
 	
+	$(document).ready(function(){
+
+	    loadPreviewData();
+
+	});
+
+	
+	function loadPreviewData(){
+
+	    // GET DATES
+
+	    let fromDate =
+	    document.getElementById("fromdate")?.value;
+
+	    let toDate =
+	    document.getElementById("todate")?.value;
+
+	    // FALLBACK
+
+	    if(!toDate){
+
+	        toDate =
+	        document.getElementById("todatehd")?.value;
+
+	    }
+
+	    console.log("FROM DATE :", fromDate);
+
+	    console.log("TO DATE :", toDate);
+
+	    // VALIDATION
+
+	    if(!fromDate || !toDate){
+
+	        console.log("Date values missing");
+
+	        return;
+
+	    }
+
+	    // CONVERT STRING TO DATE
+
+	    let startParts =
+	    fromDate.split("-");
+
+	    let endParts =
+	    toDate.split("-");
+
+	    let start =
+	    new Date(
+
+	        startParts[0],
+	        startParts[1] - 1,
+	        startParts[2]
+
+	    );
+
+	    let end =
+	    new Date(
+
+	        endParts[0],
+	        endParts[1] - 1,
+	        endParts[2]
+
+	    );
+
+	    // RANDOM DATE FUNCTION
+
+	    function randomDate(start, end){
+
+	        return new Date(
+
+	            start.getTime() +
+
+	            Math.random() *
+
+	            (end.getTime() - start.getTime())
+
+	        );
+
+	    }
+
+	    // FORMAT DATE
+
+	    function formatDate(date){
+
+	        let day =
+	        String(date.getDate()).padStart(2,'0');
+
+	        let month =
+	        String(date.getMonth() + 1)
+	        .padStart(2,'0');
+
+	        let year =
+	        date.getFullYear();
+
+	        return day + "-" + month + "-" + year;
+
+	    }
+
+	    // RANDOM AMOUNT FUNCTION
+
+	    function randomAmount(min, max){
+
+	        return Math.floor(
+
+	            Math.random() *
+
+	            (max - min + 1)
+
+	        ) + min;
+
+	    }
+
+	    // RANDOM OPENING BALANCE
+
+	    let openingBalance =
+	    randomAmount(30000, 100000);
+
+	    // RANDOM TRANSACTIONS
+
+	    let transactions = [
+
+	        {
+	            id:"TXN1001",
+	            type:"Credit",
+	            particular:"Salary Credit",
+	            debit:0,
+	            credit:randomAmount(10000,30000),
+	            currency:"AED"
+	        },
+
+	        {
+	            id:"TXN1002",
+	            type:"Debit",
+	            particular:"ATM Withdrawal",
+	            debit:randomAmount(1000,7000),
+	            credit:0,
+	            currency:"AED"
+	        },
+
+	        {
+	            id:"TXN1003",
+	            type:"Debit",
+	            particular:"Online Shopping",
+	            debit:randomAmount(1000,5000),
+	            credit:0,
+	            currency:"AED"
+	        },
+
+	        {
+	            id:"TXN1004",
+	            type:"Credit",
+	            particular:"Cash Deposit",
+	            debit:0,
+	            credit:randomAmount(5000,20000),
+	            currency:"AED"
+	        },
+
+	        {
+	            id:"TXN1005",
+	            type:"Debit",
+	            particular:"Restaurant Payment",
+	            debit:randomAmount(500,3000),
+	            credit:0,
+	            currency:"AED"
+	        }
+
+	    ];
+
+	    // RANDOMIZE TRANSACTION ORDER
+
+	    transactions.sort(() => Math.random() - 0.5);
+
+	    // TOTAL CREDIT
+
+	    let totalCredit =
+
+	    transactions
+
+	    .filter(txn => txn.type === "Credit")
+
+	    .reduce((sum, txn) =>
+
+	        sum + txn.credit, 0
+
+	    );
+
+	    // TOTAL DEBIT
+
+	    let totalDebit =
+
+	    transactions
+
+	    .filter(txn => txn.type === "Debit")
+
+	    .reduce((sum, txn) =>
+
+	        sum + txn.debit, 0
+
+	    );
+
+	    // CLOSING BALANCE
+
+	    let closingBalance =
+
+	   
+	    totalCredit -
+
+	    totalDebit;
+
+	    // SET SUMMARY
+
+	    $("#multiOpeningBalance")
+
+	    .text(
+
+	        openingBalance.toLocaleString()
+
+	        + ".00 "
+
+	    );
+
+	    $("#multiTotalCredit")
+
+	    .text(
+
+	        totalCredit.toLocaleString()
+
+	        + ".00 "
+
+	    );
+
+	    $("#multiTotalDebit")
+
+	    .text(
+
+	        totalDebit.toLocaleString()
+
+	        + ".00 "
+
+	    );
+
+	    $("#multiClosingBalance")
+
+	    .text(
+
+	        closingBalance.toLocaleString()
+
+	        + ".00 "
+
+	    );
+
+	    // GENERATE TABLE ROWS
+
+	    let rows = "";
+
+	    transactions.forEach(function(txn){
+
+	        let randDate =
+
+	        randomDate(start, end);
+
+	        let formattedDate =
+
+	        formatDate(randDate);
+
+	        rows += `
+
+	            <tr>
+
+	                <td>${formattedDate}</td>
+
+	                <td>${txn.id}</td>
+
+	                <td>${txn.type}</td>
+
+	                <td>${formattedDate}</td>
+
+	                <td>${txn.particular}</td>
+
+	                <td>
+
+	                    ${txn.debit == 0
+
+	                    ? "-"
+
+	                    : txn.debit.toLocaleString()
+
+	                    + ".00"}
+
+	                </td>
+
+	                <td>
+
+	                    ${txn.credit == 0
+
+	                    ? "-"
+
+	                    : txn.credit.toLocaleString()
+
+	                    + ".00"}
+
+	                </td>
+
+	                <td>${txn.currency}</td>
+
+	            </tr>
+
+	        `;
+
+	    });
+
+	    // LOAD TABLE
+
+	    $("#transactionBody").html(rows);
+
+	}
 </script>
 </body>
 </html>
