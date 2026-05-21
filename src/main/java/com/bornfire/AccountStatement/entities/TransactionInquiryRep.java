@@ -14,16 +14,6 @@ public interface TransactionInquiryRep extends CrudRepository<TransactionInquiry
 	@Query(value = "select * from HTD where acid =?1 order by tran_date DESC", nativeQuery = true)
 	List<TransactionInquiry> findAllCustomind(String account);
 	
-	@Query(value =
-			"SELECT * FROM HTD " +
-			"WHERE acid = ?1 " +
-			"AND TRUNC(tran_date) BETWEEN " +
-			"TO_DATE(?2,'yyyy-MM-dd') " +
-			"AND TO_DATE(?3,'yyyy-MM-dd')",
-			nativeQuery = true)
-
-			List<TransactionInquiry> findAllCustominddate(
-			        String acid,
-			        String fromDate,
-			        String toDate);
+	@Query(value = "select * from HTD where acid =?1  and tran_date between ?2 and ?3 order by tran_date DESC", nativeQuery = true)
+	List<TransactionInquiry> findAllCustominddate(String account,String fd,String td);
 }
