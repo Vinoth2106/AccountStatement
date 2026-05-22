@@ -358,6 +358,7 @@ rotate(
 							<thead>
 								<tr>
 									<th>Ref No.</th>
+									<th>Screen Name</th>
 									<th>Table Name</th>
 									<th>Date</th>
 									<th>Time</th>
@@ -368,6 +369,7 @@ rotate(
 							<tbody>
 								<tr th:each="log : ${page?.content}">
 									<td th:text="${log.audit_ref_no}"></td>
+									<td th:text="${log.audit_screen}"></td>
 									<td th:text="${log.audit_table}"></td>
 									<td th:text="${#dates.format(log.entry_time, 'dd-MM-yyyy')}">
 									</td>
