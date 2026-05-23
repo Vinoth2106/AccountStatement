@@ -565,6 +565,17 @@ function FailedStatements(){
 	location.href = "/AccountStatement/FailedStatements";
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date();
+    const dateInput = document.getElementById('searchDate');
+    dateInput.value = today.toISOString().split('T')[0];
+    const dayOptions = { weekday: 'long' };
+    const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    document.getElementById('dateDayName').textContent = today.toLocaleDateString('en-GB', dayOptions);
+    document.getElementById('dateFullText').textContent = today.toLocaleDateString('en-GB', dateOptions);
+});
+
+
 </script>
 
 </body>
