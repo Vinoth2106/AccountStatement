@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Failed Statements</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="shortcut icon" href="assets/images/favicon.ico">
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/js/bootstrap411.js}"></script>
+
+<style>
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Inter', sans-serif;
+	color: #333333;
+	background-color: #f4f7f6;
+	line-height: 1.5;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+.wrap {
+	background: #ffffff;
+	padding: 1.5rem 2rem;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+	border: 1px solid #eaedf1;
+}
+
+.ph {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+}
+
+.bread {
+	font-size: 13px;
+	color: #6c757d;
+	margin-bottom: 6px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bread span.cur {
+	color: #1a2551;
+	font-weight: 600;
+}
+
+h1 {
+	font-size: 20px;
+	font-weight: 700;
+	color: #1a2551;
+	margin-bottom: 4px;
+}
+
+.sub {
+	font-size: 13px;
+	color: #6c757d;
+}
+
+.btn-primary {
+	background-color: #0d6efd;
+	color: #ffffff;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.btn-primary:hover {
+	background-color: #0b5ed7;
+}
+
+.btn-refresh {
+	background-color: #ffffff;
+	color: #4b5563;
+	border: 1px solid #d1d5db;
+}
+
+.btn-refresh:hover {
+	background-color: #f8f9fa;
+}
+
+.tbl-wrap {
+	border: 1px solid #eaedf1;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+th {
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #000000;
+	background-color: #bdbdbd;
+	border-bottom: 2px solid #eaedf1;
+}
+
+td {
+	padding: 14px 16px;
+	font-size: 13px;
+	border-bottom: 1px solid #eaedf1;
+	vertical-align: middle;
+}
+
+tbody tr:last-child td {
+	border-bottom: none;
+}
+
+tbody tr:hover {
+	background-color: #fcfcfc;
+}
+
+.badge {
+	padding: 4px 10px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 600;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.badge-fail {
+	background: #f8d7da;
+	color: #842029;
+	border: 1px solid #f5c2c7;
+}
+
+.error-msg {
+	font-size: 13px;
+	color: #dc3545;
+	max-width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+}
+
+.dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.btn-action {
+	background: transparent;
+	border: 1px solid #d1d5db;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	color: #4b5563;
+	transition: all 0.2s;
+}
+
+.btn-action:hover {
+	border-color: #0d6efd;
+	color: #0d6efd;
+	background-color: #f8f9fa;
+}
+
+.empty {
+	text-align: center;
+	padding: 3rem;
+	color: #6c757d;
+	font-size: 14px;
+}
+
+.overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 9999 !important;
+	align-items: center;
+	justify-content: center;
+}
+
+.overlay.open {
+	display: flex;
+}
+
+.statement-modal-box {
+	background: #ffffff;
+	border-radius: 8px;
+	width: 90%;
+	max-width: 450px;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+	z-index: 1001;
+	position: relative;
+}
+
+.mh {
+	padding: 1.25rem 1.5rem;
+	border-bottom: 1px solid #eaedf1;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.mh h2 {
+	font-size: 16px;
+	font-weight: 600;
+	color: #1a2551;
+	margin: 0;
+}
+
+.btn-x {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #6c757d;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.mb {
+	padding: 1.5rem;
+	color: #4b5563;
+	font-size: 14px;
+}
+
+.mf {
+	padding: 1.25rem 1.5rem;
+	border-top: 1px solid #eaedf1;
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	background: #f8f9fa;
+	border-radius: 0 0 8px 8px;
+}
+
+.btn-cancel {
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	color: #4b5563;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.success-icon {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	padding: 1rem 0;
+	color: #059669;
+}
+
+.success-icon p {
+	font-size: 14px;
+	color: #4b5563;
+	text-align: center;
+	margin-top: 4px;
+}
+
+
+@media(max-width:991px){
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+        margin-top:15px;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+
+}
+.top-header{
+    background:white;
+    padding:20px 25px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    color:#0b1c54;
+}
+.page-container{
+    padding:25px;
+}
+.customer-section{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+</style>
+</head>
+<body>
+
+	<div th:insert="AccountStatementHeader :: header"></div>
+	<div class="main-wrapper" id="mainWrapper">
+		<div class="page-container">
+			<div class="top-header">
+
+
+
+				<div class="page-title">
+					<i class="fa fa-bars"></i> Failed Deliveries
+				</div>
+
+				<div class="search-box">
+					<input type="month" id="monthPicker" class="btn-action"
+						th:value="${selectedMonth}" onchange="loadByMonth()">
+				</div>
+
+			</div>
+			<div class="customer-section">
+
+
+
+				<div class="tbl-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Schedule Name</th>
+								<th>Failed On (Date)</th>
+								<th>Time Attempted</th>
+								<th>Format</th>
+								<th>Error Details</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody id="tBody">
+							<tr th:if="${#lists.isEmpty(failedList)}">
+								<td colspan="6" class="empty">No failed deliveries found.
+									All systems operational.</td>
+							</tr>
+							<tr th:each="f : ${failedList}">
+								<td><strong style="font-weight: 600; color: #1a2551;"
+									th:text="${f.scheduleName}"></strong></td>
+
+								<td class="format-date" th:text="${f.dateSent}"></td>
+								<td class="format-time" th:text="${f.timeSent}"></td>
+
+								<td th:text="${f.outputFormat}"></td>
+								<td><span class="badge badge-fail"><span class="dot"></span>Failed</span>
+									<br> <span class="error-msg" th:title="${f.errorReason}"
+									th:text="${f.errorReason}">Connection Timeout</span></td>
+								<td>
+									<button class="btn-action" th:data-id="${f.Id}"
+										th:data-name="${f.scheduleName}"
+										onclick="confirmResend(this.getAttribute('data-id'), this.getAttribute('data-name'))">
+										Resend Email</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="overlay" id="resendOverlay"
+			onclick="bgClose(event,'resendOverlay')">
+			<div class="statement-modal-box">
+				<div class="mh">
+					<h2 id="resendModalTitle">Confirm Resend</h2>
+					<button class="btn-x" onclick="closeResend()">&times;</button>
+				</div>
+
+				<div class="mb">
+					<div id="confirmStep">
+						<p>
+							Are you sure you want to resend the statement for <strong
+								id="resendNameText" style="color: #1a2551;"></strong>?
+						</p>
+						<p style="margin-top: 10px; font-size: 13px; color: #6c757d;">This
+							will attempt to generate and email the document immediately.</p>
+						<input type="hidden" id="resendIdTarget">
+					</div>
+
+					<div id="successStep" style="display: none">
+						<div class="success-icon">
+							<strong style="font-size: 18px; color: #1a2551;">Resend
+								Triggered</strong>
+							<p id="successMsg">The statement has been added to the queue.</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="mf" id="resendFoot">
+					<button class="btn-cancel" onclick="closeResend()">Cancel</button>
+					<button class="btn-primary" onclick="executeResend()"
+						id="executeBtn">Resend Now</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+    function formatDate(dateStr) {
+        if (!dateStr || dateStr === "—") return "—";
+        if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) return dateStr;
+        let datePart = dateStr.toString().split(' ')[0]; 
+        const [y, m, d] = datePart.split('-');
+        if (y && m && d) return `${d}-${m}-${y}`;
+        return dateStr;
+    }
+
+    function formatTime(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return timeStr;
+        let [h, m] = timeStr.split(':');
+        let ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return `${h}:${m} ${ampm}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.format-date').forEach(el => el.textContent = formatDate(el.textContent.trim()));
+        document.querySelectorAll('.format-time').forEach(el => el.textContent = formatTime(el.textContent.trim()));
+    });
+
+    function confirmResend(historyId, scheduleName) {
+        document.getElementById('confirmStep').style.display = 'block';
+        document.getElementById('successStep').style.display = 'none';
+        document.getElementById('resendFoot').style.display = 'flex';
+        document.getElementById('executeBtn').innerText = 'Resend Now';
+        document.getElementById('executeBtn').disabled = false;
+        
+        document.getElementById('resendNameText').innerText = scheduleName;
+        document.getElementById('resendIdTarget').value = historyId;
+        
+        document.getElementById('resendOverlay').classList.add('open');
+    }
+
+    function closeResend() {
+        document.getElementById('resendOverlay').classList.remove('open');
+    }
+
+    function executeResend() {
+        var historyId = document.getElementById('resendIdTarget').value;
+        var btn = document.getElementById('executeBtn');
+        
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'resendScheduleStatements', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    document.getElementById('confirmStep').style.display = 'none';
+                    document.getElementById('resendFoot').style.display = 'none';
+                    document.getElementById('successStep').style.display = 'block';
+                    
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    alert("System encountered an error trying to resend. Please try again.");
+                    btn.innerText = 'Resend Now';
+                    btn.disabled = false;
+                    closeResend();
+                }
+            }
+        };
+        
+        xhr.send('historyId=' + encodeURIComponent(historyId));
+    }
+
+    function bgClose(e, id) {
+        if (e.target === document.getElementById(id)) {
+            document.getElementById(id).classList.remove('open');
+        }
+    }
+    
+    function loadByMonth() {
+        var selectedMonth = document.getElementById('monthPicker').value;
+        if(selectedMonth) {
+            window.location.href = 'FailedStatements?month=' + selectedMonth;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var picker = document.getElementById('monthPicker');
+        if (!picker.value) {
+            var now = new Date();
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var year = now.getFullYear();
+            picker.value = year + "-" + month;
+        }
+    });
+    
+</script>
+</body>
+</html>

@@ -26,6 +26,51 @@ public class ScheduleHistory_Entity {
 	@Column(name = "DELIVERY_STATUS")
 	private String deliveryStatus;
 
+	@Column(name = "ERROR_REASON")
+	private String errorReason;
+	
+	@Column(name = "TIME_SENT")
+	private String timeSent;	
+
+	@Column(name = "SCHEDULE_NAME")
+	private String scheduleName;
+	
+	@Column(name = "IS_RERUN")
+    private String isRerun; 
+
+    public String getIsRerun() {
+        return isRerun;
+    }
+
+    public void setIsRerun(String isRerun) {
+        this.isRerun = isRerun;
+    }
+    
+
+	public String getScheduleName() {
+		return scheduleName;
+	}
+
+	public void setScheduleName(String scheduleName) {
+		this.scheduleName = scheduleName;
+	}
+
+	public String getTimeSent() {
+		return timeSent;
+	}
+
+	public void setTimeSent(String timeSent) {
+		this.timeSent = timeSent;
+	}
+
+	public String getErrorReason() {
+		return errorReason;
+	}
+
+	public void setErrorReason(String errorReason) {
+		this.errorReason = errorReason;
+	}
+
 	public BigDecimal getId() {
 		return id;
 	}

@@ -304,23 +304,17 @@
 
 		<div class="col-lg-3 col-md-6 mb-4">
 
-			<div class="stat-card">
+					<div class="stat-card" style="cursor: pointer;" onclick="FailedStatements()" >
 
-				<div class="stat-title">
-					Failed Statements
+						<div class="stat-title">Failed Statements</div>
+
+						<div class="stat-value" th:text="${failedCount}">12</div>
+						<div class="stat-growth growth-red" th:text="${failurePercentage}">-2.1%
+							From Last Month</div>
+
+					</div>
+
 				</div>
-
-				<div class="stat-value">
-					12
-				</div>
-
-				<div class="stat-growth growth-red">
-					-2.1% From Last Month
-				</div>
-
-			</div>
-
-		</div>
 
 	</div>
 
@@ -566,6 +560,10 @@ new Chart(ctx, {
 	}
 
 });
+
+function FailedStatements(){
+	location.href = "/AccountStatement/FailedStatements";
+}
 
 </script>
 

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -66,6 +67,9 @@ public class NavigationController {
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {
+		
+		md.addAttribute("failedCount", ScheduleStatementService.getFailedCountForCurrentMonth());
+	    md.addAttribute("failurePercentage", ScheduleStatementService.getFailedTransactionTrend());
 
 		return "AccountStatementDashboard";
 	}
@@ -412,6 +416,35 @@ public class NavigationController {
 	    return response;
 
 	}
+	
+	@RequestMapping(value = "FailedStatements", method = { RequestMethod.GET, RequestMethod.POST })
+	public String failedStatements(@RequestParam(value = "month", required = false) String selectedMonth,Model md, HttpServletRequest req) {
+		if (selectedMonth == null || selectedMonth.isEmpty()) {
+	        selectedMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+	    }
+		md.addAttribute("selectedMonth", selectedMonth);
+		md.addAttribute("failedList", ScheduleStatementService.getFailedDeliveriesByMonth(selectedMonth));
+		return "FailedStatements";
+	}
+
+	@RequestMapping(value = "resendScheduleStatements", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> resendStatement(@RequestParam("historyId") BigDecimal historyId) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			ScheduleStatementService.resendFailedStatement(historyId);
+			response.put("status", "success");
+			response.put("message", "Statement resent successfully.");
+		} catch (Exception e) {
+			response.put("status", "error");
+			response.put("message", "Failed to resend: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return response;
+	}
+    
 	
 
 	
