@@ -737,7 +737,7 @@ function toggleAccounts(toggle, customerId){
 
                                 <td>${acc.schm_type}</td>
 
-                                <td>${acc.acct_opn_date}</td>
+                                <td>${formatOpenDate(acc.acct_opn_date)}</td>
 
                                 <td>${acc.acct_crncy_code}</td>
 
@@ -1151,6 +1151,25 @@ document.addEventListener("click", function(e) {
         document.querySelectorAll(".filter-dropdown").forEach(div => div.style.display = "none");
     }
 });
+
+function formatOpenDate(raw) {
+    if (!raw) return '';
+    const monthMap = {
+        'JAN':'01','FEB':'02','MAR':'03','APR':'04',
+        'MAY':'05','JUN':'06','JUL':'07','AUG':'08',
+        'SEP':'09','OCT':'10','NOV':'11','DEC':'12'
+    };
+    // Handle DD-MON-YY e.g. 20-MAY-21
+    let parts = raw.toString().split('-');
+    if (parts.length === 3) {
+        let dd   = parts[0].padStart(2,'0');
+        let mm   = monthMap[parts[1].toUpperCase()] || parts[1];
+        let yy   = parseInt(parts[2], 10);
+        let yyyy = yy <= 49 ? 2000 + yy : 1900 + yy;
+        return dd + '-' + mm + '-' + yyyy;
+    }
+    return raw;
+}
 
 </script>
 </body>
