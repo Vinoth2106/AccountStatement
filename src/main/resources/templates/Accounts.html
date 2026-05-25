@@ -490,8 +490,8 @@ input:checked + .slider:before {
 }
 
 .toggle-label {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: #6c757d;
     transition: color 0.3s;
 }
@@ -603,7 +603,6 @@ input:checked + .slider:before {
 					    <th style="position:relative;"><div class="th-content">Mobile No     <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,3)"></i><div class="filter-dropdown"></div></div></th>
 					    <th style="position:relative;"><div class="th-content">Email         <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,4)"></i><div class="filter-dropdown"></div></div></th>
 					    <th style="position:relative;"><div class="th-content">Country       <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,5)"></i><div class="filter-dropdown"></div></div></th>
-					    <th style="position:relative;"><div class="th-content">Type          <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,6)"></i><div class="filter-dropdown"></div></div></th>
 					    <th>Action</th>
 					</tr>
 
@@ -618,7 +617,6 @@ input:checked + .slider:before {
                 	<td th:text="${custlistdata?.phone_cell}"></td>
                 	<td th:text="${custlistdata?.preferredemail}"></td>
                 	<td th:text="${custlistdata?.country}"></td>
-                	<td th:text="${custlistdata?.cust_type_code}"></td>
                 	
                 	<td>
 
@@ -956,16 +954,24 @@ function loadCustomersByType(type) {
 
                 // Format DOB
                 let dob = '';
-                if (cust.cust_dob) {
-                    if (Array.isArray(cust.cust_dob)) {
-                        let d = cust.cust_dob;
-                        dob = String(d[2]).padStart(2,'0') + '-'
-                            + String(d[1]).padStart(2,'0') + '-'
-                            + d[0];
-                    } else {
-                        dob = cust.cust_dob;
-                    }
-                }
+				if (cust.cust_dob) {
+				    // Extract date part only if ISO timestamp
+				    let rawDob = cust.cust_dob.toString().split('T')[0];
+				    let parts = rawDob.split('-');
+				    if (parts.length === 3) {
+				        if (parts[0].length === 4) {
+				            // yyyy-MM-dd → dd-MM-yyyy
+				            dob = parts[2].padStart(2,'0') + '-' + parts[1].padStart(2,'0') + '-' + parts[0];
+				        } else {
+				            // dd-MM-yy (Oracle) → dd-MM-yyyy
+				            let yy = parseInt(parts[2], 10);
+				            let yyyy = yy <= 49 ? 2000 + yy : 1900 + yy;
+				            dob = parts[0].padStart(2,'0') + '-' + parts[1].padStart(2,'0') + '-' + yyyy;
+				        }
+				    } else {
+				        dob = cust.cust_dob;
+				    }
+				}
 
                 custTbody.innerHTML += `
                     <tr>
@@ -975,7 +981,6 @@ function loadCustomersByType(type) {
                         <td>${cust.phone_cell     || ''}</td>
                         <td>${cust.preferredemail || ''}</td>
                         <td>${cust.country        || ''}</td>
-                        <td>${cust.cust_type_code || ''}</td>
                         <td>
                             <label class="switch">
                                 <input type="checkbox"
