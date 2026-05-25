@@ -41,4 +41,7 @@ public interface Service_audit_table_Rep extends JpaRepository<Service_audit_tab
 	 * true) Long getAuditRefUUID();
 	 */
 
+	@Query(value = "SELECT * FROM AS_SERVICE_AUDIT_TABLE ORDER BY ENTRY_TIME DESC FETCH FIRST 4 ROWS ONLY", nativeQuery = true)
+	List<Service_audit_table_entity> findTop4RecentActivities();
+    
 }

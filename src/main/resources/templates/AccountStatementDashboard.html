@@ -210,27 +210,27 @@
         <i class="fa fa-bars"></i>
     </div>
     <div class="tb-title">Home</div>
-    <div class="tb-date-widget" id="dateWidget">
-        <div class="tb-date-display" onclick="document.getElementById('searchDate').showPicker()">
-            <div class="tb-date-icon"><i class="bi bi-calendar3"></i></div>
-            <div class="tb-date-info">
-                <span class="tb-date-day" id="dateDayName">Thursday</span>
-                <span class="tb-date-full" id="dateFullText">21 May 2026</span>
-            </div>
-            <div class="tb-date-divider"></div>
-            <div class="tb-date-picker-btn"><i class="bi bi-chevron-down"></i></div>
+   <div class="tb-date-widget" id="dateWidget">
+    <div class="tb-date-display" onclick="document.getElementById('searchDate').showPicker()">
+        <div class="tb-date-icon"><i class="bi bi-calendar3"></i></div>
+        <div class="tb-date-info">
+            <span class="tb-date-day" id="dateDayName">Thursday</span>
+            <span class="tb-date-full" id="dateFullText">21 May 2026</span>
         </div>
-        <input type="date" id="searchDate" class="tb-date-hidden" />
+        <div class="tb-date-divider"></div>
+        <div class="tb-date-picker-btn"><i class="bi bi-chevron-down"></i></div>
     </div>
+    <input type="month" id="searchDate" class="tb-date-hidden" />
+</div>
     <div class="tb-notif">
         <i class="fa fa-bell-o"></i>
         <span class="notif-badge" >3</span>
     </div>
     <div class="tb-user" id="userdtl" onclick="showpassmenu()">
         <img th:src="@{/images/doctor.png}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="tb-avatar" alt="Doctor">
-        <div class="tb-avatar" style="display:none; background: linear-gradient(135deg,#6c63ff,#8b83ff); color:white; font-size:14px; font-weight:700; align-items:center; justify-content:center;" >VK</div>
+        <div class="tb-avatar" style="display:none; background: linear-gradient(135deg,#6c63ff,#8b83ff); color:white; font-size:14px; font-weight:700; align-items:center; justify-content:center;" th:text="${session.USERNAME != null ? #strings.substring(session.USERNAME,0,1) : 'VK'}">VK</div>
         <div>
-            <div class="tb-uname"><span >Vinoth kumar</span></div>
+            <div class="tb-uname"><span th:text="${session.USERNAME}" >Vinoth kumar</span></div>
             <div class="tb-urole" ></div>
         </div>
         <i class="fa fa-chevron-down tb-chevron"></i>
@@ -242,47 +242,32 @@
 
 	<div class="row">
 
-		<div class="col-lg-3 col-md-6 mb-4">
+				<div class="col-lg-3 col-md-6 mb-4">
+					<div class="stat-card">
+						<div class="stat-title">Total Accounts</div>
 
-			<div class="stat-card">
+						<div class="stat-value" id="accountsCountDisplay"
+							th:text="${accountsCount}">12,458</div>
 
-				<div class="stat-title">
-					Total Accounts
+						<div class="stat-growth growth-green"
+							id="accountsPercentageDisplay" th:text="${accountsPercentage}">
+							+8.6% From Last Month</div>
+					</div>
 				</div>
 
-				<div class="stat-value">
-					12,458
+				<div class="col-lg-3 col-md-6 mb-4">
+					<div class="stat-card">
+						<div class="stat-title">Statements Generated</div>
+
+						<div class="stat-value" id="generatedCountDisplay"
+							th:text="${generatedCount}">8,756</div>
+
+						<div class="stat-growth growth-green"
+							id="generatedPercentageDisplay" th:text="${generatedPercentage}">
+							+4.3% From Last Month</div>
+					</div>
 				</div>
-
-				<div class="stat-growth growth-green">
-					+8.6% From Last Month
-				</div>
-
-			</div>
-
-		</div>
-
-		<div class="col-lg-3 col-md-6 mb-4">
-
-			<div class="stat-card">
-
-				<div class="stat-title">
-					Statements Generated
-				</div>
-
-				<div class="stat-value">
-					8,756
-				</div>
-
-				<div class="stat-growth growth-green">
-					+4.3% From Last Month
-				</div>
-
-			</div>
-
-		</div>
-
-		<div class="col-lg-3 col-md-6 mb-4">
+				<div class="col-lg-3 col-md-6 mb-4">
 
 			<div class="stat-card">
 
@@ -308,8 +293,8 @@
 
 						<div class="stat-title">Failed Statements</div>
 
-						<div class="stat-value" th:text="${failedCount}">12</div>
-						<div class="stat-growth growth-red" th:text="${failurePercentage}">-2.1%
+						<div class="stat-value" id="failedCountDisplay" th:text="${failedCount}">12</div>
+						<div class="stat-growth growth-red" id="failedPercentageDisplay" th:text="${failurePercentage}">-2.1%
 							From Last Month</div>
 
 					</div>
@@ -338,91 +323,31 @@
 
 		</div>
 
-		<div class="col-lg-4">
+				<div class="col-lg-4">
+					<div class="dashboard-box">
+						<div class="box-title">Recent Activities</div>
 
-			<div class="dashboard-box">
+						<div class="activity-item"
+							th:each="activity : ${recentActivities}">
 
-				<div class="box-title">
-					Recent Activities
-				</div>
+							<div class="activity-dot blue"></div>
 
-				<div class="activity-item">
+							<div class="activity-content">
 
-					<div class="activity-dot blue"></div>
+								<div class="activity-text" th:text="${activity.func_code}">
+									Statement generated for 112233445566</div>
 
-					<div class="activity-content">
+								<div class="activity-time"
+									th:text="${#dates.format(activity.entry_time, 'dd MMM yyyy hh:mm a')}">
+									08 May 2026 10:30 AM</div>
 
-						<div class="activity-text">
-							Statement generated for 112233445566
-						</div>
-
-						<div class="activity-time">
-							08 May 2026 10:30 AM
-						</div>
-
-					</div>
-
-				</div>
-
-				<div class="activity-item">
-
-					<div class="activity-dot green"></div>
-
-					<div class="activity-content">
-
-						<div class="activity-text">
-							Bulk statements generated for 150 accounts
-						</div>
-
-						<div class="activity-time">
-							08 May 2026 09:15 AM
+							</div>
 						</div>
 
 					</div>
-
-				</div>
-
-				<div class="activity-item">
-
-					<div class="activity-dot orange"></div>
-
-					<div class="activity-content">
-
-						<div class="activity-text">
-							Statement request received
-						</div>
-
-						<div class="activity-time">
-							08 May 2026 08:45 AM
-						</div>
-
-					</div>
-
-				</div>
-
-				<div class="activity-item">
-
-					<div class="activity-dot red"></div>
-
-					<div class="activity-content">
-
-						<div class="activity-text">
-							Statement generation failed for 2 accounts
-						</div>
-
-						<div class="activity-time">
-							08 May 2026 07:20 AM
-						</div>
-
-					</div>
-
 				</div>
 
 			</div>
-
-		</div>
-
-	</div>
 
 	<!-- ================= TABLE ================= -->
 
@@ -566,16 +491,72 @@ function FailedStatements(){
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    const today = new Date();
     const dateInput = document.getElementById('searchDate');
-    dateInput.value = today.toISOString().split('T')[0];
+    const dayNameSpan = document.getElementById('dateDayName');
+    const fullTextSpan = document.getElementById('dateFullText');
+
     const dayOptions = { weekday: 'long' };
-    const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('dateDayName').textContent = today.toLocaleDateString('en-GB', dayOptions);
-    document.getElementById('dateFullText').textContent = today.toLocaleDateString('en-GB', dateOptions);
+    const monthYearOptions = { month: 'long', year: 'numeric' };
+
+    function updateDisplay(monthValue) {
+        if (!monthValue) return;
+        const [year, month] = monthValue.split('-');
+        const selectedDate = new Date(year, month - 1, 1); 
+
+        dayNameSpan.textContent = selectedDate.toLocaleDateString('en-GB', dayOptions);
+        fullTextSpan.textContent = selectedDate.toLocaleDateString('en-GB', monthYearOptions);
+    }
+
+    function updateStatsData(monthValue) {
+        const apiUrl = `./dashboard-stats?month=${monthValue}`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json(); 
+            })
+            .then(data => {
+            	
+            	document.getElementById('accountsCountDisplay').textContent = data.accountsCount;
+                document.getElementById('accountsPercentageDisplay').textContent = data.accountsPercentage + ' From Last Month';
+                
+                document.getElementById('failedCountDisplay').textContent = data.failedCount;
+                document.getElementById('failedPercentageDisplay').textContent = data.failedPercentage ;
+                
+                document.getElementById('generatedCountDisplay').textContent = data.generatedCount;
+                document.getElementById('generatedPercentageDisplay').textContent = data.generatedPercentage ;
+                
+                toggleGrowthClass('accountsPercentageDisplay', data.accountsPercentage);
+                 toggleGrowthClass('failedPercentageDisplay', data.failedPercentage);
+                 toggleGrowthClass('generatedPercentageDisplay', data.generatedPercentage);
+            })
+            .catch(error => console.error('Error fetching stats:', error));
+    }
+    function toggleGrowthClass(elementId, percentageString) {
+        const element = document.getElementById(elementId);
+        
+        if (!element || !percentageString) return;
+
+        element.classList.remove('growth-green', 'growth-red');
+        if (percentageString.includes('-')) {
+            element.classList.add('growth-red');
+        } else if (percentageString.includes('+')) {
+            element.classList.add('growth-green');
+        } 
+
+    }
+
+    const today = new Date();
+    const currentMonthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    dateInput.value = currentMonthStr;
+    updateDisplay(currentMonthStr);
+
+    dateInput.addEventListener('change', function(event) {
+        const newMonth = event.target.value;
+        updateDisplay(newMonth);     
+        updateStatsData(newMonth);  
+    });
 });
-
-
 </script>
 
 </body>

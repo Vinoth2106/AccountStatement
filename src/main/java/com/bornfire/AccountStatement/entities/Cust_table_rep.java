@@ -1,5 +1,6 @@
 package com.bornfire.AccountStatement.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,7 @@ public interface Cust_table_rep extends JpaRepository<Cust_table_entity, String>
 	
 	@Query(value = "select * from CUST_TABLE where CUST_TYPE_CODE = 'corporate'", nativeQuery = true)
 	List<Cust_table_entity> getCorporatelist();
+
+	long countByCreatedDateBetween(Date startDate, Date endDate);
 
 }

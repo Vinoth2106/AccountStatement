@@ -266,7 +266,18 @@ public class AccountStatementWebSecurity extends WebSecurityConfigurerAdapter {
 				
 				auditService.createLoginAudit(user.getUserid() , "Login",null , null, "XBRL_USER_PROFILE_TABLE",user);				
 				
-				response.sendRedirect("Dashboard");
+				// Generate OTP
+		        String otp = String.valueOf((int)(Math.random() * 900000) + 100000); // 6-digit OTP
+		        
+		        System.out.println(" Your Log in otp is :" + otp);
+		        
+		        //loginServices.sendclientotp(otp, user.getRole_id(), user);
+
+		        // Store OTP in session or Redis (secure option)
+		        request.getSession().setAttribute("otp", otp);				
+
+		        
+				response.sendRedirect("systemotp");
 				
 			}
 

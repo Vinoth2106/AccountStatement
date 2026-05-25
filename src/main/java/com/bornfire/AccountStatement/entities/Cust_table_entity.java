@@ -2,6 +2,7 @@ package com.bornfire.AccountStatement.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -27,6 +28,18 @@ public class Cust_table_entity {
 	private String address2;
 	private String address3;
 	private String cust_type_code;
+
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	@Column(name = "CREATED_DATE")
+	private Date createdDate;
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 	public String getPhone_cell() {
 		return phone_cell;
 	}

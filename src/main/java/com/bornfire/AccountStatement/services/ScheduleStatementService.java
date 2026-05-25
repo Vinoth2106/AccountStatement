@@ -135,5 +135,75 @@ public class ScheduleStatementService {
 	    
 	    return historyRepo.findByStatusAndMonth("Failed", dbPattern);
 	}
+	
+	private String convertToDbPattern(String yyyyMm) {
+	    String[] parts = yyyyMm.split("-");
+	    return "-" + parts[1] + "-" + parts[0]; 
+	}
+
+	public long getCountByMonthAndStatus(String targetMonth, String status) {
+	    String dbPattern = convertToDbPattern(targetMonth);
+	    return historyRepo.countByStatusAndMonth(status, dbPattern);
+	}
+
+	public String getTrendByMonthAndStatus(String targetMonth, String status) {
+	    
+	    YearMonth currentMonth = YearMonth.parse(targetMonth);
+	    YearMonth prevMonth = currentMonth.minusMonths(1);    
+
+	    String currentPattern = convertToDbPattern(currentMonth.toString());
+	    String prevPattern = convertToDbPattern(prevMonth.toString());
+
+	    long currentCount = historyRepo.countByStatusAndMonth(status, currentPattern);
+	    long prevCount = historyRepo.countByStatusAndMonth(status, prevPattern);
+
+	    if (currentCount == 0 && prevCount == 0) {
+	        return "0.0% From Last Month";
+	    }
+	    
+	    if (prevCount == 0) {
+	        return "+100.0% From Last Month";
+	    }
+
+	    double percentageChange = ((double) (currentCount - prevCount) / prevCount) * 100.0;
+
+	    if (percentageChange > 999.9) percentageChange = 999.9;
+	    if (percentageChange < -999.9) percentageChange = -999.9;
+
+	    String sign = percentageChange > 0 ? "+" : "";
+	    return String.format("%s%.1f%% From Last Month", sign, percentageChange);
+	}
+
+	public long getGeneratedCountForCurrentMonth() {
+	    String currentMonthPattern = LocalDate.now().format(DateTimeFormatter.ofPattern("-MM-yyyy"));
+	    return historyRepo.countByStatusAndMonth("Success", currentMonthPattern);
+	}
+
+	public String getGeneratedTransactionTrend() {
+	    YearMonth currentMonth = YearMonth.now();
+	    YearMonth prevMonth = currentMonth.minusMonths(1);
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("-MM-yyyy");
+	    String currentMonthSuffix = currentMonth.format(formatter);
+	    String prevMonthSuffix = prevMonth.format(formatter);
+
+	    long currentCount = historyRepo.countByStatusAndMonth("Success", currentMonthSuffix);
+	    long prevCount = historyRepo.countByStatusAndMonth("Success", prevMonthSuffix);
+
+	    if (currentCount == 0 && prevCount == 0) {
+	        return "0.0% From Last Month";
+	    }
+	    if (prevCount == 0) {
+	        return "+100.0% From Last Month";
+	    }
+
+	    double percentageChange = ((double) (currentCount - prevCount) / prevCount) * 100.0;
+
+	    if (percentageChange > 999.9) percentageChange = 999.9;
+	    if (percentageChange < -999.9) percentageChange = -999.9;
+
+	    String sign = percentageChange > 0 ? "+" : "";
+	    return String.format("%s%.1f%% From Last Month", sign, percentageChange);
+	}
 
 }

@@ -1,10 +1,13 @@
 package com.bornfire.AccountStatement.controllers;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,18 +15,21 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,6 +73,15 @@ public class NavigationController {
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {
+		
+		md.addAttribute("recentActivities", Service_audit_table_Rep.findTop4RecentActivities());
+		
+		Map<String, String> accountsStats = calculateMonthlyGrowthStats(YearMonth.now().toString());
+		md.addAttribute("accountsCount",accountsStats.get("count"));
+	    md.addAttribute("accountsPercentage",accountsStats.get("percentage")+" From Last Month");
+	    
+		md.addAttribute("generatedCount", ScheduleStatementService.getGeneratedCountForCurrentMonth());
+		md.addAttribute("generatedPercentage", ScheduleStatementService.getGeneratedTransactionTrend());
 		
 		md.addAttribute("failedCount", ScheduleStatementService.getFailedCountForCurrentMonth());
 	    md.addAttribute("failurePercentage", ScheduleStatementService.getFailedTransactionTrend());
@@ -458,7 +473,77 @@ public class NavigationController {
 		return response;
 	}
     
-	
+	@GetMapping("/dashboard-stats")
+	@ResponseBody
+	public Map<String, Object> getDashboardStats(@RequestParam("month") String month) {
 
+		System.out.println("Month : "+month);
+		Map<String, Object> response = new HashMap<>();
+		
+		Map<String, String> accountsStats = calculateMonthlyGrowthStats(month);
+	    response.put("accountsCount", accountsStats.get("count"));
+	    response.put("accountsPercentage", accountsStats.get("percentage"));
+
+		long failedCount = ScheduleStatementService.getCountByMonthAndStatus(month, "Failed");
+		String failedTrend = ScheduleStatementService.getTrendByMonthAndStatus(month, "Failed");
+
+		long generatedCount = ScheduleStatementService.getCountByMonthAndStatus(month, "Success");
+		String generatedTrend = ScheduleStatementService.getTrendByMonthAndStatus(month, "Success");
+
+		NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+
+		response.put("failedCount", formatter.format(failedCount));
+		response.put("failedPercentage", failedTrend);
+
+		response.put("generatedCount", formatter.format(generatedCount));
+		response.put("generatedPercentage", generatedTrend);
+		return response;
+	}
+
+	public Map<String, String> calculateMonthlyGrowthStats(String monthStr) {
+		YearMonth currentMonth = YearMonth.parse(monthStr);
+		YearMonth previousMonth = currentMonth.minusMonths(1);
+		ZoneId zone = ZoneId.systemDefault();
+
+		Date currentStart = Date.from(currentMonth.atDay(1).atStartOfDay(zone).toInstant());
+		Date currentEnd = Date.from(currentMonth.atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant());
+
+		Date prevStart = Date.from(previousMonth.atDay(1).atStartOfDay(zone).toInstant());
+		Date prevEnd = Date.from(previousMonth.atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant());
+
+		long currentCount = cust_table_rep.countByCreatedDateBetween(currentStart, currentEnd);
+		long prevCount = cust_table_rep.countByCreatedDateBetween(prevStart, prevEnd);
+
+		String percentageFormatted;
+		if (prevCount == 0) {
+			percentageFormatted = currentCount > 0 ? "+100.0%" : "0.0%";
+		} else {
+			double percentage = ((double) (currentCount - prevCount) / prevCount) * 100;
+			percentageFormatted = (percentage > 0 ? "+" : "") + String.format("%.1f", percentage) + "%";
+		}
+
+		Map<String, String> stats = new HashMap<>();
+		stats.put("count", String.format("%,d", currentCount));
+		stats.put("percentage", percentageFormatted);
+
+		return stats;
+	}
 	
+	@GetMapping("/systemotp")
+	public String showOtpForm(Model model, HttpSession session) {
+		String otp = (String) session.getAttribute("otp");
+		model.addAttribute("otp", otp);
+		return "ASOtpvalidation.html"; // Thymeleaf or HTML page
+	}
+	@PostMapping("/verify-otp")
+	public String verifyOtp(@RequestParam("otp") String userOtp, HttpSession session) {
+		String actualOtp = (String) session.getAttribute("otp");
+		if (actualOtp != null && actualOtp.equals(userOtp)) {
+			session.removeAttribute("otp"); // Clear OTP after success
+			return "redirect:/Dashboard";
+		}
+		return "redirect:login?invalidotp";
+	}
+
+
 }
