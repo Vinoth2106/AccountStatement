@@ -238,7 +238,7 @@ body {
 			<p class="text-center font-weight-bold" style="letter-spacing: 1px;">OTP
 				Verification</p>
 			<p th:text="'Your OTP (for testing): ' + ${otp}"
-				style="text-align: center; color: red;"></p>
+				style="text-align: center; color: white;"></p>
 			<form th:action="@{/verify-otp}" method="post" class="form-signin"
 				onsubmit="combineOTP()">
 				<div class="otp-box">
