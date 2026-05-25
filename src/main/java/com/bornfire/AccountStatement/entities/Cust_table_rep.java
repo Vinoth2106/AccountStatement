@@ -18,5 +18,11 @@ public interface Cust_table_rep extends JpaRepository<Cust_table_entity, String>
 		       "select orgkey from cust_table where cust_type_code=?1",
 		       nativeQuery = true)
 		List<String> getCustomerIdsByType(String type);
+	
+	@Query(value = "select * from CUST_TABLE where CUST_TYPE_CODE = 'retail'", nativeQuery = true)
+	List<Cust_table_entity> getRetaillist();
+	
+	@Query(value = "select * from CUST_TABLE where CUST_TYPE_CODE = 'corporate'", nativeQuery = true)
+	List<Cust_table_entity> getCorporatelist();
 
 }

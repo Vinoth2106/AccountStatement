@@ -78,10 +78,23 @@ public class NavigationController {
 	public String Accounts(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {
 		
-		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
+		List<Cust_table_entity> custlist = cust_table_rep.getRetaillist();
 		md.addAttribute("custlist", custlist);
 
 		return "Accounts";
+	}
+	
+	@GetMapping("/getCustomersByType")
+	@ResponseBody
+	public List<Cust_table_entity> getCustomersByType(
+	        @RequestParam String type) {
+
+	    if ("retail".equalsIgnoreCase(type)) {
+	        return cust_table_rep.getRetaillist();
+	    } else if ("corporate".equalsIgnoreCase(type)) {
+	        return cust_table_rep.getCorporatelist();
+	    }
+	    return cust_table_rep.getcustlist(); // fallback all
 	}
 	
 	@GetMapping("/getCustomerAccounts")
