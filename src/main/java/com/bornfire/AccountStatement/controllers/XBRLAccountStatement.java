@@ -309,7 +309,7 @@ public class XBRLAccountStatement {
 
 			FileInputStream fis = new FileInputStream(repfile);
 			byte[] fileBytes = convertInputStreamToBytes(fis);
-			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf");
+			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf",userid);
 			fis.close();
 
 			resource = new InputStreamResource(new FileInputStream(repfile));
@@ -395,7 +395,7 @@ public class XBRLAccountStatement {
 
 			FileInputStream fis = new FileInputStream(repfile);
 			byte[] fileBytes = convertInputStreamToBytes(fis);
-			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf");
+			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf",acid);
 			fis.close();
 
 			resource = new InputStreamResource(new FileInputStream(repfile));
@@ -814,7 +814,7 @@ public class XBRLAccountStatement {
 		byte[] fileBytes = convertInputStreamToBytes(repfile);
 
 		emailservices.sendEmail(fileName, fileBytes,
-				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",reportId);
 
 		return repfile;
 

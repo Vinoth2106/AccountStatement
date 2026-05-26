@@ -37,5 +37,9 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 	       nativeQuery = true)
 	GeneralMasterTbEntity findByAcctNumber(String acct_number);
 	
+	@Query(value = "SELECT * FROM GENERAL_MASTER_TB WHERE ACID = ?1 AND ROWNUM = 1",
+		       nativeQuery = true)
+		GeneralMasterTbEntity findByAcctid(String acid);
+	
 
 }

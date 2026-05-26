@@ -25,6 +25,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.bornfire.AccountStatement.entities.Cust_table_entity;
+import com.bornfire.AccountStatement.entities.Cust_table_rep;
+import com.bornfire.AccountStatement.entities.GeneralMasterTbEntity;
+import com.bornfire.AccountStatement.entities.GeneralMasterTbRep;
+
 
 
 @Service
@@ -33,11 +38,22 @@ public class EmailServices {
 
 	@Autowired
 	Environment env;
+
+	@Autowired
+	GeneralMasterTbRep generalMasterTbRepo;	
+	
+	@Autowired
+	Cust_table_rep cust_table_rep; 
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmailServices.class);
 
-	public void sendEmail(String filename, byte[] fileBytes, String fileType) {
-
+	public void sendEmail(String filename, byte[] fileBytes, String fileType, String accno) {
+		
+		GeneralMasterTbEntity accdetails= generalMasterTbRepo.findByAcctid(accno);
+		//System.out.println("ACC no : "+accno);
+		//System.out.println("cust id : "+accdetails.getCust_id());
+		Cust_table_entity custdetails = cust_table_rep.findById(accdetails.getCust_id()).get();			
+		
 	    logger.info("EMAIL STARTS");
 
 	    String host = env.getProperty("mail.host");
@@ -60,7 +76,7 @@ public class EmailServices {
 	        MimeMessage msg = new MimeMessage(session);
 	        msg.setFrom(new InternetAddress(user));
 	        msg.addRecipient(Message.RecipientType.TO,
-	                new InternetAddress("nandhini.j@bornfire.co.in"));
+	                new InternetAddress(custdetails.getPreferredemail()));
 
 	        msg.setSubject("Account Statement");
 	        msg.setSentDate(new Date());
