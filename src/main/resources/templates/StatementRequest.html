@@ -4,542 +4,608 @@
 <head>
 
 <meta charset="UTF-8">
-	<title>Account Statement</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
-	<meta content="Coderthemes" name="author">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- App favicon -->
-	<link rel="shortcut icon" href="assets/images/favicon.ico">
-	<!-- App css -->
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+<title>Account Statement</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta
+	content="A fully featured admin theme which can be used to build CRM, CMS, etc."
+	name="description">
+<meta content="Coderthemes" name="author">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- App favicon -->
+<link rel="shortcut icon" href="assets/images/favicon.ico">
+<!-- App css -->
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet"
+	type="text/css">
+<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet"
+	href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
 
-	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
-	
-	<script th:src="@{/js/bootstrap411.js}"></script>
-	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
 
-	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
-	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-	
-	<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script th:src="@{/js/bootstrap411.js}"></script>
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+	th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+	th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+	th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js"
+	th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+<script
+	src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js"
+	th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
 
 <link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-	
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-body{
-    background:#f4f7fb;
-    font-family:'Segoe UI',sans-serif;
-    color:#1e293b;
+body {
+	background: #f4f7fb;
+	font-family: 'Segoe UI', sans-serif;
+	color: #1e293b;
 }
 
 /* MAIN */
-
-.main-container{
-    padding:25px;
+.main-container {
+	padding: 25px;
 }
 
 /* HEADER */
-
-.top-header{
-    background:white;
-    border-radius:24px;
-    padding:25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+.top-header {
+	background: white;
+	border-radius: 24px;
+	padding: 25px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.header-left{
-    display:flex;
-    align-items:center;
-    gap:18px;
+.header-left {
+	display: flex;
+	align-items: center;
+	gap: 18px;
 }
 
-.header-icon{
-    width:70px;
-    height:70px;
-    border-radius:18px;
-    background:linear-gradient(135deg,#0d6efd,#003cbf);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-size:30px;
+.header-icon {
+	width: 70px;
+	height: 70px;
+	border-radius: 18px;
+	background: linear-gradient(135deg, #0d6efd, #003cbf);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 30px;
 }
 
-.header-title{
-    font-size:28px;
-    font-weight:700;
-    color:#0b1c54;
+.header-title {
+	font-size: 28px;
+	font-weight: 700;
+	color: #0b1c54;
 }
 
-.header-subtitle{
-    color:#64748b;
-    margin-top:4px;
+.header-subtitle {
+	color: #64748b;
+	margin-top: 4px;
 }
 
 /* CARD */
-
-.main-card,
-.selected-card{
-    background:white;
-    border-radius:24px;
-    padding:25px;
-    margin-bottom:25px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+.main-card, .selected-card {
+	background: white;
+	border-radius: 24px;
+	padding: 25px;
+	margin-bottom: 25px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.section-title{
-    font-size:22px;
-    font-weight:700;
-    margin-bottom:25px;
-    color:#0b1c54;
+.section-title {
+	font-size: 22px;
+	font-weight: 700;
+	margin-bottom: 25px;
+	color: #0b1c54;
 }
 
-.sub-title{
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:20px;
-    color:#0b1c54;
+.sub-title {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	color: #0b1c54;
 }
 
 /* FORM */
-
-.form-label{
-    font-weight:600;
-    margin-bottom:8px;
-    color:#0f172a;
+.form-label {
+	font-weight: 600;
+	margin-bottom: 8px;
+	color: #0f172a;
 }
 
-.form-control,
-.form-select{
-    height:52px;
-    border-radius:14px;
-    border:1px solid #dbeafe;
-    background:#fff;
-    padding-left:14px;
-    transition:0.3s;
-    box-shadow:
-    0 2px 8px rgba(13,110,253,0.05);
+.form-control, .form-select {
+	height: 52px;
+	border-radius: 14px;
+	border: 1px solid #dbeafe;
+	background: #fff;
+	padding-left: 14px;
+	transition: 0.3s;
+	box-shadow: 0 2px 8px rgba(13, 110, 253, 0.05);
 }
 
-.form-control:hover,
-.form-select:hover{
-    border-color:#93c5fd;
-    box-shadow:
-    0 4px 12px rgba(13,110,253,0.12);
+.form-control:hover, .form-select:hover {
+	border-color: #93c5fd;
+	box-shadow: 0 4px 12px rgba(13, 110, 253, 0.12);
 }
 
-.form-control:focus,
-.form-select:focus{
-    border-color:#0d6efd;
-    box-shadow:
-    0 0 0 4px rgba(13,110,253,0.12);
+.form-control:focus, .form-select:focus {
+	border-color: #0d6efd;
+	box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
 }
 
 /* RADIO */
-
-.radio-group{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-bottom:25px;
+.radio-group {
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 25px;
 }
 
-.radio-box{
-    background:#f8fbff;
-    border:1px solid #dbeafe;
-    border-radius:16px;
-    padding:14px 22px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-    transition:0.3s;
+.radio-box {
+	background: #f8fbff;
+	border: 1px solid #dbeafe;
+	border-radius: 16px;
+	padding: 14px 22px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	cursor: pointer;
+	transition: 0.3s;
 }
 
-.radio-box:hover{
-    background:#eef6ff;
-    transform:translateY(-1px);
+.radio-box:hover {
+	background: #eef6ff;
+	transform: translateY(-1px);
 }
 
-.radio-box input{
-    width:18px;
-    height:18px;
+.radio-box input {
+	width: 18px;
+	height: 18px;
 }
 
 /* TABLE */
-
-.table-container{
-    margin-top:20px;
-    overflow:hidden;
-    border-radius:18px;
-    border:1px solid #e2e8f0;
-    padding:15px;
+.table-container {
+	margin-top: 20px;
+	overflow: hidden;
+	border-radius: 18px;
+	border: 1px solid #e2e8f0;
+	padding: 15px;
 }
 
-table.dataTable{
-    width:100% !important;
-    border-collapse:collapse !important;
+table.dataTable {
+	width: 100% !important;
+	border-collapse: collapse !important;
 }
 
-table.dataTable thead{
-    background:#edf4ff;
+table.dataTable thead {
+	background: #edf4ff;
 }
 
-table.dataTable thead th{
-    color:#0b1c54 !important;
-    font-size:14px;
-    font-weight:700;
-    border-bottom:none !important;
-    padding:16px !important;
+table.dataTable thead th {
+	color: #0b1c54 !important;
+	font-size: 14px;
+	font-weight: 700;
+	border-bottom: none !important;
+	padding: 16px !important;
 }
 
-table.dataTable tbody td{
-    padding:15px !important;
-    font-size:14px;
-    border-bottom:1px solid #f1f5f9;
+table.dataTable tbody td {
+	padding: 15px !important;
+	font-size: 14px;
+	border-bottom: 1px solid #f1f5f9;
 }
 
-table.dataTable tbody tr:hover{
-    background:#f8fbff;
+table.dataTable tbody tr:hover {
+	background: #f8fbff;
 }
 
 /* BADGE */
-
-.currency-badge{
-    background:#dbeafe;
-    color:#1d4ed8;
-    padding:6px 12px;
-    border-radius:30px;
-    font-size:12px;
-    font-weight:600;
+.currency-badge {
+	background: #dbeafe;
+	color: #1d4ed8;
+	padding: 6px 12px;
+	border-radius: 30px;
+	font-size: 12px;
+	font-weight: 600;
 }
 
 /* CHECKBOX */
-
-#selectAll,
-.account-checkbox{
-    width:18px;
-    height:18px;
-    cursor:pointer;
+#selectAll, .account-checkbox {
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
 }
-
-
 
 /* BUTTON */
-
-.btn-container{
-    display:flex;
-    justify-content:end;
-    gap:15px;
-    margin-top:25px;
+.btn-container {
+	display: flex;
+	justify-content: end;
+	gap: 15px;
+	margin-top: 25px;
 }
 
-.custom-btn{
-    min-width:180px;
-    height:50px;
-    border:none;
-    border-radius:14px;
-    font-weight:600;
-    transition:0.3s;
+.custom-btn {
+	min-width: 180px;
+	height: 50px;
+	border: none;
+	border-radius: 14px;
+	font-weight: 600;
+	transition: 0.3s;
 }
 
-.cancel-btn{
-    background:#eef2ff;
-    color:#0b1c54;
+.cancel-btn {
+	background: #eef2ff;
+	color: #0b1c54;
 }
 
-.cancel-btn:hover{
-    background:#dbeafe;
+.cancel-btn:hover {
+	background: #dbeafe;
 }
 
-.generate-btn{
-    background:linear-gradient(135deg,#0d6efd,#003cbf);
-    color:white;
+.generate-btn {
+	background: linear-gradient(135deg, #0d6efd, #003cbf);
+	color: white;
 }
 
-.generate-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 18px rgba(13,110,253,0.25);
+.generate-btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 18px rgba(13, 110, 253, 0.25);
 }
 
 /* REMOVE BUTTON */
-
-.remove-btn{
-    width:36px;
-    height:36px;
-    border:none;
-    border-radius:10px;
-    background:#fee2e2;
-    color:#dc2626;
-    transition:0.3s;
+.remove-btn {
+	width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: 10px;
+	background: #fee2e2;
+	color: #dc2626;
+	transition: 0.3s;
 }
 
-.remove-btn:hover{
-    background:#dc2626;
-    color:white;
+.remove-btn:hover {
+	background: #dc2626;
+	color: white;
 }
 
 /* SEARCH */
-
-.dataTables_filter{
-    margin-bottom:18px;
+.dataTables_filter {
+	margin-bottom: 18px;
 }
 
-.dataTables_filter label{
-    font-weight:600;
-    color:#0b1c54;
+.dataTables_filter label {
+	font-weight: 600;
+	color: #0b1c54;
 }
 
-.dataTables_filter input{
-    height:42px !important;
-    border-radius:12px !important;
-    border:1px solid #dbeafe !important;
-    padding:0 14px !important;
-    margin-left:10px !important;
-    outline:none !important;
+.dataTables_filter input {
+	height: 42px !important;
+	border-radius: 12px !important;
+	border: 1px solid #dbeafe !important;
+	padding: 0 14px !important;
+	margin-left: 10px !important;
+	outline: none !important;
 }
 
 /* PAGINATION */
-
-.dataTables_paginate{
-    margin-top:18px !important;
+.dataTables_paginate {
+	margin-top: 18px !important;
 }
 
-.paginate_button{
-    border:none !important;
-    background:#f1f5f9 !important;
-    color:#0b1c54 !important;
-    border-radius:10px !important;
-    margin:0 4px !important;
-    padding:6px 14px !important;
-    transition:0.3s;
+.paginate_button {
+	border: none !important;
+	background: #f1f5f9 !important;
+	color: #0b1c54 !important;
+	border-radius: 10px !important;
+	margin: 0 4px !important;
+	padding: 6px 14px !important;
+	transition: 0.3s;
 }
 
-.paginate_button.current{
-    background:#0d6efd !important;
-    color:white !important;
+.paginate_button.current {
+	background: #0d6efd !important;
+	color: white !important;
 }
 
-.paginate_button:hover{
-    background:#dbeafe !important;
-    color:#0b1c54 !important;
+.paginate_button:hover {
+	background: #dbeafe !important;
+	color: #0b1c54 !important;
 }
 
 /* INFO */
-
-.dataTables_info{
-    margin-top:15px;
-    color:#64748b;
-    font-size:14px;
+.dataTables_info {
+	margin-top: 15px;
+	color: #64748b;
+	font-size: 14px;
 }
 
 /* REMOVE SORT ICON */
-
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting:after{
-    display:none !important;
+table.dataTable thead .sorting:before, table.dataTable thead .sorting:after
+	{
+	display: none !important;
 }
 
 /* RESPONSIVE */
-
-@media(max-width:991px){
-
-    .radio-group{
-        flex-direction:column;
-    }
-
-    .btn-container{
-        flex-direction:column;
-    }
-
-    .custom-btn{
-        width:100%;
-    }
-
+@media ( max-width :991px) {
+	.radio-group {
+		flex-direction: column;
+	}
+	.btn-container {
+		flex-direction: column;
+	}
+	.custom-btn {
+		width: 100%;
+	}
 }
 
 /* SELECTED TABLE */
-
-.selected-table{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0;
+.selected-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
 }
 
-.selected-table thead{
-    background:#f3f7fd;
+.selected-table thead {
+	background: #f3f7fd;
 }
 
-.selected-table thead th{
-    padding:18px 16px;
-    font-size:14px;
-    font-weight:700;
-    color:#0b1c54;
-    border-bottom:1px solid #dbeafe;
+.selected-table thead th {
+	padding: 18px 16px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #0b1c54;
+	border-bottom: 1px solid #dbeafe;
 }
 
-.selected-table tbody td{
-    padding:18px 16px;
-    vertical-align:middle;
-    border-bottom:1px solid #eef2f7;
-    font-size:14px;
+.selected-table tbody td {
+	padding: 18px 16px;
+	vertical-align: middle;
+	border-bottom: 1px solid #eef2f7;
+	font-size: 14px;
 }
 
-.selected-table tbody tr:hover{
-    background:#f8fbff;
+.selected-table tbody tr:hover {
+	background: #f8fbff;
 }
 
 /* REMOVE DATATABLE EXTRA SPACE */
 
-#selectedTable_wrapper .dataTables_filter,
-#selectedTable_wrapper .dataTables_info,
-#selectedTable_wrapper .dataTables_paginate,
-#selectedTable_wrapper .dataTables_length{
-    display:none !important;
-}
-
 /* EMPTY TABLE */
-
-#selectedBody:empty::after{
-    content:"No Accounts Selected";
-    display:block;
-    text-align:center;
-    padding:25px;
-    color:#94a3b8;
-    font-weight:600;
+#selectedBody:empty::after {
+	content: "No Accounts Selected";
+	display: block;
+	text-align: center;
+	padding: 25px;
+	color: #94a3b8;
+	font-weight: 600;
 }
 
 /* DATATABLE TOP AREA */
-
-#accountTable_wrapper .dataTables_filter{
-
-    width:100%;
-    display:flex;
-    justify-content:flex-end;
-    align-items:center;
-    margin-bottom:20px;
-
+#accountTable_wrapper .dataTables_filter {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-bottom: 20px;
 }
 
-#accountTable_wrapper .dataTables_filter label{
-
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:600;
-    color:#0b1c54;
-    margin:0;
-
+#accountTable_wrapper .dataTables_filter label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 600;
+	color: #0b1c54;
+	margin: 0;
 }
 
-#accountTable_wrapper .dataTables_filter input{
-
-    width:260px;
-    height:44px !important;
-    border-radius:12px !important;
-    border:1px solid #dbeafe !important;
-    padding:0 14px !important;
-    outline:none !important;
-    margin-left:0 !important;
-    background:white;
-
+#accountTable_wrapper .dataTables_filter input {
+	width: 260px;
+	height: 44px !important;
+	border-radius: 12px !important;
+	border: 1px solid #dbeafe !important;
+	padding: 0 14px !important;
+	outline: none !important;
+	margin-left: 0 !important;
+	background: white;
 }
 
 /* TABLE INFO + PAGINATION */
-
-#accountTable_wrapper .dataTables_info{
-
-    float:left;
-    padding-top:18px;
-    font-size:14px;
-    color:#64748b;
-
+#accountTable_wrapper .dataTables_info {
+	float: left;
+	padding-top: 18px;
+	font-size: 14px;
+	color: #64748b;
 }
 
-#accountTable_wrapper .dataTables_paginate{
+#accountTable_wrapper .dataTables_paginate {
+	float: right;
+	padding-top: 10px;
+}
 
-    float:right;
-    padding-top:10px;
+#selectedTable_wrapper .dataTables_filter {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-bottom: 20px;
+}
 
+#selectedTable_wrapper .dataTables_filter label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 600;
+	color: #0b1c54;
+	margin: 0;
+}
+
+#selectedTable_wrapper .dataTables_filter input {
+	width: 260px;
+	height: 44px !important;
+	border-radius: 12px !important;
+	border: 1px solid #dbeafe !important;
+	padding: 0 14px !important;
+	outline: none !important;
+	margin-left: 0 !important;
+	background: white;
+}
+
+/* TABLE INFO + PAGINATION */
+#selectedTable_wrapper .dataTables_info {
+	float: left;
+	padding-top: 18px;
+	font-size: 14px;
+	color: #64748b;
+}
+
+#selectedTable_wrapper .dataTables_paginate {
+	float: right;
+	padding-top: 10px;
+}
+
+.dataTables_empty {
+	text-align: center !important;
 }
 
 /* RESPONSIVE */
-
-@media(max-width:768px){
-
-    #accountTable_wrapper .dataTables_filter{
-
-        justify-content:flex-start;
-        margin-top:15px;
-
-    }
-
-    #accountTable_wrapper .dataTables_filter input{
-
-        width:100%;
-
-    }
-
-}
-.schedule-group{
-    display:flex;
-    gap:12px;
-    align-items:center;
-    flex-wrap:nowrap;
+@media ( max-width :768px) {
+	#accountTable_wrapper .dataTables_filter {
+		justify-content: flex-start;
+		margin-top: 15px;
+	}
+	#accountTable_wrapper .dataTables_filter input {
+		width: 100%;
+	}
 }
 
-.schedule-group .radio-box{
-    padding:10px 18px;
-    min-width:auto;
+.schedule-group {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	flex-wrap: nowrap;
 }
 
-.schedule-group{
-    display:flex;
-    align-items:center;
-    gap:200px;
+.schedule-group .radio-box {
+	padding: 10px 18px;
+	min-width: auto;
 }
 
-.schedule-group .radio-box{
-    padding:10px 18px;
-    min-width:auto;
-    margin-bottom:0;
+.schedule-group {
+	display: flex;
+	align-items: center;
+	gap: 200px;
 }
 
-#scheduleDetails .form-control{
-    height: 42px;
-    border-radius: 8px;
+.schedule-group .radio-box {
+	padding: 10px 18px;
+	min-width: auto;
+	margin-bottom: 0;
+}
+
+#scheduleDetails .form-control {
+	height: 42px;
+	border-radius: 8px;
+}
+</style>
+<style>
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 52px;
+	height: 28px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #cbd5e1;
+	transition: .4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	transition: .4s;
+}
+
+input:checked+.slider {
+	background-color: #2563eb;
+}
+
+input:checked+.slider:before {
+	transform: translateX(24px);
+}
+
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
+}
+</style>
+
+<style>
+@keyframes spin { 0% {
+	transform: rotate(0deg);
+}100%
+{
+transform : rotate(360deg);
+}
 }
 </style>
 
@@ -547,551 +613,416 @@ table.dataTable thead .sorting:after{
 
 <body>
 
-<div th:insert="AccountStatementHeader :: header"></div>
+	<div th:insert="AccountStatementHeader :: header"></div>
 
-<div class="main-wrapper" id="mainWrapper">
+	<div class="main-wrapper" id="mainWrapper">
 
-<div class="main-container" th:if="${formmode}=='StatementRequest'">
+		<div class="main-container" th:if="${formmode}=='StatementRequest'">
 
-    <!-- HEADER -->
+			<!-- HEADER -->
 
-    <div class="top-header">
+			<div class="top-header">
 
-        <div class="header-left">
+				<div class="header-left">
 
-            <div class="header-icon">
-                <i class="fa-solid fa-file-lines"></i>
-            </div>
+					<div class="header-icon">
+						<i class="fa-solid fa-file-lines"></i>
+					</div>
 
-            <div>
+					<div>
 
-                <div class="header-title">
-                    Statement Request
-                </div>
+						<div class="header-title">Statement Request</div>
 
-                <div class="header-subtitle">
-                    Generate Single / Multiple Customer Statements
-                </div>
+						<div class="header-subtitle">Generate Single / Multiple
+							Customer Statements</div>
 
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- MAIN CARD -->
-
-    <div class="main-card">
-
-        <div class="section-title">
-            Statement Type
-        </div>
-
-        <!-- RADIO -->
-
-        <div class="radio-group">
-
-            <label class="radio-box">
-
-                <input type="radio"
-                name="statementType"
-                value="single"
-                checked
-                onchange="changeStatementType()">
-
-                <span>Single Account</span>
-
-            </label>
-
-            <label class="radio-box">
-
-                <input type="radio"
-                name="statementType"
-                value="multiple"
-                onchange="changeStatementType()">
-
-                <span>Multiple Accounts</span>
-
-            </label>
-
-        </div>
-
-        <!-- SINGLE -->
-
-        <div id="singleAccountDiv">
-
-            <div class="row">
-
-				<div class="col-lg-3 mb-3">
-
-				    <label class="form-label">
-				        Customer ID
-				    </label>
-
-					<input type="text" class="form-control" id="customerId" list="customerList" placeholder="Select Customer ID" onchange="getCustomerAccounts()">
-
-					<datalist id="customerList">
-					
-					    <option th:each="custlistdata : ${custlist}"
-					            th:value="${custlistdata.orgkey}"
-					            th:text="${custlistdata.orgkey + ' - ' + custlistdata.cust_last_name}">
-					    </option>
-					
-					</datalist>
+					</div>
 
 				</div>
 
-				<div class="col-lg-3 mb-3">
+			</div>
 
-				    <label class="form-label">
-				        Account Number
-				    </label>
+			<!-- MAIN CARD -->
 
-					<select class="form-control"
-					        id="accountNumber"
-					        onchange="setAccountData()">
+			<div class="main-card">
 
-					    <option value="">
-					        Select Account
-					    </option>
+				<div class="section-title">Statement Type</div>
 
-					</select>
+				<!-- RADIO -->
+
+				<div class="radio-group">
+
+					<label class="radio-box"> <input type="radio"
+						name="statementType" value="single" checked
+						onchange="changeStatementType()"> <span>Single
+							Account</span>
+
+					</label> <label class="radio-box"> <input type="radio"
+						name="statementType" value="multiple"
+						onchange="changeStatementType()"> <span>Multiple
+							Accounts</span>
+
+					</label>
+
+				</div>
+
+				<!-- SINGLE -->
+
+				<div id="singleAccountDiv">
+
+					<div class="row">
+
+						<div class="col-lg-3 mb-3">
+
+							<label class="form-label"> Customer ID </label> <input
+								type="text" class="form-control" id="customerId"
+								list="customerList" placeholder="Select Customer ID"
+								onchange="getCustomerAccounts()">
+
+							<datalist id="customerList">
+
+								<option th:each="custlistdata : ${custlist}"
+									th:value="${custlistdata.orgkey}"
+									th:text="${custlistdata.orgkey + ' - ' + custlistdata.cust_last_name}">
+								</option>
+
+							</datalist>
+
+						</div>
+
+						<div class="col-lg-3 mb-3">
+
+							<label class="form-label"> Account Number </label> <select
+								class="form-control" id="accountNumber"
+								onchange="setAccountData()">
+
+								<option value="">Select Account</option>
+
+							</select>
+
+						</div>
+
+						<div class="col-lg-3 mb-3">
+
+							<label class="form-label"> Currency </label> <input type="text"
+								class="form-control" id="currency" readonly> <input
+								type="hidden" class="form-control" id="acid" readonly> <input
+								type="hidden" id="accountname" readonly>
+
+
+						</div>
+						<!-- ACCOUNT DETAILS -->
+
+						<div class="col-lg-3 mb-3">
+
+							<label class="form-label"> Available Balance </label> <input
+								type="text" class="form-control" id="availableBalance" readonly>
+
+						</div>
+
+						<!-- STATEMENT PERIOD -->
+
+
+					</div>
 
 				</div>
 
-				<div class="col-lg-3 mb-3">
 
-				    <label class="form-label">
-				        Currency
-				    </label>
 
-					<input type="text" class="form-control" id="currency" readonly>
-					<input type="hidden" class="form-control" id="acid" readonly>
-					<input type="hidden"  id="accountname" readonly>
-					
+				<!-- MULTIPLE -->
+
+				<div id="multipleAccountDiv" style="display: none;">
+
+					<div class="row">
+						<div class="col-lg-6 mb-3">
+							<div class="sub-title">Selection Mode</div>
+							<div class="radio-group">
+
+								<label class="radio-box"> <input type="radio"
+									name="selectionMode" value="accountwise" checked
+									onchange="changeSelectionMode()"> <span>Account
+										Type Wise</span>
+
+								</label> <label class="radio-box"> <input type="radio"
+									name="selectionMode" value="schmtypewise"
+									onchange="changeSelectionMode()"> <span>Schm
+										Type Wise</span>
+
+								</label> <label class="radio-box"> <input type="radio"
+									name="selectionMode" value="customerwise"
+									onchange="changeSelectionMode()"> <span>Customer
+										Wise</span>
+
+								</label>
+
+
+
+							</div>
+						</div>
+
+						<div class="col-lg-3  mb-3" id="accountTypeDiv">
+
+
+
+							<div class="sub-title">Account Type</div>
+
+							<select class="form-control"
+								onchange="getAccountdata(this.value)">
+
+								<option value="">All Accounts</option>
+
+								<option th:each="type : ${accountTypes}" th:value="${type}"
+									th:text="${type}"></option>
+
+							</select>
+
+						</div>
+
+						<div class="col-lg-3 mb-3" id="customerWiseDiv"
+							style="display: none;">
+
+							<div class="sub-title">Select Customer</div>
+
+							<select class="form-control"
+								onchange="getAccountdata(this.value)">
+
+								<option value="">All Customers</option>
+
+								<option th:each="cust : ${custlist}" th:value="${cust.orgkey}"
+									th:text="${cust.orgkey + ' - ' + cust.cust_last_name}">
+								</option>
+
+							</select>
+
+						</div>
+
+						<div class="col-lg-3 mb-3" id="schmtypewiseDiv"
+							style="display: none;">
+
+							<div class="sub-title">Select schm type</div>
+
+							<select class="form-control"
+								onchange="getAccountdata(this.value)">
+
+								<option value="">Select schm type</option>
+
+								<option th:each="schm : ${schmtype}" th:value="${schm}"
+									th:text="${schm}"></option>
+
+							</select>
+
+						</div>
+
+						<div class="col-lg-2 mb-3 ">
+							<div class="sub-title">Schedule</div>
+
+							<div class="schedule-group d-flex gap-2">
+
+								<label class="radio-box mb-0"> <input type="radio"
+									name="wantSchedule" value="yes"
+									onchange="toggleScheduleFields()"> <span>Yes</span>
+
+								</label> <label class="radio-box mb-0"> <input type="radio"
+									name="wantSchedule" value="no" checked
+									onchange="toggleScheduleFields()"> <span>No</span>
+
+								</label>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="row mb-3" id="scheduleDetails" style="display: none;">
+
+						<!-- ROW 1 -->
+
+						<div class="col-lg-6 mb-3">
+
+							<label class="form-label"> Schedule Name </label> <input
+								type="text" class="form-control" id="scheduleName"
+								placeholder="Enter Schedule Name">
+
+						</div>
+
+						<div class="col-lg-6 mb-3">
+
+							<label class="form-label"> Frequency </label> <select
+								class="form-control" id="Frequency">
+
+								<option value="">-- Select Frequency --</option>
+
+								<option value="Daily">Daily</option>
+
+								<option value="Weekly">Weekly</option>
+
+								<option value="Monthly">Monthly</option>
+
+								<option value="Yearly">Yearly</option>
+
+							</select>
+
+						</div>
+
+						<!-- ROW 2 -->
+
+						<div class="col-lg-6 mb-3">
+
+							<label class="form-label"> Schedule Date </label> <input
+								type="date" class="form-control" id="scheduleDate">
+
+						</div>
+
+						<div class="col-lg-6 mb-3">
+
+							<label class="form-label"> Schedule Time </label> <input
+								type="time" class="form-control" id="scheduleTime">
+
+						</div>
+
+					</div>
+
+
+
+					<!-- Offer Alert -->
+
+					<div class="col-lg-7">
+
+						<div class="sub-title mb-2">Marketing collaterals</div>
+
+						<div class="d-flex align-items-center gap-3 flex-wrap">
+
+							<!-- YES -->
+							<label class="radio-box mb-0"> <input type="radio"
+								name="offerAlert" value="yes" onchange="toggleUploadField()">
+
+								<span>Yes</span>
+
+							</label>
+
+							<!-- NO -->
+							<label class="radio-box mb-0"> <input type="radio"
+								name="offerAlert" value="no" checked
+								onchange="toggleUploadField()"> <span>No</span>
+
+							</label>
+
+							<!-- Upload Option -->
+							<div id="uploadDiv" style="display: none;">
+
+								<input type="file" class="form-control" id="marketingFile">
+
+							</div>
+
+						</div>
+
+					</div>
+
+
+					<!-- TABLE -->
+
+					<div class="table-container">
+
+						<table id="accountTable" class="display">
+
+							<thead>
+
+								<tr>
+
+									<th style="width: 70px;"><input type="checkbox"
+										id="selectAll"></th>
+									<th>Customer ID</th>
+									<th>Customer Name</th>
+									<th>Customer Email</th>
+									<th>Account Number</th>
+									<th>Account Type</th>
+									<th>Acid</th>
+									<th>Currency</th>
+
+								</tr>
+
+							</thead>
+
+							<tbody id="accountTableBody">
+
+							</tbody>
+
+						</table>
+
+					</div>
 
 				</div>
-				<!-- ACCOUNT DETAILS -->
 
-				<div class="col-lg-3 mb-3">
+			</div>
+			<!-- STATEMENT SETTINGS CARD -->
 
-				    <label class="form-label">
-				        Available Balance
-				    </label>
+			<div class="selected-card">
 
-					<input type="text"
-					       class="form-control"
-					       id="availableBalance"
-					       readonly>
-
-				</div>
+				<div class="section-title">Statement Settings</div>
 
 				<!-- STATEMENT PERIOD -->
 
-				
-            </div>
+				<div class="sub-title">Statement Period</div>
 
-        </div>
-        
-        
+				<div class="row">
 
-        <!-- MULTIPLE -->
+					<div class="col-lg-4 mb-3">
 
-        <div id="multipleAccountDiv" style="display:none;">
-        
-        	 <div class="row">
-	        	 	<div class="col-lg-4 mb-3">
-	        	 		 <div class="sub-title">
-	                		Selection Mode
-	            		</div>
-	            	<div class="radio-group">
+						<label class="form-label"> From Date </label> <input type="date"
+							class="form-control" id="fromDate">
+
+					</div>
+
+					<div class="col-lg-4 mb-3">
+
+						<label class="form-label"> To Date </label> <input type="date"
+							class="form-control" id="toDate">
+
+					</div>
+
+					<div class="col-lg-4 mb-3">
+
+						<label class="form-label"> Format </label>
+						 	<select class="form-control" id="statementFormat">
+
+								<option value="PDF">PDF</option>
+								<option value="EXCEL">EXCEL</option>
 	
-	                <label class="radio-box">
-	
-	                    <input type="radio"
-	                    name="selectionMode"
-	                    value="accountwise"
-	                    checked
-	                    onchange="changeSelectionMode()">
-	
-	                    <span>Account Type Wise</span>
-	
-	                </label>
-	
-	                <label class="radio-box">
-	
-	                    <input type="radio"
-	                    name="selectionMode"
-	                    value="customerwise"
-	                    onchange="changeSelectionMode()">
-	
-	                    <span>Customer Wise</span>
-	
-	                </label>
-	
-	            </div>	
-            </div>
-            
-             <div class="col-lg-4  mb-3"
-                id="accountTypeDiv">
+							</select>
 
-              
-                    
-                     <div class="sub-title">
-                		 Account Type
-            		</div>
-
-					<select class="form-control"
-					        onchange="filterAccountType(this.value)">
-
-					    <option value="">
-					        All Accounts
-					    </option>
-
-					    <option th:each="type : ${accountTypes}"
-					            th:value="${type}"
-					            th:text="${type}">
-					    </option>
-
-					</select>
-
-                </div>
-                
-                <div class="col-lg-4 mb-3" id="customerWiseDiv" style="display:none;">
-
-				    <div class="sub-title">
-				        Select Customer
-				    </div>
-
-				    <select class="form-control"
-				            onchange="filterCustomer(this.value)">
-
-				        <option value="">
-				            All Customers
-				        </option>
-
-				        <option th:each="cust : ${custlist}"
-				                th:value="${cust.orgkey}"
-				                th:text="${cust.orgkey + ' - ' + cust.cust_last_name}">
-				        </option>
-
-				    </select>
+					</div>
 
 				</div>
-				
-				<div class="col-lg-4 mb-3 ">
-					<div class="sub-title">
-			            Schedule
-			        </div>
-			        
-			        <div class="schedule-group d-flex gap-2">
 
-			            <label class="radio-box mb-0">
+				<!-- DELIVERY CHANNEL -->
 
-							<input type="radio"
-							       name="wantSchedule"
-							       value="yes"
-							       onchange="toggleScheduleFields()">
+				<div class="row">
+					<div class="col-lg-4 mb-3">
+						<div class="sub-title mt-4">Delivery Channel</div>
 
-			                <span>Yes</span>
+						<div class="radio-group">
 
-			            </label>
+							<label class="radio-box"> <input type="radio"
+								name="deliveryChannel" value="email" checked
+								onchange="toggleDeliveryChannel()"> <span>Email</span>
 
-			            <label class="radio-box mb-0">
+							</label> <label class="radio-box"> <input type="radio"
+								name="deliveryChannel" value="download"
+								onchange="toggleDeliveryChannel()"> <span>Download</span>
 
-							<input type="radio"
-							       name="wantSchedule"
-							       value="no"
-							       checked
-							       onchange="toggleScheduleFields()">
+							</label> <label class="radio-box"> <input type="radio"
+								name="deliveryChannel" value="both"
+								onchange="toggleDeliveryChannel()"> <span>Both</span>
 
-			                <span>No</span>
+							</label>
 
-			            </label>
+						</div>
 
-			        </div>
-			        
-				</div>
-            
-            </div>
-            
-			<div class="row mb-3"
-			     id="scheduleDetails"
-			     style="display:none;">
 
-			    <!-- ROW 1 -->
+					</div>
 
-			    <div class="col-lg-6 mb-3">
-
-			        <label class="form-label">
-			            Schedule Name
-			        </label>
-
-			        <input type="text"
-			               class="form-control"
-			               id="scheduleName"
-			               placeholder="Enter Schedule Name">
-
-			    </div>
-
-			    <div class="col-lg-6 mb-3">
-
-			        <label class="form-label">
-			            Frequency
-			        </label>
-
-			        <select class="form-control"
-			                id="Frequency">
-
-			            <option value="">
-			                -- Select Frequency --
-			            </option>
-
-			            <option value="Daily">
-			                Daily
-			            </option>
-
-			            <option value="Weekly">
-			                Weekly
-			            </option>
-
-			            <option value="Monthly">
-			                Monthly
-			            </option>
-
-			            <option value="Yearly">
-			                Yearly
-			            </option>
-
-			        </select>
-
-			    </div>
-
-			    <!-- ROW 2 -->
-
-			    <div class="col-lg-6 mb-3">
-
-			        <label class="form-label">
-			            Schedule Date
-			        </label>
-
-			        <input type="date"
-			               class="form-control"
-			               id="scheduleDate">
-
-			    </div>
-
-			    <div class="col-lg-6 mb-3">
-
-			        <label class="form-label">
-			            Schedule Time
-			        </label>
-
-			        <input type="time"
-			               class="form-control"
-			               id="scheduleTime">
-
-			    </div>
-
-			</div>
-            
-           
-			
-			    <!-- Offer Alert -->
-
-			   <div class="col-lg-7">
-
-			    <div class="sub-title mb-2">
-			        Marketing collaterals
-			    </div>
-			
-			    <div class="d-flex align-items-center gap-3 flex-wrap">
-			
-			        <!-- YES -->
-			        <label class="radio-box mb-0">
-			
-			            <input type="radio"
-			                   name="offerAlert"
-			                   value="yes"
-			                   onchange="toggleUploadField()">
-			
-			            <span>Yes</span>
-			
-			        </label>
-			
-			        <!-- NO -->
-			        <label class="radio-box mb-0">
-			
-			            <input type="radio"
-			                   name="offerAlert"
-			                   value="no"
-			                   checked
-			                   onchange="toggleUploadField()">
-			
-			            <span>No</span>
-			
-			        </label>
-			
-			        <!-- Upload Option -->
-			        <div id="uploadDiv" style="display:none;">
-			
-			            <input type="file" class="form-control" id="marketingFile">
-			
-			        </div>
-			
-			    </div>
-
-		</div>
-
-
-            <!-- TABLE -->
-
-            <div class="table-container">
-
-                <table id="accountTable" class="display">
-
-                    <thead>
-
-                        <tr>
-
-                           <th style="width:70px;">
-                                <input type="checkbox" 
-                                id="selectAll">
-                            </th>
-                            <th>Customer ID</th>
-                            <th>Customer Name</th>
-                            <th>Account Number</th>
-                            <th>Account Type</th>
-                            <th>Currency</th>
-
-                        </tr>
-
-                    </thead>
-
-					<tbody id="accountTableBody">
-
-					</tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-	<!-- STATEMENT SETTINGS CARD -->
-
-	<div class="selected-card">
-
-	    <div class="section-title">
-	        Statement Settings
-	    </div>
-
-	    <!-- STATEMENT PERIOD -->
-
-	    <div class="sub-title">
-	        Statement Period
-	    </div>
-
-	    <div class="row">
-
-	        <div class="col-lg-4 mb-3">
-
-	            <label class="form-label">
-	                From Date
-	            </label>
-
-	            <input type="date"
-	                   class="form-control"
-	                   id="fromDate">
-
-	        </div>
-
-	        <div class="col-lg-4 mb-3">
-
-	            <label class="form-label">
-	                To Date
-	            </label>
-
-	            <input type="date"
-	                   class="form-control"
-	                   id="toDate">
-
-	        </div>
-
-	        <div class="col-lg-4 mb-3">
-
-	            <label class="form-label">
-	                Format
-	            </label>
-
-	            <select class="form-control"
-	                    id="statementFormat">
-
-	                <option value="PDF">
-	                    PDF
-	                </option>
-
-	                <!-- <option value="EXCEL">
-	                    EXCEL
-	                </option> -->
-
-	            </select>
-
-	        </div>
-
-	    </div>
-
-	    <!-- DELIVERY CHANNEL -->
-	    
-	    <div class="row">
-	    	<div class="col-lg-4 mb-3">
-	    		<div class="sub-title mt-4">
-	        Delivery Channel
-	    </div>
-
-	    <div class="radio-group">
-
-	        <label class="radio-box">
-
-	            <input type="radio"
-	                   name="deliveryChannel"
-	                   value="email"
-	                   checked
-	                   onchange="toggleDeliveryChannel()">
-
-	            <span>Email</span>
-
-	        </label>
-
-	        <label class="radio-box">
-
-	            <input type="radio"
-	                   name="deliveryChannel"
-	                   value="download"
-	                   onchange="toggleDeliveryChannel()">
-
-	            <span>Download</span>
-
-	        </label>
-
-	        <label class="radio-box">
-
-	            <input type="radio"
-	                   name="deliveryChannel"
-	                   value="both"
-	                   onchange="toggleDeliveryChannel()">
-
-	            <span>Both</span>
-
-	        </label>
-
-	    </div>
-	    	
-	    	
-	    	</div>
-	    	
-	    	<div class="col-lg-4 mb-3" id="emailDiv">
+					<!-- <div class="col-lg-4 mb-3" id="emailDiv">
 	    		
 				<div class="sub-title mt-4">
 	        Email ID
@@ -1101,753 +1032,358 @@ table.dataTable thead .sorting:after{
 	                   id="emailId"
 	                   placeholder="Enter Email ID">
 	    	
-	    	</div>
-	    
-	    
-	    </div>
+	    	</div> -->
 
-	    
-
-	    
-
-	</div>
-    <!-- SELECTED -->
-	<div class="selected-card">
-
-	    <div class="section-title">
-	        Selected Accounts
-	    </div>
-
-	    <div class="table-container">
-
-	        <table id="selectedTable"
-	               class="table align-middle selected-table">
-
-	            <thead>
-
-	                <tr>
-
-	                    <th>Customer ID</th>
-	                    <th>Account Number</th>
-	                    <th>Currency</th>
-	                    <th class="text-center">
-	                        Action
-	                    </th>
-
-	                </tr>
-
-	            </thead>
-
-	            <tbody id="selectedBody">
-
-	            </tbody>
-
-	        </table>
-
-	    </div>
-
-	    <div class="btn-container">
-
-	        <button type="button"
-	                class="custom-btn cancel-btn">
-
-	            Cancel
-
-	        </button>
-
-			<button type="button"
-			        class="custom-btn generate-btn"
-			        onclick="openStatementPreview()">
-
-			    Preview
-
-			</button>
-
-	    </div>
-
-	</div>
-</div>
-
-
-
-<!-- STATEMENT PREVIEW SCREEN -->
-
-<div id="statementPreviewScreen" th:if="${formmode}=='Preview'"
-     style=" padding:25px;">
-
-    <div class="selected-card">
-
-        <!-- TOP -->
-
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:25px;
-            flex-wrap:wrap;
-            gap:15px;">
-
-            <div>
-
-                <div class="section-title"
-                     style="margin-bottom:5px;">
-
-                    Statement Preview
-
-                </div>
-
-                <div style="color:#64748b;">
-                    Preview your account statement
-                </div>
-
-            </div>
-
-            <div style="
-                display:flex;
-                gap:10px;
-                flex-wrap:wrap;">
-
-                <div class="dropdown" style="display:inline-block;">
-
-    <button class="custom-btn generate-btn dropdown-toggle"
-            type="button"
-            data-toggle="dropdown"
-            style="min-width:140px; height:45px;">
-
-        Download
-
-    </button>
-
-    <div class="dropdown-menu">
-
-        <a class="dropdown-item"
-           href="javascript:void(0)"
-           onclick="ReportDownloadPDF('normal')">
-
-            Normal PDF
-
-        </a>
-
-        <a class="dropdown-item"
-           href="javascript:void(0)"
-           onclick="ReportDownloadPDF('arabic')">
-
-            Arabic PDF
-
-        </a>
-
-    </div>
-
-</div>
-
-                <button class="custom-btn cancel-btn" onclick="getEpdfDep()"
-                        style="min-width:120px; height:45px;"
-                        >
-
-                    Generate
-
-                </button>
-
-                <button class="custom-btn cancel-btn"
-                        style="min-width:120px; height:45px;"
-                        onclick="closePreviewScreen()">
-
-                    Close
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- CUSTOMER CARD -->
-
-        <div class="main-card">
-
-            <div class="row align-items-center">
-
-                <!-- LEFT -->
-
-                <div class="col-lg-8">
-
-                    <div style="
-                        display:flex;
-                        align-items:center;">
-
-                        <div style="
-                            width:70px;
-                            height:70px;
-                            border-radius:18px;
-                            background:linear-gradient(135deg,#0d6efd,#003cbf);
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            color:white;
-                            font-size:28px;
-                            margin-right:18px;">
-
-                            <i class="fa fa-user"></i>
-
-                        </div>
-
-                        <div>
-
-                            <div id="previewCustomerName"
-                                 style="
-                                 font-size:22px;
-                                 font-weight:700;
-                                 color:#0b1c54;">
-
-                                Customer Name
-
-                            </div>
-
-                            <div id="previewAccountNumber" style=" color:#64748b; margin-top:5px;">
-
-                                <span th:text="${Acctname}"></span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- RIGHT -->
-
-                <div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
-
-                   <div style="
-    color:#64748b;
-    font-size:14px;">
-
-    Statement Period
-
-</div>
-
-<div id="previewDate"
-     style="
-     font-weight:700;
-     color:#0b1c54;
-     margin-top:5px;">
-
-    <span th:text="${opr_datefd}"></span>
-<span style="color:#64748b;"> → </span>
-<span th:text="${opr_datetd}"></span>
-
-</div>
-
-                </div>
-
-            </div>
-
-            <!-- SUMMARY -->
-
-            <div class="row text-center mt-4">
-
-                <div class="col-lg-3">
-
-                    <div style="color:#64748b;">
-                        Opening Balance
-                    </div>
-
-                    <div style="
-                        font-size:22px;
-                        font-weight:700;
-                        color:#0b1c54;">
-
-                        <span th:text="${#numbers.formatDecimal(openingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
-
-                    </div>
-
-                </div>
-
-				<!-- Total Credits -->
-				<div class="col-lg-3">
-
-				    <div style="color:#64748b;">
-				        Total Credits
-				    </div>
-
-				    <div style="
-				        font-size:22px;
-				        font-weight:700;
-				        color:#16a34a;">
-
-				        <span th:text="${#numbers.formatDecimal(totalCredit,1,'COMMA',2,'POINT')} + ' AED' "></span>
-
-				    </div>
 
 				</div>
 
-				<!-- Total Debits -->
-				<div class="col-lg-3">
 
-				    <div style="color:#64748b;">
-				        Total Debits
-				    </div>
 
-				    <div style="
-				        font-size:22px;
-				        font-weight:700;
-				        color:#dc2626;">
 
-				       <span th:text=" ${#numbers.formatDecimal(totalDebit,1,'COMMA',2,'POINT')} + ' AED' "></span>
 
-				    </div>
+			</div>
+			<!-- SELECTED -->
+			<div class="selected-card">
+
+				<div class="section-title">Selected Accounts</div>
+
+				<div class="table-container">
+
+					<table id="selectedTable" class="table align-middle selected-table">
+
+						<thead>
+
+							<tr>
+
+								<th>Customer ID</th>
+								<th>Customer Name</th>
+								<th>Customer Email</th>
+								<th>Account Number</th>
+								<th>Account Type</th>
+								<th>Acid</th>
+								<th>Currency</th>
+								<th class="text-center">Action</th>
+
+							</tr>
+
+						</thead>
+
+						<tbody id="selectedBody">
+
+						</tbody>
+
+					</table>
 
 				</div>
 
-				<!-- Closing Balance -->
-				<div class="col-lg-3">
+				<div class="btn-container">
 
-				    <div style="color:#64748b;">
-				        Closing Balance
-				    </div>
+					<button type="button" class="custom-btn cancel-btn">
 
-				    <div style="
-				        font-size:22px;
-				        font-weight:700;
-				        color:#0b1c54;">
+						Cancel</button>
 
-				        <span th:text="${#numbers.formatDecimal(closingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
-				    </div>
+					<button type="button" class="custom-btn generate-btn"
+						onclick="openStatementPreview()">Preview</button>
 
 				</div>
 
-            </div>
-
-        </div>
-
-        <!-- TABLE -->
-
-        <div class="main-card mt-4">
-
-            <div class="section-title">
-                Transactions
-            </div>
-
-            <div class="table-container">
-            	<input type="hidden" id="reportId" th:value="${reportId}">
-				<input type="hidden" id="acidhd" th:value="${acid}">
-				<input type="hidden" id="userid" th:value="${userid}">
-				<input type="hidden" id="category" th:value="${category}">
-				<input type="hidden" id="accountnumberhd" th:value="${accountnumber}">
-				<input type="hidden" id="Acctname" th:value="${Acctname}">
-				<input type="hidden" id="fromdate" th:value="${opr_datefd}">
-				<input type="hidden" id="todatehd" th:value="${opr_datetd}">
-				<input type="hidden" id="customerId" th:value="${customerId}">
+			</div>
+		</div>
 
 
-                <table class="table align-middle">
-                    <thead>
-                    <tr>
-                    	<th>Transaction Date</th>
-						<th>Reference Number </th>
-						<th>Debit/Credit</th>
-						<th>Value Date</th>
-						<th>particulars</th>
-						<th>Debit Amount</th>
-						<th>Credit Amount</th>
-						<th>Tran Currency</th>
-					</tr>	
-                    </thead>
-                    
-                    <tbody>
-			                    
-                    				<tr th:if="${COUNT} == '0'">
-										<td colspan="9" style="text-align: center; color: red">No
-											Data Found</td>
-									</tr>
-									<tr th:if="${COUNT} != '0'" th:each="custInq : ${tranInquiry}"
-										th:attr="data-acid=${custInq.acid}"
-										th:id="${custInq.acid}" class="userlist">
 
-										<td th:text="${#dates.format(custInq?.tran_date, 'dd-MM-yyyy')}"></td>
+		<!-- STATEMENT PREVIEW SCREEN -->
 
-										<td th:text="${custInq.tran_id}"></td>
-										<th:block
-												th:switch="${custInq.part_tran_type}">
-												<td th:case="'D'">Debit</td>
-												<td th:case="'C'">Credit</td>
-											</th:block>
-										<td th:text="${#dates.format(custInq?.value_date, 'dd-MM-yyyy')}"></td>
-										<td th:text="${custInq.tran_particular}"></td>
-										<th:block th:switch="${custInq.part_tran_type}">
-										<td th:case="'D'"  align="right" th:text="'-'+${#numbers.formatDecimal(custInq.tran_amt 	,1,'COMMA',2,'POINT')}"></td>
+		<div id="statementPreviewScreen" th:if="${formmode}=='Preview'"
+			style="padding: 25px;">
+
+			<div class="selected-card">
+
+				<!-- TOP -->
+
+				<div
+					style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+
+					<!-- LEFT SIDE -->
+					<div class="section-title"
+						style="margin-bottom: 0; font-size: 26px; font-weight: 600; color: #1e293b;">
+						Statement Preview</div>
+
+					<!-- RIGHT SIDE -->
+					<div
+						style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+
+						<!-- LANGUAGE TOGGLE -->
+						<div style="display: flex; align-items: center; gap: 10px;">
+
+							<span style="font-size: 14px; color: #475569; font-weight: 500;">
+								English </span> <label class="switch"> <input type="checkbox"
+								id="languageToggle"> <span class="slider round"></span>
+
+							</label> <span style="font-size: 14px; color: #475569; font-weight: 500;">
+								Arabic </span>
+
+						</div>
+
+						<!-- GENERATE BUTTON -->
+						<button class="custom-btn generate-btn" onclick="generatebtn()"
+							style="min-width: 120px; height: 45px;">Generate</button>
+
+						<!-- CLOSE BUTTON -->
+						<button class="custom-btn cancel-btn"
+							onclick="closePreviewScreen()"
+							style="min-width: 120px; height: 45px;">Close</button>
+
+					</div>
+
+				</div>
+
+				<!-- CUSTOMER CARD -->
+
+				<div class="main-card">
+
+					<div class="row align-items-center">
+
+						<!-- LEFT -->
+
+						<div class="col-lg-8">
+
+							<div style="display: flex; align-items: center;">
+
+								<div
+									style="width: 70px; height: 70px; border-radius: 18px; background: linear-gradient(135deg, #0d6efd, #003cbf); display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; margin-right: 18px;">
+
+									<i class="fa fa-user"></i>
+
+								</div>
+
+								<div class="dropdown">
+
+									<!-- CUSTOMER NAME -->
+
+									<div id="previewCustomerName" class="dropdown-toggle"
+										data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false"
+										style="font-size: 22px; font-weight: 700; color: #0b1c54; cursor: pointer;">
+
+										<span th:text="${Acctname}"></span>
+
+									</div>
+
+									<!-- ACCOUNT NUMBER -->
+
+									<div id="previewAccountNumber"
+										style="color: #64748b; margin-top: 5px;">
+
+										<span th:text="${accountnumber}"></span>
+
+									</div>
+
+									<!-- DROPDOWN LIST -->
+
+									<div class="dropdown-menu"
+										style="min-width: 300px; border-radius: 12px; padding: 10px; max-height: 250px; overflow-y: auto; overflow-x: hidden;">
+
+										<a class="dropdown-item" href="#"
+											th:each="acc : ${accountList}"
+											th:text="${acc.customerName + ' - ' + acc.accountNumber}"
+											th:attr="onclick=|loadPreviewData('${acc.accountNumber}')|">
+										</a> <input type="hidden" id="accounts" th:value="${accountsJson}">
+										<input type="hidden" id="channel" th:value="${channel}">
+										<input type="hidden" id="statementFormat" th:value="${statementFormat}">
+										
+										
+
+
+									</div>
+
+								</div>
+
+							</div>
+
+						</div>
+
+						<!-- RIGHT -->
+
+						<div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
+
+							<div style="color: #64748b; font-size: 14px;">Statement
+								Period</div>
+
+							<div id="previewDate"
+								style="font-weight: 700; color: #0b1c54; margin-top: 5px;">
+
+								<span th:text="${opr_datefd}"></span> <span
+									style="color: #64748b;"> → </span> <span
+									th:text="${opr_datetd}"></span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- SUMMARY -->
+
+					<div class="row text-center mt-4">
+
+						<div class="col-lg-3">
+
+							<div style="color: #64748b;">Opening Balance</div>
+
+							<div style="font-size: 22px; font-weight: 700; color: #0b1c54;">
+
+								<span id="multiOpeningBalance"
+									th:text="${#numbers.formatDecimal(openingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
+
+							</div>
+
+						</div>
+
+						<!-- Total Credits -->
+						<div class="col-lg-3">
+
+							<div style="color: #64748b;">Total Credits</div>
+
+							<div style="font-size: 22px; font-weight: 700; color: #16a34a;">
+
+								<span id="multiTotalCredit"
+									th:text="${#numbers.formatDecimal(totalCredit,1,'COMMA',2,'POINT')} + ' AED' "></span>
+
+							</div>
+
+						</div>
+
+						<!-- Total Debits -->
+						<div class="col-lg-3">
+
+							<div style="color: #64748b;">Total Debits</div>
+
+							<div style="font-size: 22px; font-weight: 700; color: #dc2626;">
+
+								<span id="multiTotalDebit"
+									th:text=" ${#numbers.formatDecimal(totalDebit,1,'COMMA',2,'POINT')} + ' AED' "></span>
+
+							</div>
+
+						</div>
+
+						<!-- Closing Balance -->
+						<div class="col-lg-3">
+
+							<div style="color: #64748b;">Closing Balance</div>
+
+							<div style="font-size: 22px; font-weight: 700; color: #0b1c54;">
+
+								<span id="multiClosingBalance"
+									th:text="${#numbers.formatDecimal(closingBalance,1,'COMMA',2,'POINT')} + ' AED' "></span>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- TABLE -->
+
+				<div class="main-card mt-4">
+
+					<div class="section-title">Transactions</div>
+
+					<div class="table-container">
+						<input type="hidden" id="reportId" th:value="${reportId}">
+						<input type="hidden" id="acidhd" th:value="${acid}"> <input
+							type="hidden" id="userid" th:value="${userid}"> <input
+							type="hidden" id="category" th:value="${category}"> <input
+							type="hidden" id="accountnumberhd" th:value="${accountnumber}">
+						<input type="hidden" id="Acctname" th:value="${Acctname}">
+						<input type="hidden" id="fromdate" th:value="${opr_datefd}">
+						<input type="hidden" id="todatehd" th:value="${opr_datetd}">
+						<input type="hidden" id="customerId" th:value="${customerId}">
+
+
+						<table class="table align-middle">
+							<thead>
+								<tr>
+									<th>Transaction Date</th>
+									<th>Reference Number</th>
+									<th>Debit/Credit</th>
+									<th>Value Date</th>
+									<th>particulars</th>
+									<th>Debit Amount</th>
+									<th>Credit Amount</th>
+									<th>Tran Currency</th>
+								</tr>
+							</thead>
+
+							<tbody id="transactionTableBody">
+
+								<tr th:if="${COUNT} == '0'">
+									<td colspan="9" style="text-align: center; color: red">No
+										Data Found</td>
+								</tr>
+								<tr th:if="${COUNT} != '0'" th:each="custInq : ${tranInquiry}"
+									th:attr="data-acid=${custInq.acid}" th:id="${custInq.acid}"
+									class="userlist">
+
+									<td
+										th:text="${#dates.format(custInq?.tran_date, 'dd-MM-yyyy')}"></td>
+
+									<td th:text="${custInq.tran_id}"></td>
+									<th:block th:switch="${custInq.part_tran_type}">
+										<td th:case="'D'">Debit</td>
+										<td th:case="'C'">Credit</td>
+									</th:block>
+									<td
+										th:text="${#dates.format(custInq?.value_date, 'dd-MM-yyyy')}"></td>
+									<td th:text="${custInq.tran_particular}"></td>
+									<th:block th:switch="${custInq.part_tran_type}">
+										<td th:case="'D'" align="right"
+											th:text="'-'+${#numbers.formatDecimal(custInq.tran_amt 	,1,'COMMA',2,'POINT')}"></td>
 										<td th:case="'C'" align="right">-</td>
 									</th:block>
 
-										<th:block th:switch="${custInq.part_tran_type}" >
-										<td th:case="'C'" align="right" th:text="${#numbers.formatDecimal(custInq.tran_amt 	,1,'COMMA',2,'POINT')}"></td>
+									<th:block th:switch="${custInq.part_tran_type}">
+										<td th:case="'C'" align="right"
+											th:text="${#numbers.formatDecimal(custInq.tran_amt 	,1,'COMMA',2,'POINT')}"></td>
 										<td th:case="'D'" align="right">-</td>
 									</th:block>
-										
-										
-										<td th:text="${custInq.tran_crncy_code}"></td>
-										
-										
-                    
-                    </tbody>
 
-                       
 
-                </table>
+									<td th:text="${custInq.tran_crncy_code}"></td>
+							</tbody>
 
-            </div>
 
-        </div>
 
-    </div>
+						</table>
 
-</div>
+					</div>
 
+				</div>
 
-<div id="multiStatementPreviewScreen"
-     th:if="${formmode}=='MultiPreview'"
-     style="padding:25px;">
+			</div>
 
-    <div class="selected-card">
+		</div>
 
-        <!-- TOP -->
 
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:25px;
-            flex-wrap:wrap;
-            gap:15px;">
 
-            <div>
+	</div>
 
-                <div class="section-title"
-                     style="margin-bottom:5px;">
+	<!-- LOADER -->
 
-                    Multiple Statement Preview
+	<div id="loader"
+		style="display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(3px); justify-content: center; align-items: center;">
 
-                </div>
+		<div
+			style="width: 70px; height: 70px; border: 6px solid #dbeafe; border-top: 6px solid #2563eb; border-radius: 50%; animation: spin 1s linear infinite;"></div>
 
-                <div style="color:#64748b;">
+	</div>
 
-                    Preview multiple account statements
 
-                </div>
+	<script>
 
-            </div>
 
-            <div style="
-                display:flex;
-                gap:10px;
-                flex-wrap:wrap;">
-
-                <!-- DOWNLOAD -->
-
-                <div class="dropdown">
-
-                    <button class="custom-btn generate-btn dropdown-toggle"
-                            type="button"
-                            data-toggle="dropdown"
-                            style="min-width:140px;height:45px;">
-
-                        Download
-
-                    </button>
-
-                    <div class="dropdown-menu">
-
-                        <a class="dropdown-item"
-                           href="javascript:void(0)"
-                           onclick="ReportDownloadPDF('normal')">
-
-                            Normal PDF
-
-                        </a>
-
-                        <a class="dropdown-item"
-                           href="javascript:void(0)"
-                           onclick="ReportDownloadPDF('arabic')">
-
-                            Arabic PDF
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <!-- PRINT -->
-
-                <button class="custom-btn cancel-btn"
-                        style="min-width:120px;height:45px;"
-                        onclick="window.print()">
-
-                    Generate
-
-                </button>
-
-                <!-- CLOSE -->
-
-                <button class="custom-btn cancel-btn"
-                        style="min-width:120px;height:45px;"
-                        onclick="closePreviewScreen()">
-
-                    Close
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <!-- ACCOUNT SELECT -->
-
-        <div class="row mb-4">
-
-            <div class="col-lg-4">
-
-                <label class="form-label">
-
-                    Select Account
-
-                </label>
-
-                <select class="form-control"
-                        id="accountDropdown"
-                        onchange="loadPreviewData()">
-
-                    <option th:each="acc : ${accountList}"
-                            th:value="${acc}"
-                            th:text="${acc}">
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <!-- CUSTOMER CARD -->
-
-        <div class="main-card">
-
-            <div class="row align-items-center">
-
-                <div class="col-lg-8">
-
-                   
-                </div>
-
-                <!-- RIGHT -->
-
-                <div class="col-lg-4 text-lg-right mt-3 mt-lg-0">
-
-                    <div style="
-                        color:#64748b;
-                        font-size:14px;">
-
-                        Statement Period
-
-                    </div>
-
-                    <div style="
-                        font-weight:700;
-                        color:#0b1c54;
-                        margin-top:5px;">
-
-                        <span th:text="${fromDate}"></span>
-
-                        <span style="color:#64748b;">
-                            →
-                        </span>
-
-                        <span th:text="${toDate}"></span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- SUMMARY -->
-
-            <div class="row text-center mt-4">
-
-                <div class="col-lg-3">
-
-                    <div style="color:#64748b;">
-                        Opening Balance
-                    </div>
-
-                    <div id="multiOpeningBalance"
-                         style="
-                         font-size:22px;
-                         font-weight:700;
-                         color:#0b1c54;">
-                    </div>
-
-                </div>
-
-                <div class="col-lg-3">
-
-                    <div style="color:#64748b;">
-                        Total Credits
-                    </div>
-
-                    <div id="multiTotalCredit"
-                         style="
-                         font-size:22px;
-                         font-weight:700;
-                         color:#16a34a;">
-                    </div>
-
-                </div>
-
-                <div class="col-lg-3">
-
-                    <div style="color:#64748b;">
-                        Total Debits
-                    </div>
-
-                    <div id="multiTotalDebit"
-                         style="
-                         font-size:22px;
-                         font-weight:700;
-                         color:#dc2626;">
-                    </div>
-
-                </div>
-
-                <div class="col-lg-3">
-
-                    <div style="color:#64748b;">
-                        Closing Balance
-                    </div>
-
-                    <div id="multiClosingBalance"
-                         style="
-                         font-size:22px;
-                         font-weight:700;
-                         color:#0b1c54;">
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- TRANSACTION TABLE -->
-
-        <div class="main-card mt-4">
-
-            <div class="section-title">
-
-                Transactions
-
-            </div>
-
-            <div class="table-container">
-
-                <input type="hidden" id="multiacid">
-                <input type="hidden" id="multiaccountnumber">
-                <input type="hidden" id="multicustomerId">
-                <input type="hidden" id="multicurrency">
-				<input type="hidden"
-				       id="fromdate"
-				       th:value="${fromDate}">
-
-				<input type="hidden"
-				       id="todate"
-				       th:value="${toDate}">
-                <table class="table align-middle">
-
-                    <thead>
-
-                        <tr>
-
-							<th>Transaction Date</th>
-							<th>Reference Number </th>
-							<th>Debit/Credit</th>
-							<th>Value Date</th>
-							<th>particulars</th>
-							<th>Debit Amount</th>
-							<th>Credit Amount</th>
-							<th>Tran Currency</th>
-
-                        </tr>
-
-                    </thead>
-
-					<tbody id="transactionBody">
-
-					    <tr>
-
-					        <td>01-01-2025</td>
-					        <td>TXN1001</td>
-					        <td>Credit</td>
-					        <td>01-01-2025</td>
-					        <td>Salary Credit</td>
-					        <td>-</td>
-					        <td>25,000.00</td>
-					        <td>AED</td>
-
-					    </tr>
-
-					    <tr>
-
-					        <td>05-01-2025</td>
-					        <td>TXN1002</td>
-					        <td>Debit</td>
-					        <td>05-01-2025</td>
-					        <td>ATM Withdrawal</td>
-					        <td>5,000.00</td>
-					        <td>-</td>
-					        <td>AED</td>
-
-					    </tr>
-
-					    <tr>
-
-					        <td>10-01-2025</td>
-					        <td>TXN1003</td>
-					        <td>Debit</td>
-					        <td>10-01-2025</td>
-					        <td>Online Shopping</td>
-					        <td>2,500.00</td>
-					        <td>-</td>
-					        <td>AED</td>
-
-					    </tr>
-
-					    <tr>
-
-					        <td>15-01-2025</td>
-					        <td>TXN1004</td>
-					        <td>Credit</td>
-					        <td>15-01-2025</td>
-					        <td>Refund Credit</td>
-					        <td>-</td>
-					        <td>1,200.00</td>
-					        <td>AED</td>
-
-					    </tr>
-
-					</tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</div>
-<script>
 
 /* DATATABLE */
 
@@ -1861,16 +1397,22 @@ $(document).ready(function(){
     selectedTable =
     $('#selectedTable').DataTable({
 
-        paging:false,
-        searching:false,
-        info:false,
-        ordering:false
+    	pageLength : 5,
+        lengthChange : false,
+        ordering : false,
+        destroy : true
 
     });
+    accountTable =
+    $('#accountTable').DataTable({
 
-    /* LOAD ACCOUNT TABLE */
+        pageLength : 5,
+        lengthChange : false,
+        ordering : false,
+        destroy : true
 
- loadAccountTable("ALL");
+    });
+    
 
 });
 
@@ -1911,157 +1453,146 @@ function changeSelectionMode(){
 
         $("#accountTypeDiv").show();
         $("#customerWiseDiv").hide();
+        $("#schmtypewiseDiv").hide();
 
-    }else{
+    }
+    else if(mode === "schmtypewise"){
+    	
+    	$("#schmtypewiseDiv").show();
+    	$("#accountTypeDiv").hide();
+        $("#customerWiseDiv").hide();
+    }
+    
+    
+    else{
 
         $("#accountTypeDiv").hide();
+        $("#schmtypewiseDiv").hide();
         $("#customerWiseDiv").show();
 
     }
 
 }
 
-/* FILTER ACCOUNT TYPE */
-
-/*function filterAccountType(type){
-alert("hi");
-    $("#accountTableBody tr").show();
-
-    if(type == ""){
-
-        return;
-
-    }
-	alert("hi");
-    $("#accountTableBody tr").each(function(){
-
-        let accountType =
-
-        $(this)
-        .find("td:eq(4)")
-        .text()
-        .trim();
-		alert("hi");
-        if(accountType != type){
-
-            $(this).hide();
-
-        }
-
-    });
-
-}*/
-
-
-
-function filterAccountType(type) {
-
-    const tbody = document.getElementById("accountTableBody");
-
-    tbody.innerHTML = "";
-
-    $.ajax({
-
-        url: './getCustomerAccountsbytype',
-
-        type: 'GET',
-
-        data: {
-            accountType: type
-        },
-
-        success: function(response) {
-
-            let data = response;
-
-            if (data.length > 0) {
-
-                data.forEach(acc => {
-
-                    tbody.innerHTML += `
-
-                        <tr>
-
-                            <td>
-                                <input type="checkbox"
-                                       class="account-checkbox"
-                                       data-customer="${acc[0]}"
-                                       data-account="${acc[2]}"
-                                       data-currency="${acc[4]}">
-                            </td>
-
-                            <td>${acc[0]}</td>
-
-                            <td>${acc[1]}</td>
-
-                            <td>${acc[2]}</td>
-
-                            <td>${acc[3]}</td>
-
-                            <td>${acc[4]}</td>
-
-                        </tr>
-
-                    `;
-                });
-
-            } else {
-
-                tbody.innerHTML = `
-
-                    <tr>
-
-                        <td colspan="6"
-                            style="text-align:center;color:red;">
-
-                            No Accounts Found
-
-                        </td>
-
-                    </tr>
-
-                `;
-            }
-        },
-
-        error: function(xhr, status, error) {
-
-            console.log(error);
-
-            alert("Error loading account details");
-
-        }
-
-    });
-
-}
 
 /* FILTER CUSTOMER */
 
-function filterCustomer(customer){
+function getAccountdata(filterValue){
+	//alert(filterValue);
+	 $("#accountTableBody").empty();
 
-    if(customer == ""){
+    $.ajax({
 
-        $("#accountTableBody").empty();
+        url : "./getAccountdata",
+        type : "GET",
+        data : {filterValue : filterValue},
+        success : function(data){
+           
+            if($.fn.DataTable.isDataTable('#accountTable')){
+                $('#accountTable').DataTable().clear().destroy();
+            }
 
-        if($.fn.DataTable.isDataTable('#accountTable')){
 
-            accountTable.clear().destroy();
+            $("#accountTableBody").empty();
+
+
+            if(data == null || data.length == 0){
+
+                $("#accountTableBody").append(
+
+                    `<tr>
+                        <td colspan="8"
+                            style="text-align:center;">
+
+                            No Accounts Found
+                        </td>
+                    </tr>`
+
+                );
+
+                return;
+
+            }
+
+            // LOAD ROWS
+
+            $.each(data, function(index, acc){
+
+                let row =
+
+                `<tr>
+
+                    <td>
+
+                        <input type="checkbox"
+                               class="account-checkbox"
+
+	                        data-customer="${acc[0]}"
+	                        data-customername="${acc[1]}"   
+	                        data-customeremail="${acc[2]}"
+                            data-accountnum="${acc[3]}"
+                            data-accounttype="${acc[4]}"
+                            data-acid="${acc[5]}"
+                            data-currency="${acc[6]}">
+
+                    </td>
+
+                    <td>${acc[0]}</td>
+
+                    <td>${acc[1]}</td>
+
+                    <td>${acc[2] || '-'}</td>
+
+                    <td>${acc[3]}</td>
+
+                    <td>${acc[4]}</td>
+
+                    <td>${acc[5]}</td>
+
+                    <td>${acc[6]}</td>
+
+                </tr>`;
+
+                $("#accountTableBody").append(row);
+
+            });
+
+            // RELOAD DATATABLE
+
+            $('#accountTable').DataTable({
+
+                pageLength : 5,
+
+                lengthChange : false,
+
+                ordering : false,
+
+                destroy : true
+
+            });
+
+        },
+
+        error : function(xhr, status, error){
+
+            console.log(error);
+
+            alert("Error loading accounts");
 
         }
 
-        return;
-
-    }
-
-    loadAccountTable(customer);
+    });
 
 }
 
+
+
+
+
+
 /* CHECKBOX */
 
-$(document).on("change",
-".account-checkbox",
+$(document).on("change",".account-checkbox",
 function(){
 
     addSelected(this);
@@ -2072,37 +1603,54 @@ function(){
 
 function addSelected(checkbox){
 
-    let customerId =
-    checkbox.dataset.customer;
+    let customerId = checkbox.dataset.customer;
+    let customername = checkbox.dataset.customername;
+    let customeremail = checkbox.dataset.customeremail;
+    let accountnum =checkbox.dataset.accountnum;
 
-    let account =
-    checkbox.dataset.account;
+    let accounttype = checkbox.dataset.accounttype;
+
+    let acid =
+        checkbox.dataset.acid;
 
     let currency =
-    checkbox.dataset.currency;
+        checkbox.dataset.currency;
 
     let rowId =
-    "row_" + account;
+        "row_" + accountnum;
 
     if(checkbox.checked){
 
         if($("#" + rowId).length === 0){
 
             let rowNode =
+
             selectedTable.row.add([
 
                 customerId,
 
-                account,
+                customername,
+
+                customeremail,
+
+                accountnum,
+
+                accounttype,
+
+                acid,
 
                 currency,
 
-                `<button class="remove-btn"
-                onclick="removeSelected('${account}')">
+                `<div class="text-center">
 
-                <i class="fa fa-trash"></i>
+                    <button class="remove-btn"
+                            onclick="removeSelected('${accountnum}')">
 
-                </button>`
+                        <i class="fa fa-trash"></i>
+
+                    </button>
+
+                </div>`
 
             ]).draw(false).node();
 
@@ -2112,9 +1660,10 @@ function addSelected(checkbox){
 
     }else{
 
-        selectedTable.rows("#" + rowId)
-        .remove()
-        .draw();
+        selectedTable
+            .rows("#" + rowId)
+            .remove()
+            .draw();
 
     }
 
@@ -2124,31 +1673,24 @@ function addSelected(checkbox){
 
 function removeSelected(account){
 
-    selectedTable.rows("#row_" + account)
-    .remove()
-    .draw();
+    selectedTable.rows("#row_" + account).remove().draw();
 
-    let checkbox =
-    document.querySelector(
-    'input[data-account="' + account + '"]'
-    );
+    let checkbox = document.querySelector('input[data-account="' + account + '"]');
 
     if(checkbox){
-
         checkbox.checked = false;
-
     }
-
 }
 
 /* SELECT ALL */
 
+
 $("#selectAll").on("change", function(){
 
-    let checked =
-    $(this).prop("checked");
+    let checked = $(this).prop("checked");
+    let table =$('#accountTable').DataTable();
 
-    $(".account-checkbox").each(function(){
+    table.$('.account-checkbox').each(function(){
 
         $(this).prop("checked", checked);
 
@@ -2179,113 +1721,117 @@ function toggleDeliveryChannel(){
 
 }
 
-function setAccountData(){
+function setAccountData() {
 
-    let customerId =
-    $("#customerId").val();
+    let customerId = $("#customerId").val();
 
     let selected =
-    $("#accountNumber option:selected");
-   
+        $("#accountNumber option:selected");
 
     let accountNumber =
-    selected.val();
-    
-  
+        selected.val();
 
     let currency =
-    selected.data("currency");
+        selected.data("currency");
 
-
-		
     let balance =
-    selected.data("balance");
-    
-    let acidv=  selected.data("acid");
-    let accountnamev=  selected.data("accountname");
-   
+        selected.data("balance");
+
+    let acidv =
+        selected.data("acid");
+
+    let accountnamev =
+        selected.data("accountname");
+
+    let customeremail =
+        selected.data("customeremail");
+
+    let customertype =
+        selected.data("customertype");
+
     $("#acid").val(acidv);
+
     $("#accountname").val(accountnamev);
-    
+
     $("#currency").val(currency);
 
     $("#availableBalance").val(balance);
-    
 
-    $("#selectedBody").html(
+    // REMOVE EXISTING ROW
 
-        `<tr id="row_${accountNumber}">
+    selectedTable
+        .rows("#row_" + accountNumber)
+        .remove()
+        .draw();
 
-            <td>${customerId}</td>
+    // ADD ROW USING DATATABLE
 
-            <td>${accountNumber}</td>
+    let rowNode = selectedTable.row.add([
 
-            <td>${currency}</td>
+        customerId,
 
-            <td class="text-center">
+        accountnamev,
 
-                <button class="remove-btn"
-                onclick="removeSelected('${accountNumber}')">
+        customeremail,
 
-                    <i class="fa fa-trash"></i>
+        accountNumber,
 
-                </button>
+        customertype,
 
-            </td>
+        acidv,
 
-        </tr>`
+        currency,
 
+        `<button type="button"
+                 class="remove-btn"
+                 onclick="removeSelected('${accountNumber}')">
+
+            <i class="fa fa-trash"></i>
+
+        </button>`
+
+    ]).draw(false).node();
+
+    // SET ROW ID
+
+    $(rowNode).attr(
+        "id",
+        "row_" + accountNumber
     );
 
 }
 
 function getCustomerData(){
 
-    let customer =
-    document.getElementById("customerId");
-
-    let selected =
-    customer.options[customer.selectedIndex];
-
-    let email =
-    selected.getAttribute("data-email");
-
-    let phone =
-    selected.getAttribute("data-phone");
-
-    let country =
-    selected.getAttribute("data-country");
-
+    let customer = document.getElementById("customerId");
+    let selected = customer.options[customer.selectedIndex];
+    let email = selected.getAttribute("data-email");
+    let phone = selected.getAttribute("data-phone");
+    let country = selected.getAttribute("data-country");
     console.log(email);
     console.log(phone);
     console.log(country);
 
 }
+
 function getCustomerAccounts(){
 
-    let cust_id =
-    $("#customerId").val();
+    let cust_id = $("#customerId").val();
 
     if(cust_id == ""){
-
         return;
-
     }
 
     $.ajax({
 
-        url : "./getCustomerAccounts",
-
+        url : "./getAccountdata",
         type : "GET",
-
         data : {
-            cust_id : cust_id
+        	filterValue : cust_id
         },
 
         success : function(data){
-
             $("#accountNumber").empty();
-
             $("#accountNumber").append(
                 '<option value="">Select Account</option>'
             );
@@ -2296,17 +1842,19 @@ function getCustomerAccounts(){
 
                     '<option ' +
 
-                    'value="' + value.acct_number + '" ' +
+                    'value="' + value[3] + '" ' +
 
-                    'data-currency="' + value.acct_crncy_code + '" ' +
+                    'data-currency="' + value[6] + '" ' +
+                    'data-customerid="' + value[0] + '" ' +
+                    'data-customeremail="' + value[2] + '" ' +
+                    'data-customertype="' + value[4] + '" ' +
+                    'data-acid="' + value[5] + '" ' +
                     
-                    'data-acid="' + value.acid + '" ' +
-                    
-                    'data-accountname="' + value.acct_name + '" ' +
+                    'data-accountname="' + value[1] + '" ' +
 
-                    'data-balance="' + value.acct_balance_amt_ac + '">' +
+                    'data-balance="' + value[7] + '">' +
 
-                    value.acct_number +
+                    value[3] +
 
                     '</option>'
 
@@ -2332,95 +1880,11 @@ function removeSelected(accountNumber){
 
 }
 
-function loadAccountTable(cust_id){
 
-    $.ajax({
-
-        url : "./getCustomerAccounts",
-
-        type : "GET",
-
-        data : {
-            cust_id : cust_id
-        },
-
-        success : function(data){
-
-            if($.fn.DataTable.isDataTable('#accountTable')){
-
-                accountTable.clear().destroy();
-
-            }
-
-            $("#accountTableBody").empty();
-
-            $.each(data, function(index, acc){
-
-                let row =
-
-                `<tr>
-
-                    <td>
-
-                        <input type="checkbox"
-                        class="account-checkbox"
-
-                        data-customer="${acc.cust_id}"
-
-                        data-account="${acc.acct_number}"
-
-                        data-currency="${acc.acct_crncy_code}"
-
-                        data-balance="${acc.acct_balance_amt_ac}">
-
-                    </td>
-
-                    <td>${acc.cust_id}</td>
-
-                    <td>${acc.acct_name}</td>
-
-                    <td>${acc.acct_number}</td>
-
-                    <td>${acc.schm_type}</td>
-
-                    <td>
-
-                        <span class="currency-badge">
-
-                            ${acc.acct_crncy_code}
-
-                        </span>
-
-                    </td>
-
-                </tr>`;
-
-                $("#accountTableBody").append(row);
-
-            });
-
-            accountTable =
-            $('#accountTable').DataTable({
-
-                pageLength:5,
-                lengthChange:false,
-                info:true,
-                ordering:false
-
-            });
-
-        }
-
-    });
-
-}
 
 function toggleScheduleFields(){
 
-    let value =
-    document.querySelector(
-    'input[name="wantSchedule"]:checked'
-    ).value;
+    let value = document.querySelector( 'input[name="wantSchedule"]:checked').value;
 
     if(value === "yes"){
 
@@ -2434,250 +1898,344 @@ function toggleScheduleFields(){
 
 }
 </script>
-<script>
+	<script>
+function openStatementPreview() {
 
-	function openStatementPreview(){
+    let accountList = [];
+    var fromDate = document.getElementById('fromDate').value;
+	var toDate = document.getElementById('toDate').value;
+	var statementFormat = document.getElementById('statementFormat').value;
+	alert(statementFormat);
+	
+    let statementType = document.querySelector('input[name="statementType"]:checked').value;
+    var channel = document.querySelector('input[name="deliveryChannel"]:checked').value;
 
-	    var fromDate =
-	    document.getElementById('fromDate').value;
+    // GET ALL DATATABLE ROWS
 
-	    var toDate =
-	    document.getElementById('toDate').value;
+    selectedTable.rows().every(function () {
+    	
+        let row = this.data();
+        
+        accountList.push({
 
-	    // STATEMENT TYPE
+            customerId: $('<div>').html(row[0]).text().trim(),
 
-	    let statementType =
+            customerName: $('<div>').html(row[1]).text().trim(),
 
-	    document.querySelector(
-	    'input[name="statementType"]:checked'
-	    ).value;
+            customerEmail: $('<div>').html(row[2]).text().trim(),
 
-	    // COMMON VALIDATION
+            accountNumber: $('<div>').html(row[3]).text().trim(),
 
-	    if(fromDate === ''){
+            accountType: $('<div>').html(row[4]).text().trim(),
 
-	        alert("Please select From Date");
+            acid: $('<div>').html(row[5]).text().trim(),
 
-	        document.getElementById('fromDate').focus();
+            currency: $('<div>').html(row[6]).text().trim()
 
-	        return false;
+        });
 
-	    }
+    });
+    
+     if(fromDate === ''){
 
-	    if(toDate === ''){
+        alert("Please select From Date");
 
-	        alert("Please select To Date");
+        document.getElementById('fromDate').focus();
 
-	        document.getElementById('toDate').focus();
+        return false;
 
-	        return false;
+    }
 
-	    }
+    if(toDate === ''){
 
-	    if(new Date(fromDate) > new Date(toDate)){
+        alert("Please select To Date");
 
-	        alert(
-	        "From Date should not be greater than To Date"
-	        );
+        document.getElementById('toDate').focus();
 
-	        document.getElementById('fromDate').focus();
+        return false;
 
-	        return false;
+    }
 
-	    }
+    if(new Date(fromDate) > new Date(toDate)){
 
-	    // SINGLE ACCOUNT
+        alert(
+        "From Date should not be greater than To Date"
+        );
 
-	    if(statementType === "single"){
+        document.getElementById('fromDate').focus();
 
-	        var acid =
-	        document.getElementById('acid').value;
+        return false;
 
-	        var accountnumber =
-	        document.getElementById('accountNumber').value;
+    }
 
-	        var accountname =
-	        document.getElementById('accountname').value;
+   
+    
+    if(accountList.length == 0){
 
-	        if(acid === ''){
+        alert("Please select at least one account");
 
-	            alert("Please select Account");
+        return false;
 
-	            document.getElementById('acid').focus();
+    } 
 
-	            return false;
+    console.log(accountList);
 
-	        }
+    let form = document.createElement("form");
 
-	        if(accountnumber === ''){
+    form.method = "POST";
 
-	            alert("Please enter Account Number");
+    form.action = "NewStatementRequest";
 
-	            document.getElementById('accountNumber').focus();
+    // FORM MODE
 
-	            return false;
+    addHidden(form, "formmode", "Preview");
 
-	        }
+    addHidden(form, "fd",document.getElementById("fromDate").value);
+    
+    addHidden(
+        form,
+        "td",
+        document.getElementById("toDate").value
+    );
+    
+    addHidden(form, "channel",channel);
+    addHidden(form, "statementFormat",statementFormat);
 
-	        // SINGLE PREVIEW
+    addHidden(form,"statementtype",document.querySelector('input[name="statementType"]:checked').value);
 
-	        location.href =
-	        'NewStatementRequest?formmode=Preview'
-	        + '&fd=' + encodeURIComponent(fromDate)
-	        + '&td=' + encodeURIComponent(toDate)
-	        + '&Account=' + encodeURIComponent(acid)
-	        + '&Accountnum=' + encodeURIComponent(accountnumber)
-	        + '&accountname=' + encodeURIComponent(accountname);
+    // LIST DATA
 
-	    }
+    addHidden(
+        form,
+        "tableData",
+        JSON.stringify(accountList)
+    );
 
-	    // MULTIPLE ACCOUNT
+    document.body.appendChild(form);
 
-	    else{
+    form.submit();
+}
 
-	        let accounts = [];
+function addHidden(form, name, value) {
 
-	        $("#selectedBody tr").each(function(){
+    let input = document.createElement("input");
 
-	            let accountNo =
+    input.type = "hidden";
 
-	            $(this)
-	            .find("td:eq(1)")
-	            .text()
-	            .trim();
+    input.name = name;
 
-	            if(accountNo != ""){
+    input.value = value;
 
-	                accounts.push(accountNo);
+    form.appendChild(input);
+}
 
-	            }
-
-	        });
-
-	        // VALIDATION
-
-	        if(accounts.length == 0){
-
-	            alert("Please select at least one account");
-
-	            return false;
-
-	        }
-
-	        // MULTI PREVIEW
-
-	        location.href =
-	        'NewStatementRequest?formmode=MultiPreview'
-	        + '&fd=' + encodeURIComponent(fromDate)
-	        + '&td=' + encodeURIComponent(toDate)
-	        + '&accounts='
-	        + encodeURIComponent(accounts.join(","));
-
-	    }
-
-	}
-
-	/* function openStatementPreview(){
-
-	    let customerText =
-	    $("#customerId option:selected").text();
-
-	    let accountNumber =
-	    $("#accountNumber").val();
-
-	    let fromDate =
-	    $("#fromDate").val();
-
-	    let toDate =
-	    $("#toDate").val();
-
-	    if(accountNumber == ""){
-
-	        alert("Please select account");
-
-	        return;
-	    }
-
-	    $("#previewCustomerName").text(customerText);
-
-	    $("#previewAccountNumber").text(
-	        accountNumber + " - Savings Account"
-	    );
-
-	    $("#previewDate").text(
-	        fromDate + " to " + toDate
-	    );
-
-	    $(".main-container").hide();
-
-	    $("#statementPreviewScreen").show();
-
-	} */
-
+	
 	/* CLOSE SCREEN */
 
 	function closePreviewScreen(){
 		
-		 location.href = 'NewStatementRequest';
-
-	    //$("#statementPreviewScreen").hide();
-
-	    //$(".main-wrapper").show();
+		location.href = 'NewStatementRequest';
+		 //window.history.back();
 
 	}
-	function ReportDownloadPDF(type) {
 	
-
-	    var fromDate = document.getElementById('fromdate').value;
-
-	    var toDate = document.getElementById('todatehd').value;
-
-	    var acid = document.getElementById('acidhd').value;
-
-	    var accountnumber = document.getElementById('accountnumberhd').value;
-
-	    var Acctname = document.getElementById('Acctname').value;
+	function generatebtn(){
+		var channel = document.getElementById('channel').value;
+		var statementFormat = document.getElementById('statementFormat').value;
+		alert(statementFormat);
 		
-		/* var customerId = document.getElementById('customerId').value;
-		alert(customerId)
-		var currency = document.getElementById('currencyhd').value; */
-
-	  
-		if(type=='normal'){
-		    location.href =
-		        'ReportsAccount/ReportDownloadPDF?reportId=RISK_DEP'
-		        + '&formmode=Preview'
-		        + '&filetype=pdf'
-		        + '&fromdate=' + encodeURIComponent(fromDate)
-		        + '&todate=' + encodeURIComponent(toDate)
-		        + '&userid=' + encodeURIComponent(acid)
-		        + '&acid=' + encodeURIComponent(acid)
-		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname);
-			}
-		else if(type=='arabic'){
+		var Language =document.getElementById("languageToggle").checked? "arabic" : "normal";
+		//alert(Language)
+		//alert(channel);
+		
+		if(channel=="download"){
+			ReportDownloadPDF(Language);
+		}
+		else{
 			
-			location.href =
-		        'ReportsAccount/ReportDownloadPDFAr?reportId=RISK_DEP'
-		        + '&formmode=Preview'
-		        + '&filetype=pdf'
-		        + '&fromdate=' + encodeURIComponent(fromDate)
-		        + '&todate=' + encodeURIComponent(toDate)
-		        + '&userid=' + encodeURIComponent(acid)
-		        + '&acid=' + encodeURIComponent(acid)
-		        + '&accountnumber=' + encodeURIComponent(accountnumber)
-		        + '&Acctname=' + encodeURIComponent(Acctname);
-			
+			getEpdfDep(channel,Language)
 		}
 		
+		
+		
+		
 	}
 	
-function getEpdfDep() {
+	function ReportDownloadPDF(type) {
+
+	    var fromDate = document.getElementById('fromdate').value;
+	    var toDate = document.getElementById('todatehd').value;
+
+	    
+	    var accountlist = document.getElementById("accounts").value;
+	    
+	    let form =document.createElement("form");
+	    form.method = "POST";
+
+	    if(type == 'normal'){
+
+	        form.action = "ReportsAccount/ReportDownloadPDF";
+
+	    }else{
+
+	        form.action = "ReportsAccount/ReportDownloadPDFAr";
+
+	    }
+
+
+	    addHidden(form,"accounts",accountlist);
+
+	    addHidden(form,"fromdate",fromDate);
+
+	    addHidden(form,"todate",toDate);
+
+	    document.body.appendChild(form);
+
+	    form.submit();
+
+	}
+
+	
+	async function getEpdfDep(channel,type) {
+
+	    var fromDate =
+	        document.getElementById('fromdate').value;
+
+	    var toDate =
+	        document.getElementById('todatehd').value;
+
+	    var accountlist =
+	        document.getElementById("accounts").value;
+
+	    let formData = new FormData();
+
+	    formData.append("reportId", "RISK_DEP");
+	    formData.append("formmode", "Preview");
+	    formData.append("filetype", "pdf");
+	    formData.append("fromdate", fromDate);
+	    formData.append("todate", toDate);
+	    formData.append("accounts", accountlist);
+	    formData.append("channel", channel);
+
+	    // SHOW LOADER
+
+	    document.getElementById("loader").style.display = "flex";
+
+	    try {
+
+	    	var url=null;
+	    		
+	    		if(type == 'normal'){
+	    			url="ReportsAccount/ReportDownloadPDFE";
+	    		}
+	    		
+	    		else{
+	    			url="ReportsAccount/ReportDownloadPDFEAr";
+	    		}
+	    		
+	    		
+	        const response = await fetch(
+	        		url,
+	            {
+	                method: "POST",
+	                body: formData
+	            }
+	        );
+
+	        // DOWNLOAD / BOTH
+
+	        if (channel === "DOWNLOAD"
+	            || channel === "both") {
+
+	            const blob =
+	                await response.blob();
+
+	            let fileName =
+	                "EStatements.zip";
+
+	            const disposition =
+	                response.headers.get("Content-Disposition");
+
+	            if (disposition &&
+	                disposition.indexOf("filename=") !== -1) {
+
+	                fileName =
+	                    disposition
+	                    .split("filename=")[1]
+	                    .replace(/"/g, "");
+	            }
+
+	            const url =
+	                window.URL.createObjectURL(blob);
+
+	            const a =
+	                document.createElement("a");
+
+	            a.href = url;
+
+	            a.download = fileName;
+
+	            document.body.appendChild(a);
+
+	            a.click();
+
+	            a.remove();
+
+	            window.URL.revokeObjectURL(url);
+
+	            if (channel === "both") {
+
+	                alert("Email Sent Successfully & Download Completed");
+
+	            } else {
+
+	                alert("Download Completed Successfully");
+	            }
+
+	        }
+
+	        // EMAIL ONLY
+
+	        else {
+
+	            const result =
+	                await response.text();
+
+	            if (result === "SUCCESS") {
+
+	                alert("Email Sent Successfully");
+
+	            } else {
+
+	                alert("Email Sending Failed");
+	            }
+	        }
+
+	    } catch (e) {
+
+	        console.error(e);
+
+	        alert("Something Went Wrong");
+
+	    } finally {
+
+	        // HIDE LOADER
+
+	        document.getElementById("loader").style.display = "none";
+	    }
+	}
+
+	
+	
+	
+/* function getEpdfDep() {
 	
 	
 	 var fromDate = document.getElementById('fromdate').value;
 
 	    var toDate = document.getElementById('todatehd').value;
+	    
+	    var accountlist = document.getElementById("accounts").value;
 
 	    var acid = document.getElementById('acidhd').value;
 
@@ -2697,7 +2255,7 @@ function getEpdfDep() {
         + '&accountnumber=' + encodeURIComponent(accountnumber)
         + '&Acctname=' + encodeURIComponent(Acctname);
 	
-}
+} */
 		
 		
 	
@@ -2718,323 +2276,284 @@ function getEpdfDep() {
 	    }
 	}
 	
-	$(document).ready(function(){
+	/* $(document).ready(function(){
 
 	    loadPreviewData();
 
-	});
+	}); */
 
 	
-	function loadPreviewData(){
+	
+	
+	
+</script>
 
-	    // GET DATES
+	<script>
 
-	    let fromDate =
-	    document.getElementById("fromdate")?.value;
+function loadPreviewData(accountNo){
 
-	    let toDate =
-	    document.getElementById("todate")?.value;
+    var fromDate = document.getElementById("fromdate").value;
+    var toDate = document.getElementById("todatehd").value;
 
-	    // FALLBACK
+    // VALIDATION
 
-	    if(!toDate){
+    if(fromDate === ""){
+        alert("Please select From Date");
+        return;
+    }
 
-	        toDate =
-	        document.getElementById("todatehd")?.value;
+    if(toDate === ""){
+        alert("Please select To Date");
+        return;
 
-	    }
+    }
 
-	    console.log("FROM DATE :", fromDate);
+    $.ajax({
 
-	    console.log("TO DATE :", toDate);
+        url : './getPreviewData',
+        type : 'GET',
+        data : {
+            accountNo : accountNo,
+            fromDate : fromDate,
+            toDate : toDate
+        },
+        success : function(data){
 
-	    // VALIDATION
+            console.log(data);
 
-	    if(!fromDate || !toDate){
+            let openingBalance = Number(data.openingBalance || 0);
+            let totalCredit = Number(data.totalCredit || 0);
+            let totalDebit = Number(data.totalDebit || 0);
+            let closingBalance = Number(data.closingBalance || 0);
+            let currency = data.currency || "AED";
 
-	        console.log("Date values missing");
+            $("#multiOpeningBalance").text(
 
-	        return;
+                openingBalance.toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
 
-	    }
+                ) + " " + currency
 
-	    // CONVERT STRING TO DATE
+            );
 
-	    let startParts =
-	    fromDate.split("-");
+            $("#multiTotalCredit").text(
 
-	    let endParts =
-	    toDate.split("-");
+                totalCredit.toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
 
-	    let start =
-	    new Date(
+                ) + " " + currency
 
-	        startParts[0],
-	        startParts[1] - 1,
-	        startParts[2]
+            );
 
-	    );
+            $("#multiTotalDebit").text(
 
-	    let end =
-	    new Date(
+                totalDebit < 0
 
-	        endParts[0],
-	        endParts[1] - 1,
-	        endParts[2]
+                ? "(" +
 
-	    );
+                    Math.abs(totalDebit)
+                    .toLocaleString(
+                        undefined,
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
 
-	    // RANDOM DATE FUNCTION
+                    )
 
-	    function randomDate(start, end){
+                    + " " + currency + ")"
 
-	        return new Date(
+                :
 
-	            start.getTime() +
+                totalDebit.toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
 
-	            Math.random() *
+                ) + " " + currency
 
-	            (end.getTime() - start.getTime())
+            );
 
-	        );
+            $("#multiClosingBalance").text(
 
-	    }
+                closingBalance.toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
 
-	    // FORMAT DATE
+                ) + " " + currency
 
-	    function formatDate(date){
+            );
 
-	        let day =
-	        String(date.getDate()).padStart(2,'0');
+            // =========================
+            // CUSTOMER DETAILS
+            // =========================
 
-	        let month =
-	        String(date.getMonth() + 1)
-	        .padStart(2,'0');
+            $("#previewCustomerName")
+                .html(data.customerName || "-");
 
-	        let year =
-	        date.getFullYear();
+            $("#previewAccountNumber")
+                .html(data.accountNumber || "-");
 
-	        return day + "-" + month + "-" + year;
+            // =========================
+            // HIDDEN FIELDS
+            // =========================
 
-	    }
+            $("#acidhd")
+                .val(data.acid || "");
 
-	    // RANDOM AMOUNT FUNCTION
+            $("#accountnumberhd")
+                .val(data.accountNumber || "");
 
-	    function randomAmount(min, max){
+            $("#Acctname")
+                .val(data.customerName || "");
 
-	        return Math.floor(
+            $("#customerId")
+                .val(data.customerId || "");
 
-	            Math.random() *
+            // =========================
+            // TABLE BODY
+            // =========================
 
-	            (max - min + 1)
+            var tbody =
+                $("#transactionTableBody");
 
-	        ) + min;
+            tbody.html("");
 
-	    }
+            // =========================
+            // NO DATA
+            // =========================
 
-	    // RANDOM OPENING BALANCE
+            if(data.transactions == null ||
+               data.transactions.length == 0){
 
-	    let openingBalance =
-	    randomAmount(30000, 100000);
+                tbody.append(
 
-	    // RANDOM TRANSACTIONS
+                    '<tr>' +
 
-	    let transactions = [
+                        '<td colspan="8" ' +
+                        'style="text-align:center;color:red;">' +
 
-	        {
-	            id:"TXN1001",
-	            type:"Credit",
-	            particular:"Salary Credit",
-	            debit:0,
-	            credit:randomAmount(10000,30000),
-	            currency:"AED"
-	        },
+                            'No Data Found' +
 
-	        {
-	            id:"TXN1002",
-	            type:"Debit",
-	            particular:"ATM Withdrawal",
-	            debit:randomAmount(1000,7000),
-	            credit:0,
-	            currency:"AED"
-	        },
+                        '</td>' +
 
-	        {
-	            id:"TXN1003",
-	            type:"Debit",
-	            particular:"Online Shopping",
-	            debit:randomAmount(1000,5000),
-	            credit:0,
-	            currency:"AED"
-	        },
+                    '</tr>'
 
-	        {
-	            id:"TXN1004",
-	            type:"Credit",
-	            particular:"Cash Deposit",
-	            debit:0,
-	            credit:randomAmount(5000,20000),
-	            currency:"AED"
-	        },
+                );
 
-	        {
-	            id:"TXN1005",
-	            type:"Debit",
-	            particular:"Restaurant Payment",
-	            debit:randomAmount(500,3000),
-	            credit:0,
-	            currency:"AED"
-	        }
+                return;
 
-	    ];
+            }
 
-	    // RANDOMIZE TRANSACTION ORDER
+            // =========================
+            // LOAD TRANSACTIONS
+            // =========================
 
-	    transactions.sort(() => Math.random() - 0.5);
+            $.each(data.transactions,
+            function(index, txn){
 
-	    // TOTAL CREDIT
+                let debitValue = "-";
+                let creditValue = "-";
 
-	    let totalCredit =
+                if(txn.debit != "-"){
 
-	    transactions
+                    debitValue =
+                        Number(txn.debit)
+                        .toLocaleString(
+                            undefined,
+                            {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }
 
-	    .filter(txn => txn.type === "Credit")
+                        );
 
-	    .reduce((sum, txn) =>
+                }
 
-	        sum + txn.credit, 0
+                if(txn.credit != "-"){
 
-	    );
+                    creditValue =
+                        Number(txn.credit)
+                        .toLocaleString(
+                            undefined,
+                            {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }
 
-	    // TOTAL DEBIT
+                        );
 
-	    let totalDebit =
+                }
 
-	    transactions
+                var row =
 
-	    .filter(txn => txn.type === "Debit")
+                    '<tr>' +
 
-	    .reduce((sum, txn) =>
+                        '<td>' +
+                        (txn.tranDate || "-") +
+                        '</td>' +
 
-	        sum + txn.debit, 0
+                        '<td>' +
+                        (txn.tranId || "-") +
+                        '</td>' +
 
-	    );
+                        '<td>' +
+                        (txn.partTranType || "-") +
+                        '</td>' +
 
-	    // CLOSING BALANCE
+                        '<td>' +
+                        (txn.valueDate || "-") +
+                        '</td>' +
 
-	    let closingBalance =
+                        '<td>' +
+                        (txn.particular || "-") +
+                        '</td>' +
 
-		(openingBalance + totalCredit )-
+                        '<td style="text-align:right;">' +
+                        debitValue +
+                        '</td>' +
 
-	    totalDebit;
+                        '<td style="text-align:right;">' +
+                        creditValue +
+                        '</td>' +
 
-	    // SET SUMMARY
+                        '<td>' +
+                        (txn.currency || currency) +
+                        '</td>' +
 
-	    $("#multiOpeningBalance")
+                    '</tr>';
 
-	    .text(
+                tbody.append(row);
 
-	        openingBalance.toLocaleString()
+            });
 
-	        + ".00 "+"AED"
+        },
 
-	    );
+        error : function(xhr, status, error){
 
-	    $("#multiTotalCredit")
+            console.log(error);
 
-	    .text(
+            alert("Error loading preview data");
 
-	        totalCredit.toLocaleString()
+        }
 
-	        + ".00 "+"AED"
+    });
 
-	    );
+}
 
-	    $("#multiTotalDebit")
-
-	    .text(
-
-	        totalDebit.toLocaleString()
-
-	        + ".00 " +"AED"
-
-	    );
-
-	    $("#multiClosingBalance")
-
-	    .text(
-
-	        closingBalance.toLocaleString()
-
-	        + ".00 " +"AED"
-
-	    );
-
-	    // GENERATE TABLE ROWS
-
-	    let rows = "";
-
-	    transactions.forEach(function(txn){
-
-	        let randDate =
-
-	        randomDate(start, end);
-
-	        let formattedDate =
-
-	        formatDate(randDate);
-
-	        rows += `
-
-	            <tr>
-
-	                <td>${formattedDate}</td>
-
-	                <td>${txn.id}</td>
-
-	                <td>${txn.type}</td>
-
-	                <td>${formattedDate}</td>
-
-	                <td>${txn.particular}</td>
-
-	                <td>
-
-	                    ${txn.debit == 0
-
-	                    ? "-"
-
-	                    : txn.debit.toLocaleString()
-
-	                    + ".00"}
-
-	                </td>
-
-	                <td>
-
-	                    ${txn.credit == 0
-
-	                    ? "-"
-
-	                    : txn.credit.toLocaleString()
-
-	                    + ".00"}
-
-	                </td>
-
-	                <td>${txn.currency}</td>
-
-	            </tr>
-
-	        `;
-
-	    });
-
-	    // LOAD TABLE
-
-	    $("#transactionBody").html(rows);
-
-	}
 </script>
 </body>
 </html>

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -43,6 +45,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,12 +82,15 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 
 import com.itextpdf.text.pdf.BaseFont;
+import com.bornfire.AccountStatement.entities.AccountDTO;
 import com.bornfire.AccountStatement.entities.TransactionInquiry;
 import com.bornfire.AccountStatement.entities.TransactionInquiryRep;
 import com.bornfire.AccountStatement.services.EmailServices;
 import com.bornfire.AccountStatement.services.EmailServices;
 
 import com.bornfire.AccountStatement.util.EnglishToArabicNameTransliterator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.pdf.FontSelector;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -221,189 +227,500 @@ public class XBRLAccountStatement {
 				getDownloadFileExcelE(null, acid, fromdate, todate, dtltype, filetype, category, filename)));
 
 	}
-
-	@RequestMapping(value = "/ReportDownloadPDF", method = RequestMethod.GET)
-	@ResponseBody
-	public InputStreamResource AMLReportDownloadFormattedDate(HttpServletResponse response,
-			@RequestParam(value = "reportId", required = false) String reportId,
-			@RequestParam(value = "acid", required = false) String acid,
-			@RequestParam(value = "fromdate", required = false) String fromdate,
-			@RequestParam(value = "todate", required = false) String todate,
-			@RequestParam(value = "userid", required = false) String userid,
-			@RequestParam(value = "filetype", required = false) String filetype,
-			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "accountnumber", required = false) String accountnumber,
-			@RequestParam(value = "Acctname", required = false) String Acctname)
+	
+	@RequestMapping(value = "/ReportDownloadPDF", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody public InputStreamResource AMLReportDownloadFormattedDate(HttpServletResponse response, @RequestParam(value = "reportId", required = false) String reportId,
+			@RequestParam(value = "acid", required = false) String acid, @RequestParam(value = "fromdate", required = false) String fromdate, @RequestParam(value = "todate", required = false) String todate,
+			@RequestParam(value = "userid", required = false) String userid, @RequestParam(value = "filetype", required = false) String filetype, @RequestParam(value = "category", required = false) String category,
+			@RequestParam(value = "accountnumber", required = false) String accountnumber, @RequestParam(value = "Acctname", required = false) String Acctname,@RequestParam("accounts") String accounts)
 			throws IOException, SQLException, ParseException {
-		response.setContentType("application/octet-stream");
+		
+	    response.setContentType("application/octet-stream");
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	    ObjectMapper mapper = new ObjectMapper();
 
-		Date ConDateFromdate = dateFormat1.parse(fromdate);
-		System.out.println(ConDateFromdate);
+	    List<AccountDTO> accountList = mapper.readValue( accounts, new TypeReference<List<AccountDTO>>() {});
 
-		String strDate2 = formatter1.format(ConDateFromdate);
-		fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate2));
+	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 
-		Date ConToDate = dateFormat1.parse(todate);
-		System.out.println(ConToDate);
+	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
 
-		String strDate1 = formatter1.format(ConToDate);
-		todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+	    Date ConDateFromdate = dateFormat1.parse(fromdate);
 
-		InputStreamResource resource = null;
-		try {
-			logger.info("Getting download File :" + reportId + ", FileType :" + filetype);
-			// System.out.println(asondate);getDownloadFile
-			File repfile = getDownloadFileScr(acid, userid, reportId, fromdate, todate, null, null, filetype, category,
-					accountnumber, Acctname);
+	    String strDate2 = formatter1.format(ConDateFromdate);
 
-			response.setHeader("Content-Disposition", "attachment; filename=" + repfile.getName());
-			resource = new InputStreamResource(new FileInputStream(repfile));
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		return resource;
+	    fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy") .parse(strDate2));
+	    Date ConToDate = dateFormat1.parse(todate);
+	    String strDate1 = formatter1.format(ConToDate);
+	    todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+
+	    InputStreamResource resource = null;
+
+	    try {
+
+	        logger.info(
+	                "Getting download File :" + reportId
+	        );
+
+	        // SINGLE PDF
+
+	        if(accountList != null && accountList.size() == 1){
+
+	            AccountDTO acc =accountList.get(0);
+
+	            File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName());
+
+	            response.setContentType("application/pdf");
+
+	            response.setHeader("Content-Disposition","attachment; filename="+ pdfFile.getName());
+
+	            resource = new InputStreamResource(new FileInputStream(pdfFile));
+	            
+	        }
+
+	        // MULTIPLE PDF ZIP
+
+	        else if(accountList != null && accountList.size() > 1){
+
+	            String zipFileName ="AccountStatements.zip";
+	            File zipFile = new File(zipFileName);
+	            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+
+	            for(AccountDTO acc : accountList){
+
+	                File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName());
+
+	                FileInputStream fis = new FileInputStream(pdfFile);
+
+	                ZipEntry zipEntry = new ZipEntry(pdfFile.getName());
+
+	                zos.putNextEntry(zipEntry);
+
+	                byte[] bytes = new byte[1024];
+
+	                int length;
+
+	                while((length = fis.read(bytes)) >= 0){
+
+	                    zos.write(bytes, 0, length);
+	                }
+
+	                fis.close();
+
+	                zos.closeEntry();
+	            }
+
+	            zos.close();
+
+	            response.setContentType("application/zip");
+
+	            response.setHeader("Content-Disposition","attachment; filename="+ zipFile.getName());
+
+	            resource =new InputStreamResource(new FileInputStream(zipFile));
+	        }
+
+	        // DEFAULT
+
+	        else{
+
+	            File repfile =getDownloadFileScr(acid,userid,reportId,fromdate,todate,null,null,filetype,category,accountnumber,Acctname);
+	            response.setHeader("Content-Disposition","attachment; filename=" + repfile.getName());
+	            resource = new InputStreamResource(new FileInputStream(repfile));
+	        }
+
+	    } catch (JRException e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return resource;
 	}
-
-	@RequestMapping(value = "/ReportDownloadPDFE", method = RequestMethod.GET)
-	@ResponseBody
-	public InputStreamResource AMLReportDownloadFormattedDateE(HttpServletResponse response,
-			@RequestParam(value = "reportId", required = false) String reportId,
-			@RequestParam(value = "acid", required = false) String acid,
-			@RequestParam(value = "fromdate", required = false) String fromdate,
-			@RequestParam(value = "todate", required = false) String todate,
-			@RequestParam(value = "userid", required = false) String userid,
-			@RequestParam(value = "filetype", required = false) String filetype,
-			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "accountnumber", required = false) String accountnumber,
-			@RequestParam(value = "Acctname", required = false) String Acctname)
+	
+	@RequestMapping(value = "/ReportDownloadPDFAr", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody public InputStreamResource AMLReportDownloadFormattedDateAr(HttpServletResponse response, @RequestParam(value = "reportId", required = false) String reportId,
+			@RequestParam(value = "acid", required = false) String acid, @RequestParam(value = "fromdate", required = false) String fromdate, @RequestParam(value = "todate", required = false) String todate,
+			@RequestParam(value = "userid", required = false) String userid, @RequestParam(value = "filetype", required = false) String filetype, @RequestParam(value = "category", required = false) String category,
+			@RequestParam(value = "accountnumber", required = false) String accountnumber, @RequestParam(value = "Acctname", required = false) String Acctname,@RequestParam("accounts") String accounts)
 			throws IOException, SQLException, ParseException {
-		response.setContentType("application/octet-stream");
+		
+	    response.setContentType("application/octet-stream");
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	    ObjectMapper mapper = new ObjectMapper();
 
-		Date ConDateFromdate = dateFormat1.parse(fromdate);
-		System.out.println(ConDateFromdate);
+	    List<AccountDTO> accountList = mapper.readValue( accounts, new TypeReference<List<AccountDTO>>() {});
 
-		String strDate2 = formatter1.format(ConDateFromdate);
-		fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate2));
+	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 
-		Date ConToDate = dateFormat1.parse(todate);
-		System.out.println(ConToDate);
+	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
 
-		String strDate1 = formatter1.format(ConToDate);
-		todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+	    Date ConDateFromdate = dateFormat1.parse(fromdate);
 
-		InputStreamResource resource = null;
-		try {
-			logger.info("Getting download File :" + reportId + ", FileType :" + filetype);
-			// System.out.println(asondate);getDownloadFile
-			File repfile = getDownloadFileScr(acid, userid, reportId, fromdate, todate, null, null, filetype, category,
-					accountnumber, Acctname);
+	    String strDate2 = formatter1.format(ConDateFromdate);
 
-			response.setHeader("Content-Disposition", "attachment; filename=" + repfile.getName());
-			// emailservices.sendEmail(repfile.getName());
+	    fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy") .parse(strDate2));
+	    Date ConToDate = dateFormat1.parse(todate);
+	    String strDate1 = formatter1.format(ConToDate);
+	    todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
 
-			FileInputStream fis = new FileInputStream(repfile);
-			byte[] fileBytes = convertInputStreamToBytes(fis);
-			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf",userid);
-			fis.close();
+	    InputStreamResource resource = null;
 
-			resource = new InputStreamResource(new FileInputStream(repfile));
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		return resource;
+	    try {
+
+	        logger.info(
+	                "Getting download File :" + reportId
+	        );
+
+	        // SINGLE PDF
+
+	        if(accountList != null && accountList.size() == 1){
+
+	            AccountDTO acc =accountList.get(0);
+
+	            File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName(),true);
+
+	            response.setContentType("application/pdf");
+
+	            response.setHeader("Content-Disposition","attachment; filename="+ pdfFile.getName());
+
+	            resource = new InputStreamResource(new FileInputStream(pdfFile));
+	            
+	        }
+
+	        // MULTIPLE PDF ZIP
+
+	        else if(accountList != null && accountList.size() > 1){
+
+	            String zipFileName ="AccountStatements.zip";
+	            File zipFile = new File(zipFileName);
+	            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+
+	            for(AccountDTO acc : accountList){
+
+	                File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName(),true);
+
+	                FileInputStream fis = new FileInputStream(pdfFile);
+
+	                ZipEntry zipEntry = new ZipEntry(pdfFile.getName());
+
+	                zos.putNextEntry(zipEntry);
+
+	                byte[] bytes = new byte[1024];
+
+	                int length;
+
+	                while((length = fis.read(bytes)) >= 0){
+
+	                    zos.write(bytes, 0, length);
+	                }
+
+	                fis.close();
+
+	                zos.closeEntry();
+	            }
+
+	            zos.close();
+
+	            response.setContentType("application/zip");
+
+	            response.setHeader("Content-Disposition","attachment; filename="+ zipFile.getName());
+
+	            resource =new InputStreamResource(new FileInputStream(zipFile));
+	        }
+
+	        // DEFAULT
+
+	        else{
+
+	            File repfile =getDownloadFileScr(acid,userid,reportId,fromdate,todate,null,null,filetype,category,accountnumber,Acctname,true);
+	            response.setHeader("Content-Disposition","attachment; filename=" + repfile.getName());
+	            resource = new InputStreamResource(new FileInputStream(repfile));
+	        }
+
+	    } catch (JRException e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return resource;
 	}
-
-	@RequestMapping(value = "/ReportDownloadPDFAr", method = RequestMethod.GET)
+	
+	
+	@RequestMapping(value = "/ReportDownloadPDFE", method = RequestMethod.POST)
 	@ResponseBody
-	public InputStreamResource AMLReportDownloadFormattedDateAr(HttpServletResponse response,
-			@RequestParam(value = "reportId", required = false) String reportId,
-			@RequestParam(value = "acid", required = false) String acid,
-			@RequestParam(value = "fromdate", required = false) String fromdate,
-			@RequestParam(value = "todate", required = false) String todate,
-			@RequestParam(value = "userid", required = false) String userid,
-			@RequestParam(value = "filetype", required = false) String filetype,
-			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "accountnumber", required = false) String accountnumber,
-			@RequestParam(value = "Acctname", required = false) String Acctname)
-			throws IOException, SQLException, ParseException {
-		response.setContentType("application/octet-stream");
+	public ResponseEntity<?> AMLReportDownloadFormattedDateE(HttpServletResponse response, @RequestParam(value = "reportId", required = false)String reportId,
+	        @RequestParam(value = "acid", required = false)String acid, @RequestParam(value = "fromdate", required = false) String fromdate,
+	        @RequestParam(value = "todate", required = false) String todate, @RequestParam(value = "userid", required = false) String userid,
+	        @RequestParam(value = "filetype", required = false) String filetype,
+	        @RequestParam(value = "category", required = false) String category,
+	        @RequestParam(value = "accounts", required = false) String accounts,
+	        @RequestParam(value = "channel",required = false,defaultValue = "EMAIL") String channel
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	) throws Exception {
 
-		Date ConDateFromdate = dateFormat1.parse(fromdate);
-		String strDate2 = formatter1.format(ConDateFromdate);
-		fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate2));
+	    ObjectMapper mapper = new ObjectMapper();
+	    System.out.println("channel="+channel);
 
-		Date ConToDate = dateFormat1.parse(todate);
-		String strDate1 = formatter1.format(ConToDate);
-		todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+	    List<AccountDTO> accountList = mapper.readValue(accounts,new TypeReference<List<AccountDTO>>() {});
 
-		InputStreamResource resource = null;
-		try {
-			logger.info("Getting Arabic download File :" + reportId + ", FileType :" + filetype);
-			File repfile = getDownloadFileScr(acid, userid, reportId, fromdate, todate, null, null, filetype, category,
-					accountnumber, Acctname, true);
+	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	    Date ConDateFromdate = dateFormat1.parse(fromdate);
+	    fromdate = formatter1.format(ConDateFromdate);
+	    Date ConToDate = dateFormat1.parse(todate);
+	    todate = formatter1.format(ConToDate);
+	    List<File> generatedFiles = new ArrayList<>();
 
-			response.setHeader("Content-Disposition", "attachment; filename=" + repfile.getName());
-			resource = new InputStreamResource(new FileInputStream(repfile));
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		return resource;
+	    try {
+
+	        for (AccountDTO accountdata : accountList) {
+
+	            System.out.println("count = 1");
+
+	            String accountNumber = accountdata.getAccountNumber();
+	            String accountName = accountdata.getCustomerName();
+
+	            // PDF GENERATION
+
+	            File repfile = getDownloadFileScr(accountdata.getAcid(),userid,reportId,fromdate,todate,null,null,filetype,
+	            		category,accountdata.getAccountNumber(),accountdata.getCustomerName());
+
+	            generatedFiles.add(repfile);
+
+	            // EMAIL SEND
+
+	            if (channel.equalsIgnoreCase("EMAIL") || channel.equalsIgnoreCase("BOTH")) {
+
+	                FileInputStream fis = new FileInputStream(repfile);
+	                byte[] fileBytes = convertInputStreamToBytes(fis);
+
+	                fis.close();
+
+					
+					 emailservices.sendEmail( repfile.getName(), fileBytes, "application/pdf",accountdata.getCustomerEmail());
+					 
+
+	                System.out.println("Mail Sent : "  + accountNumber);
+	            }
+	        }
+
+	        // EMAIL ONLY
+
+	        if (channel.equalsIgnoreCase("EMAIL")) {
+
+	            return ResponseEntity.ok("SUCCESS");
+	        }
+
+	        // DOWNLOAD / BOTH
+
+	        if (channel.equalsIgnoreCase("DOWNLOAD") || channel.equalsIgnoreCase("BOTH")) {
+
+	            // SINGLE PDF
+
+	            if (generatedFiles.size() == 1) {
+
+	                File pdfFile = generatedFiles.get(0);
+
+	                InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
+
+	                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+ pdfFile.getName())
+	                        .contentType(MediaType.APPLICATION_PDF).contentLength(pdfFile.length()).body(resource);
+	            
+	            }
+
+	            // MULTIPLE PDF -> ZIP
+
+	            else if (generatedFiles.size() > 1) {
+
+	                File zipFile = File.createTempFile("EStatements",".zip");
+
+	                ZipOutputStream zos =new ZipOutputStream(new FileOutputStream(zipFile));
+
+	                for (File file : generatedFiles) {
+
+	                    FileInputStream fis =new FileInputStream(file);
+
+	                    ZipEntry zipEntry =new ZipEntry(file.getName());
+
+	                    zos.putNextEntry(zipEntry);
+
+	                    byte[] bytes = new byte[1024];
+
+	                    int length;
+
+	                    while ((length = fis.read(bytes)) >= 0) {
+
+	                        zos.write(bytes,0,length);
+	                    
+	                    }
+
+	                    fis.close();
+
+	                    zos.closeEntry();
+	                }
+
+	                zos.close();
+
+	                InputStreamResource resource =new InputStreamResource(new FileInputStream(zipFile));
+
+	                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=EStatements.zip").contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                        .contentLength(zipFile.length())
+	                        .body(resource);
+	            }
+	        }
+
+	    } catch (JRException e) {
+
+	        e.printStackTrace();
+
+	        return ResponseEntity
+	                .badRequest()
+	                .body("FAILED");
+	    }
+
+	    return ResponseEntity.ok("SUCCESS");
 	}
-
-	@RequestMapping(value = "/ReportDownloadPDFEAr", method = RequestMethod.GET)
+	
+	
+	@RequestMapping(value = "/ReportDownloadPDFEAr", method = RequestMethod.POST)
 	@ResponseBody
-	public InputStreamResource AMLReportDownloadFormattedDateEAr(HttpServletResponse response,
-			@RequestParam(value = "reportId", required = false) String reportId,
-			@RequestParam(value = "acid", required = false) String acid,
-			@RequestParam(value = "fromdate", required = false) String fromdate,
-			@RequestParam(value = "todate", required = false) String todate,
-			@RequestParam(value = "userid", required = false) String userid,
-			@RequestParam(value = "filetype", required = false) String filetype,
-			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "accountnumber", required = false) String accountnumber,
-			@RequestParam(value = "Acctname", required = false) String Acctname)
-			throws IOException, SQLException, ParseException {
-		response.setContentType("application/octet-stream");
+	public ResponseEntity<?> AMLReportDownloadFormattedDateEAR(HttpServletResponse response, @RequestParam(value = "reportId", required = false)String reportId,
+	        @RequestParam(value = "acid", required = false)String acid, @RequestParam(value = "fromdate", required = false) String fromdate,
+	        @RequestParam(value = "todate", required = false) String todate, @RequestParam(value = "userid", required = false) String userid,
+	        @RequestParam(value = "filetype", required = false) String filetype,
+	        @RequestParam(value = "category", required = false) String category,
+	        @RequestParam(value = "accounts", required = false) String accounts,
+	        @RequestParam(value = "channel",required = false,defaultValue = "EMAIL") String channel
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	) throws Exception {
 
-		Date ConDateFromdate = dateFormat1.parse(fromdate);
-		String strDate2 = formatter1.format(ConDateFromdate);
-		fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate2));
+	    ObjectMapper mapper = new ObjectMapper();
+	    System.out.println("channel="+channel);
 
-		Date ConToDate = dateFormat1.parse(todate);
-		String strDate1 = formatter1.format(ConToDate);
-		todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+	    List<AccountDTO> accountList = mapper.readValue(accounts,new TypeReference<List<AccountDTO>>() {});
 
-		InputStreamResource resource = null;
-		try {
-			logger.info("Getting Arabic email File :" + reportId + ", FileType :" + filetype);
-			File repfile = getDownloadFileScr(acid, userid, reportId, fromdate, todate, null, null, filetype, category,
-					accountnumber, Acctname, true);
+	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	    Date ConDateFromdate = dateFormat1.parse(fromdate);
+	    fromdate = formatter1.format(ConDateFromdate);
+	    Date ConToDate = dateFormat1.parse(todate);
+	    todate = formatter1.format(ConToDate);
+	    List<File> generatedFiles = new ArrayList<>();
 
-			response.setHeader("Content-Disposition", "attachment; filename=" + repfile.getName());
+	    try {
 
-			FileInputStream fis = new FileInputStream(repfile);
-			byte[] fileBytes = convertInputStreamToBytes(fis);
-			emailservices.sendEmail(repfile.getName(), fileBytes, "application/pdf",acid);
-			fis.close();
+	        for (AccountDTO accountdata : accountList) {
 
-			resource = new InputStreamResource(new FileInputStream(repfile));
-		} catch (JRException e) {
-			e.printStackTrace();
-		}
-		return resource;
+	            //System.out.println("count = 1");
+
+	            String accountNumber = accountdata.getAccountNumber();
+	            String accountName = accountdata.getCustomerName();
+
+	            // PDF GENERATION
+
+	            File repfile = getDownloadFileScr(accountdata.getAcid(),userid,reportId,fromdate,todate,null,null,filetype,
+	            		category,accountdata.getAccountNumber(),accountdata.getCustomerName(),true);
+
+	            generatedFiles.add(repfile);
+
+	            // EMAIL SEND
+
+	            if (channel.equalsIgnoreCase("EMAIL") || channel.equalsIgnoreCase("BOTH")) {
+
+	                FileInputStream fis = new FileInputStream(repfile);
+	                byte[] fileBytes = convertInputStreamToBytes(fis);
+
+	                fis.close();
+
+					
+					 emailservices.sendEmail( repfile.getName(), fileBytes, "application/pdf",accountdata.getCustomerEmail());
+					 
+
+	                System.out.println("Mail Sent : "  + accountNumber);
+	            }
+	        }
+
+	        // EMAIL ONLY
+
+	        if (channel.equalsIgnoreCase("EMAIL")) {
+
+	            return ResponseEntity.ok("SUCCESS");
+	        }
+
+	        // DOWNLOAD / BOTH
+
+	        if (channel.equalsIgnoreCase("DOWNLOAD") || channel.equalsIgnoreCase("BOTH")) {
+
+	            // SINGLE PDF
+
+	            if (generatedFiles.size() == 1) {
+
+	                File pdfFile = generatedFiles.get(0);
+
+	                InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
+
+	                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+ pdfFile.getName())
+	                        .contentType(MediaType.APPLICATION_PDF).contentLength(pdfFile.length()).body(resource);
+	            
+	            }
+
+	            // MULTIPLE PDF -> ZIP
+
+	            else if (generatedFiles.size() > 1) {
+
+	                File zipFile = File.createTempFile("EStatements",".zip");
+
+	                ZipOutputStream zos =new ZipOutputStream(new FileOutputStream(zipFile));
+
+	                for (File file : generatedFiles) {
+
+	                    FileInputStream fis =new FileInputStream(file);
+
+	                    ZipEntry zipEntry =new ZipEntry(file.getName());
+
+	                    zos.putNextEntry(zipEntry);
+
+	                    byte[] bytes = new byte[1024];
+
+	                    int length;
+
+	                    while ((length = fis.read(bytes)) >= 0) {
+
+	                        zos.write(bytes,0,length);
+	                    
+	                    }
+
+	                    fis.close();
+
+	                    zos.closeEntry();
+	                }
+
+	                zos.close();
+
+	                InputStreamResource resource =new InputStreamResource(new FileInputStream(zipFile));
+
+	                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=EStatements.zip").contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                        .contentLength(zipFile.length())
+	                        .body(resource);
+	            }
+	        }
+
+	    } catch (JRException e) {
+
+	        e.printStackTrace();
+
+	        return ResponseEntity
+	                .badRequest()
+	                .body("FAILED");
+	    }
+
+	    return ResponseEntity.ok("SUCCESS");
 	}
+	
+	
+
+	
+
+	
 
 	public byte[] convertInputStreamToBytes(InputStream is) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -454,7 +771,16 @@ public class XBRLAccountStatement {
 			String fileName = filePrefix + System.currentTimeMillis() + ".pdf";
 
 			Document document = new Document(PageSize.A4.rotate());
-			PdfWriter.getInstance(document, new FileOutputStream(fileName));
+
+			PdfWriter writer = PdfWriter.getInstance(document,new FileOutputStream(fileName));
+
+			// PASSWORD
+
+			String userPassword = accountnumber;
+			String ownerPassword = "ADMIN123"; 
+
+			writer.setEncryption(userPassword.getBytes(),ownerPassword.getBytes(),PdfWriter.ALLOW_PRINTING,PdfWriter.ENCRYPTION_AES_128);
+
 			document.open();
 
 			com.itextpdf.text.Font titleFont;

@@ -47,14 +47,15 @@ public class EmailServices {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EmailServices.class);
 
-	public void sendEmail(String filename, byte[] fileBytes, String fileType, String accno) {
+	public void sendEmail(String filename, byte[] fileBytes, String fileType, String Emailid) {
 		
-		GeneralMasterTbEntity accdetails= generalMasterTbRepo.findByAcctid(accno);
+		//GeneralMasterTbEntity accdetails= generalMasterTbRepo.findByAcctid(accno);
 		//System.out.println("ACC no : "+accno);
 		//System.out.println("cust id : "+accdetails.getCust_id());
-		Cust_table_entity custdetails = cust_table_rep.findById(accdetails.getCust_id()).get();			
+		//Cust_table_entity custdetails = cust_table_rep.findById(accdetails.getCust_id()).get();			
 		
 	    logger.info("EMAIL STARTS");
+	    System.out.println("Emailid="+Emailid);
 
 	    String host = env.getProperty("mail.host");
 	    String user = env.getProperty("mail.username");
@@ -76,7 +77,7 @@ public class EmailServices {
 	        MimeMessage msg = new MimeMessage(session);
 	        msg.setFrom(new InternetAddress(user));
 	        msg.addRecipient(Message.RecipientType.TO,
-	                new InternetAddress(custdetails.getPreferredemail()));
+	                new InternetAddress(Emailid));
 
 	        msg.setSubject("Account Statement");
 	        msg.setSentDate(new Date());

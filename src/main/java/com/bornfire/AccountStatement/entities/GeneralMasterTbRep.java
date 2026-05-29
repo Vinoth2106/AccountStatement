@@ -15,8 +15,14 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 	@Query(value = "select * from GENERAL_MASTER_TB where schm_type<>'OAB' and cust_id=?1 order by Acct_number DESC", nativeQuery = true)
 	List<GeneralMasterTbEntity> findAllCustom(String cust_id);
 	
-	@Query(value = "select a.CUST_ID,a.ACCT_NAME,a.ACCT_NUMBER,b.CUST_TYPE_CODE,a.ACCT_CRNCY_CODE from GENERAL_MASTER_TB a left join CUST_TABLE b on a.CUST_ID=b.ORGKEY where b.CUST_TYPE_CODE=?1", nativeQuery = true)
-	List<Object> findAllCustombytype(String CUST_TYPE_CODE);
+	@Query(value = "select * from GENERAL_MASTER_TB where Acct_number=?1 order by Acct_number DESC", nativeQuery = true)
+	List<GeneralMasterTbEntity> findbyAccountnum(String Acct_number);
+	
+	@Query(value = "select DISTINCT schm_type from GENERAL_MASTER_TB order by schm_type ", nativeQuery = true)
+	List<String> getschmtype();
+	
+	@Query(value = "select a.CUST_ID,a.ACCT_NAME,b.PREFERREDEMAIL,a.ACCT_NUMBER,b.CUST_TYPE_CODE,a.acid,a.ACCT_CRNCY_CODE,a.ACCT_BALANCE_AMT_AC from GENERAL_MASTER_TB a left join CUST_TABLE b on a.CUST_ID=b.ORGKEY where (b.CUST_TYPE_CODE=?1 or b.ORGKEY=?1 or a.schm_type=?1) ", nativeQuery = true)
+	List<Object> findAllCustombytype(String filterValue);
 	
 	
 	@Query(value = "select * from GENERAL_MASTER_TB where schm_type<>'OAB'  and Acid =?1 order by Acct_number DESC", nativeQuery = true)
@@ -28,7 +34,7 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 		List<GeneralMasterTbEntity> findByCustIds(
 		        @Param("custIds") List<String> custIds);
 	
-	@Query(value = "SELECT SUM(ACCT_BALANCE_AMT_AC) FROM GENERAL_MASTER_TB WHERE Acct_number = ?1 AND report_date BETWEEN ?2 AND ?3",
+	@Query(value = "SELECT nvl(SUM(ACCT_BALANCE_AMT_AC),0) FROM GENERAL_MASTER_TB WHERE Acct_number = ?1 AND report_date BETWEEN ?2 AND ?3",
 		       nativeQuery = true)
 		BigDecimal getSumBalanceBetweenDates(String Accountnum, String fd, String td);
 	

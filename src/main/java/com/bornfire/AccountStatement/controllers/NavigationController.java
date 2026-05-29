@@ -1,5 +1,6 @@
 package com.bornfire.AccountStatement.controllers;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bornfire.AccountStatement.entities.AccountDTO;
 import com.bornfire.AccountStatement.entities.AuditServicesEntity;
 import com.bornfire.AccountStatement.entities.AuditServicesRep;
 import com.bornfire.AccountStatement.entities.Cust_table_entity;
@@ -48,6 +50,10 @@ import com.bornfire.AccountStatement.entities.UserAuditRepo;
 import com.bornfire.AccountStatement.entities.TransactionInquiry;
 import com.bornfire.AccountStatement.entities.TransactionInquiryRep;
 import com.bornfire.AccountStatement.services.ScheduleStatementService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bornfire.AccountStatement.entities.Service_audit_table_Rep;
 import com.bornfire.AccountStatement.entities.Service_audit_table_entity;
 
@@ -131,25 +137,74 @@ public class NavigationController {
 	}
 	
 	
+	@GetMapping("/getAccountdata")
+	@ResponseBody
+	public List<Object> loadAccounts(@RequestParam String filterValue){
+
+		 return generalMasterTbRepo.findAllCustombytype(filterValue);
+
+	}
+	
+	
+
 	
 	@RequestMapping(value = "NewStatementRequest", method = { RequestMethod.GET, RequestMethod.POST })
-	public String NewStatementRequest(@RequestParam(name = "frequency", required = false) String frequency,
-			@RequestParam(name = "formmode", required = false) String formmode, Model md,@RequestParam(name = "Account", required = false) String Account
-			,@RequestParam(name = "Accountnum", required = false) String Accountnum,@RequestParam(name = "accountname", required = false) String accountname,
-			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "customerId", required = false) String customerId,  @RequestParam(required=false) String accounts,
-			@RequestParam(value = "td",required = false) String todate,HttpServletRequest req) throws ParseException {
+	public String NewStatementRequest(@RequestParam(name="tableData", required = false)String tableData,@RequestParam(name = "channel", required = false) String channel,@RequestParam(name = "formmode", required = false) String formmode, Model md,
+			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "statementtype", required = false) String statementtype,
+			@RequestParam(value = "td",required = false) String todate,@RequestParam(value = "statementFormat",required = false) String statementFormat,HttpServletRequest req) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		
+		
+
 		if(formmode==null) {
+			
 			List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
 			md.addAttribute("custlist", custlist);
 			md.addAttribute( "accountTypes",cust_table_rep.getDistinctAccountTypes());
+			md.addAttribute( "Types",cust_table_rep.getDistinctAccountTypes());
+			md.addAttribute( "schmtype",generalMasterTbRepo.getschmtype());
 			md.addAttribute("formmode","StatementRequest");
 			
 		}else if(formmode.equals("Preview")) {
 			
-			md.addAttribute("formmode",formmode);
-			md.addAttribute("tranInquiry", transactionInquiryRep.findAllCustomind(Account));
+			ObjectMapper mapper = new ObjectMapper();
+			 List<AccountDTO> accountList=null;
+			 AccountDTO accountdata=null;
+			 String Accountnum=null;
+			 String accountname=null;
+			 String Acid=null;
+			 String customerId=null;
+			 
+			  
+			 if(tableData!=null) {
+				   accountList =mapper.readValue(tableData,new TypeReference<List<AccountDTO>>() {});
+				   accountdata=accountList.get(0);
+			  }
+			 
+			 if (accountdata!=null) {
+				 Accountnum=accountdata.getAccountNumber();
+				 accountname=accountdata.getCustomerName();
+				 Acid=accountdata.getAcid();
+				 customerId=accountdata.getCustomerId();
+			 }
+		    
 			
+							
+				if(Accountnum!=null) {
+					System.out.println("Accountnum="+Accountnum);
+					List<GeneralMasterTbEntity> accountlists=generalMasterTbRepo.findbyAccountnum(Accountnum);
+					if(accountlists!=null) {
+						GeneralMasterTbEntity finaldata=accountlists.get(0);
+						if(finaldata!=null) {
+							Acid=finaldata.getAcid();
+							accountname=finaldata.getAcct_name();
+							customerId=finaldata.getCust_id();
+						}
+						
+					}
+					
+				}	
+			
+			md.addAttribute("tranInquiry", transactionInquiryRep.findAllCustomind(Acid));
 			
 			
 			if (fromdate!=null & todate!=null) {
@@ -164,13 +219,17 @@ public class NavigationController {
 				md.addAttribute("opr_datetd",output.format(toDateValue).toUpperCase());
 			}
 			
-			
-			List<TransactionInquiry> tranlist =transactionInquiryRep.findAllCustominddate(Account,fromdate,todate);
+			List<TransactionInquiry> tranlist =transactionInquiryRep.findAllCustominddate(Acid,fromdate,todate);
 			System.out.println("tranlistsize="+tranlist.size());
 			md.addAttribute("tranInquiry", tranlist);
 			
+			BigDecimal closingBalance = generalMasterTbRepo.getSumBalanceBetweenDates(Accountnum, fromdate, todate);
 			
-			md.addAttribute("acid",Account);
+			BigDecimal openingBalance = transactionInquiryRep.getOpeningBalance(Acid, fromdate);
+
+			md.addAttribute("openingBalance", openingBalance);
+			
+			md.addAttribute("acid",Acid);
 			md.addAttribute("accountnumber",Accountnum);
 			md.addAttribute("Acctname",accountname);
 			md.addAttribute("customerId", customerId);
@@ -190,37 +249,23 @@ public class NavigationController {
 
 			    }
 			}
-			BigDecimal openingBalance =
-			        transactionInquiryRep.getOpeningBalance(Account, fromdate);
-
-			md.addAttribute("openingBalance", openingBalance);
-			BigDecimal closingBalance =
-			        openingBalance.add(totalCredit).subtract(totalDebit);
-
-			md.addAttribute("closingBalance", closingBalance);
 
 			md.addAttribute("totalCredit", totalCredit);
 			md.addAttribute("totalDebit", totalDebit);
-			
+			md.addAttribute("closingBalance",(openingBalance.add(totalCredit)).subtract(totalDebit));
+			md.addAttribute("accountList", accountList);
+			String accountsJson =mapper.writeValueAsString(accountList);
+			md.addAttribute("accountsJson", accountsJson);
+			md.addAttribute("formmode",formmode);
+			md.addAttribute("channel",channel);
+			md.addAttribute("statementFormat", statementFormat);
 			
 		}
-		else if(formmode.equals("MultiPreview")) {
 
-		    md.addAttribute("formmode", formmode);
-
-		    List<String> accountList =
-		            Arrays.asList(accounts.split(","));
-
-		    md.addAttribute("accountList", accountList);
-
-		    md.addAttribute("fromDate", fromdate);
-
-		    md.addAttribute("toDate", todate);
-
-		}
-		
+			
 		return "StatementRequest";
 	}
+
 	
 
 
@@ -339,17 +384,24 @@ public class NavigationController {
 	    Map<String,Object> response =
 	    new HashMap<>();
 
-	    GeneralMasterTbEntity account =
-	            generalMasterTbRepo
-	            .findByAcctNumber(accountNo);
+	    GeneralMasterTbEntity account =generalMasterTbRepo.findByAcctNumber(accountNo);
+	    
+	    if (fromDate!=null & toDate!=null) {
+			SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MMM/yyyy");
+			SimpleDateFormat output = new SimpleDateFormat("dd-MM-yyyy");
+			Date fromDateValue = inputFormat.parse(fromDate);
+			Date toDateValue = inputFormat.parse(toDate);
+			fromDate = outputFormat.format(fromDateValue).toUpperCase();
+			toDate = outputFormat.format(toDateValue).toUpperCase();
+		}
+	    
+	    System.out.println("Acid="+account.getAcid());
+	    System.out.println(fromDate);
 
-	    List<TransactionInquiry> tranlist =
-	            transactionInquiryRep
-	            .findAllCustominddate(
-	                    account.getAcid(),
-	                    fromDate,
-	                    toDate);
+	    List<TransactionInquiry> tranlist = transactionInquiryRep.findAllCustominddate(account.getAcid(),fromDate,toDate);
 
+	    System.out.println("datacount="+tranlist.size());
 	    BigDecimal totalCredit = BigDecimal.ZERO;
 
 	    BigDecimal totalDebit = BigDecimal.ZERO;
@@ -357,85 +409,38 @@ public class NavigationController {
 	    for(TransactionInquiry txn : tranlist){
 
 	        if("C".equals(txn.getPart_tran_type())){
-
-	            totalCredit =
-	                    totalCredit.add(txn.getTran_amt());
+	            totalCredit =totalCredit.add(txn.getTran_amt());
 
 	        }else if("D".equals(txn.getPart_tran_type())){
-
-	            totalDebit =
-	                    totalDebit.add(txn.getTran_amt());
-
+	            totalDebit =totalDebit.add(txn.getTran_amt());
 	        }
 	    }
 
-	    response.put("customerName",
-	            account.getAcct_name());
+	    response.put("customerName",account.getAcct_name());
+	    response.put("accountNumber",account.getAcct_number());
+	    response.put("currency",account.getAcct_crncy_code());
+	    response.put("acid",account.getAcid());
+	    response.put("customerId",account.getCust_id());
+	    response.put("totalCredit",totalCredit);
+	    response.put("totalDebit",totalDebit);
+		BigDecimal openingBalance = transactionInquiryRep.getOpeningBalance(account.getAcid(), fromDate);
+		response.put("openingBalance",openingBalance);
+		response.put("closingBalance",(openingBalance.add(totalCredit)).subtract(totalDebit));
 
-	    response.put("accountNumber",
-	            account.getAcct_number());
 
-	    response.put("currency",
-	            account.getAcct_crncy_code());
-
-	    response.put("openingBalance",
-	            account.getAcct_balance_amt_ac());
-
-	    response.put("closingBalance",
-	            account.getAcct_balance_amt_ac());
-
-	    response.put("acid",
-	            account.getAcid());
-
-	    response.put("customerId",
-	            account.getCust_id());
-
-	    response.put("totalCredit",
-	            totalCredit);
-
-	    response.put("totalDebit",
-	            totalDebit);
-
-	    List<Map<String,Object>> txns =
-	            new ArrayList<>();
+	    List<Map<String,Object>> txns = new ArrayList<>();
 
 	    for(TransactionInquiry txn : tranlist){
 
-	        Map<String,Object> t =
-	                new HashMap<>();
-
-	        t.put("tranDate",
-	                new SimpleDateFormat("dd-MM-yyyy")
-	                .format(txn.getTran_date()));
-
-	        t.put("tranId",
-	                txn.getTran_id());
-
-	        t.put("partTranType",
-	                "C".equals(txn.getPart_tran_type())
-	                ? "Credit" : "Debit");
-
-	        t.put("valueDate",
-	                new SimpleDateFormat("dd-MM-yyyy")
-	                .format(txn.getValue_date()));
-
-	        t.put("particular",
-	                txn.getTran_particular());
-
-	        t.put("debit",
-	                "D".equals(txn.getPart_tran_type())
-	                ? txn.getTran_amt()
-	                : "-");
-
-	        t.put("credit",
-	                "C".equals(txn.getPart_tran_type())
-	                ? txn.getTran_amt()
-	                : "-");
-
-	        t.put("currency",
-	                txn.getTran_crncy_code());
-
-	        txns.add(t);
+	        Map<String,Object> t = new HashMap<>();
+	        t.put("tranDate", new SimpleDateFormat("dd-MM-yyyy") .format(txn.getTran_date()));
+	        t.put("tranId",txn.getTran_id());
+	        t.put("partTranType","C".equals(txn.getPart_tran_type())? "Credit" : "Debit");
+	        t.put("valueDate",new SimpleDateFormat("dd-MM-yyyy").format(txn.getValue_date()));
+	        t.put("particular",txn.getTran_particular());
+	        t.put("debit","D".equals(txn.getPart_tran_type()) ? txn.getTran_amt() : "-");
+	        t.put("credit", "C".equals(txn.getPart_tran_type()) ? txn.getTran_amt() : "-");
+	        t.put("currency", txn.getTran_crncy_code()); txns.add(t);
 
 	    }
 
