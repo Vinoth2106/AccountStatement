@@ -53,8 +53,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-
+import org.springframework.web.multipart.MultipartFile;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -83,9 +82,11 @@ import com.itextpdf.text.Phrase;
 
 import com.itextpdf.text.pdf.BaseFont;
 import com.bornfire.AccountStatement.entities.AccountDTO;
+import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
 import com.bornfire.AccountStatement.entities.TransactionInquiry;
 import com.bornfire.AccountStatement.entities.TransactionInquiryRep;
 import com.bornfire.AccountStatement.services.EmailServices;
+import com.bornfire.AccountStatement.services.ScheduleStatementService;
 import com.bornfire.AccountStatement.services.EmailServices;
 
 import com.bornfire.AccountStatement.util.EnglishToArabicNameTransliterator;
@@ -103,6 +104,9 @@ public class XBRLAccountStatement {
 
 	@Autowired
 	DataSource srcdataSource;
+	
+	@Autowired
+	ScheduleStatementService schedulestatementservice;
 
 	DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
 
@@ -240,6 +244,13 @@ public class XBRLAccountStatement {
 	    ObjectMapper mapper = new ObjectMapper();
 
 	    List<AccountDTO> accountList = mapper.readValue( accounts, new TypeReference<List<AccountDTO>>() {});
+	    
+	    if(accountList!=null) {
+	    	AccountDTO getaccountdata= accountList.get(0);
+	    	if(getaccountdata.getScheduleType()!=null && getaccountdata.getScheduleType().equalsIgnoreCase("Yes") ) {
+	    		schedulestatementservice.Schedule(null, accountList,"PDF");
+	    	}
+	    }
 
 	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -348,6 +359,13 @@ public class XBRLAccountStatement {
 	    ObjectMapper mapper = new ObjectMapper();
 
 	    List<AccountDTO> accountList = mapper.readValue( accounts, new TypeReference<List<AccountDTO>>() {});
+	    
+	    if(accountList!=null) {
+	    	AccountDTO getaccountdata= accountList.get(0);
+	    	if(getaccountdata.getScheduleType()!=null && getaccountdata.getScheduleType().equalsIgnoreCase("Yes") ) {
+	    		schedulestatementservice.Schedule(null, accountList,"PDF");
+	    	}
+	    }
 
 	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -461,6 +479,12 @@ public class XBRLAccountStatement {
 	    System.out.println("channel="+channel);
 
 	    List<AccountDTO> accountList = mapper.readValue(accounts,new TypeReference<List<AccountDTO>>() {});
+	    if(accountList!=null) {
+	    	AccountDTO getaccountdata= accountList.get(0);
+	    	if(getaccountdata.getScheduleType()!=null && getaccountdata.getScheduleType().equalsIgnoreCase("Yes") ) {
+	    		schedulestatementservice.Schedule(null, accountList,"PDF");
+	    	}
+	    }
 
 	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
@@ -597,6 +621,12 @@ public class XBRLAccountStatement {
 	    System.out.println("channel="+channel);
 
 	    List<AccountDTO> accountList = mapper.readValue(accounts,new TypeReference<List<AccountDTO>>() {});
+	    if(accountList!=null) {
+	    	AccountDTO getaccountdata= accountList.get(0);
+	    	if(getaccountdata.getScheduleType()!=null && getaccountdata.getScheduleType().equalsIgnoreCase("Yes") ) {
+	    		schedulestatementservice.Schedule(null, accountList,"PDF");
+	    	}
+	    }
 
 	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
 	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
@@ -946,6 +976,7 @@ public class XBRLAccountStatement {
 
 		return outputFile;
 	}
+	
 
 	private void addHeader(PdfPTable table, String text, com.itextpdf.text.Font font, int alignment) {
 		addHeader(table, text, font, alignment, false);
@@ -1350,5 +1381,7 @@ public class XBRLAccountStatement {
 		membershipDate.setCellStyle(dateCellStyle);
 
 	}
+	
+	
 
 }

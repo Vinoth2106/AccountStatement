@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bornfire.AccountStatement.entities.AccountDTO;
 import com.bornfire.AccountStatement.entities.AuditServicesEntity;
@@ -151,10 +152,10 @@ public class NavigationController {
 	@RequestMapping(value = "NewStatementRequest", method = { RequestMethod.GET, RequestMethod.POST })
 	public String NewStatementRequest(@RequestParam(name="tableData", required = false)String tableData,@RequestParam(name = "channel", required = false) String channel,@RequestParam(name = "formmode", required = false) String formmode, Model md,
 			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "statementtype", required = false) String statementtype,
-			@RequestParam(value = "td",required = false) String todate,@RequestParam(value = "statementFormat",required = false) String statementFormat,HttpServletRequest req) throws ParseException, JsonParseException, JsonMappingException, IOException {
+			@RequestParam(value = "td",required = false) String todate,@RequestParam(value = "statementFormat",required = false) String statementFormat,
+			@RequestParam(value="marketingFile",required = false) MultipartFile marketingFile,
+			HttpServletRequest req) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		
-		
-
 		if(formmode==null) {
 			
 			List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
@@ -166,6 +167,8 @@ public class NavigationController {
 			
 		}else if(formmode.equals("Preview")) {
 			
+			
+			//System.out.println(marketingFile.getOriginalFilename());
 			ObjectMapper mapper = new ObjectMapper();
 			 List<AccountDTO> accountList=null;
 			 AccountDTO accountdata=null;
@@ -259,6 +262,7 @@ public class NavigationController {
 			md.addAttribute("formmode",formmode);
 			md.addAttribute("channel",channel);
 			md.addAttribute("statementFormat", statementFormat);
+			md.addAttribute("marketingFile", marketingFile);
 			
 		}
 

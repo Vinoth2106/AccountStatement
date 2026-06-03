@@ -2,7 +2,9 @@ package com.bornfire.AccountStatement.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bornfire.AccountStatement.entities.AccountDTO;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Repo;
 import com.bornfire.AccountStatement.entities.ScheduleStatement_Repo;
@@ -46,7 +48,7 @@ public class ScheduleStatementService {
 	}
 
 	public List<ScheduledStatement_Entity> getAllSchedules() {
-		return scheduleRepo.findAll();
+		return scheduleRepo.getScheduledata();
 	}
 
 	public Map<String, Object> saveSchedule(ScheduledStatement_Entity schedule) {
@@ -204,6 +206,39 @@ public class ScheduleStatementService {
 
 	    String sign = percentageChange > 0 ? "+" : "";
 	    return String.format("%s%.1f%% From Last Month", sign, percentageChange);
+	}
+	
+	
+public String Schedule(MultipartFile marketingFile,List<AccountDTO> accountdata,String format) {
+		
+	
+	BigDecimal Scheduledid=scheduleRepo.getSCHEDULEID();
+	for(AccountDTO acc:accountdata) {
+		BigDecimal id=scheduleRepo.getid();
+		ScheduledStatement_Entity addnewdata=new ScheduledStatement_Entity();
+		addnewdata.setId(id);
+		addnewdata.setScheduleId(Scheduledid);
+		addnewdata.setScheduleName(acc.getScheduleName());
+		addnewdata.setRunTime(acc.getScheduleTime());
+		addnewdata.setFrequency(acc.getFrequency());
+		addnewdata.setStartDate(acc.getScheduleDate());
+		addnewdata.setOutputFormat(format);
+		addnewdata.setStatus("Active");
+		addnewdata.setAccountNumber(acc.getAccountNumber());
+		addnewdata.setAccountType(acc.getAccountType());
+		addnewdata.setAcid(acc.getAcid());
+		addnewdata.setCustomerEmailId(acc.getCustomerEmail());
+		addnewdata.setCustomerId(acc.getCustomerId());
+		addnewdata.setCustomerName(acc.getCustomerName());
+		addnewdata.setCurrency(acc.getCurrency());
+		
+		scheduleRepo.save(addnewdata);
+		
+	}
+		
+		
+		return "Sucessfully";
+		
 	}
 
 }

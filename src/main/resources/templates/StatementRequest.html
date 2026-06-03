@@ -911,7 +911,7 @@ transform : rotate(360deg);
 							<!-- Upload Option -->
 							<div id="uploadDiv" style="display: none;">
 
-								<input type="file" class="form-control" id="marketingFile">
+								<input type="file" class="form-control" id="marketingFile" name="marketingFile">
 
 							</div>
 
@@ -1191,9 +1191,7 @@ transform : rotate(360deg);
 										</a> <input type="hidden" id="accounts" th:value="${accountsJson}">
 										<input type="hidden" id="channel" th:value="${channel}">
 										<input type="hidden" id="statementFormat" th:value="${statementFormat}">
-										
-										
-
+										<input type="hidden" id="marketingFile" th:value="${marketingFile}">
 
 									</div>
 
@@ -1905,11 +1903,16 @@ function openStatementPreview() {
     var fromDate = document.getElementById('fromDate').value;
 	var toDate = document.getElementById('toDate').value;
 	var statementFormat = document.getElementById('statementFormat').value;
-	alert(statementFormat);
-	
+	var ScheduleType = document.querySelector('input[name="wantSchedule"]:checked').value;
+	var scheduleName =document.getElementById('scheduleName').value;
+	var Frequency =document.getElementById('Frequency').value;
+	var scheduleDate =document.getElementById('scheduleDate').value;
+	var scheduleTime = document.getElementById('scheduleTime').value;
+	var offerAlert= document.querySelector('input[name="offerAlert"]:checked').value;
     let statementType = document.querySelector('input[name="statementType"]:checked').value;
     var channel = document.querySelector('input[name="deliveryChannel"]:checked').value;
-
+    let fileInput = document.getElementById("marketingFile");
+   
     // GET ALL DATATABLE ROWS
 
     selectedTable.rows().every(function () {
@@ -1930,7 +1933,13 @@ function openStatementPreview() {
 
             acid: $('<div>').html(row[5]).text().trim(),
 
-            currency: $('<div>').html(row[6]).text().trim()
+            currency: $('<div>').html(row[6]).text().trim(),
+            scheduleType: ScheduleType,
+            scheduleName: scheduleName,
+            frequency: Frequency,
+            scheduleDate: scheduleDate,
+            scheduleTime:scheduleTime,
+            offerAlert:offerAlert
 
         });
 
@@ -1987,7 +1996,17 @@ function openStatementPreview() {
     form.action = "NewStatementRequest";
 
     // FORM MODE
-
+    
+    if(offerAlert==='yes'){
+    	
+    	if (fileInput.files.length > 0) {
+    	    form.enctype = "multipart/form-data";
+    	    form.appendChild(fileInput.cloneNode(true));
+    	}
+    }
+    
+    
+    
     addHidden(form, "formmode", "Preview");
 
     addHidden(form, "fd",document.getElementById("fromDate").value);
@@ -2064,9 +2083,7 @@ function addHidden(form, name, value) {
 	function ReportDownloadPDF(type) {
 
 	    var fromDate = document.getElementById('fromdate').value;
-	    var toDate = document.getElementById('todatehd').value;
-
-	    
+	    var toDate = document.getElementById('todatehd').value;	    
 	    var accountlist = document.getElementById("accounts").value;
 	    
 	    let form =document.createElement("form");

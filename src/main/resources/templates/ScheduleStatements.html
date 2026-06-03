@@ -532,7 +532,7 @@ tbody tr:hover {
 						<tr th:each="r : ${scheduleList}">
 							<td><strong style="font-weight: 600; color: #1a2551;"
 								th:text="${r.scheduleName}"></strong></td>
-							<td th:text="${r.dayDesc}"></td>
+							<td th:text="${r.frequency}"></td>
 							<td><span th:text="${r.runTime}"></span></td>
 							<td th:text="${r.startDate}"></td>
 							<td><span
@@ -543,7 +543,7 @@ tbody tr:hover {
 									<span class="dot"></span> <span th:text="${r.status}"></span>
 							</span></td>
 							<td>
-								<button class="btn-view" th:data-id="${r.id}"
+								<button class="btn-view" th:data-id="${r.scheduleId}"
 									th:data-name="${r.scheduleName}"
 									onclick="viewHist(this.getAttribute('data-id'), this.getAttribute('data-name'))">
 									View history</button>
@@ -662,7 +662,7 @@ tbody tr:hover {
 					+ ' - History List';
 			document.getElementById('histBody').innerHTML = '<p style="text-align:center;color:#6c757d;padding:2rem 0;font-size:14px">Loading...</p>';
 			document.getElementById('histOverlay').classList.add('open');
-
+			
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', 'historyScheduleStatements', true);
 			xhr.setRequestHeader('Content-Type',
@@ -681,7 +681,6 @@ tbody tr:hover {
 						    var h = records[i];
 						    var bc = h.deliveryStatus === 'Success' ? 'badge-ok' : 'badge-fail';
 						    var formattedDate = formatDate(h.dateSent);
-						    
 						    var rerunBadge = (h.isRerun === 'Y') 
 						                     ? '<span class="badge badge-rerun">Reruned</span>' 
 						                     : '';
@@ -693,7 +692,13 @@ tbody tr:hover {
 						          + '</div>'
 						          + '<div>'
 						          + rerunBadge 
-						          + '<span class="badge ' + bc + '">' + h.deliveryStatus + '</span>'
+						          + '<span class="badge ' + bc + '" '
+						          + (h.deliveryStatus === 'Fail'
+						              ? 'onclick="rerunSchedule(\'' + h.scheduleId + '\', \'' + h.runid + '\')" style="cursor:pointer;"'
+						              : '')
+						          + '>'
+						          + h.deliveryStatus
+						          + '</span>'
 						          + '</div>'
 						          + '</div>';
 						}
@@ -702,6 +707,11 @@ tbody tr:hover {
 				}
 			};
 			xhr.send('scheduleId=' + scheduleId);
+		}
+		
+		function rerunSchedule(scheduleId,runId){
+			alert(scheduleId);
+			alert(runId);
 		}
 
 		function closeHist() {
