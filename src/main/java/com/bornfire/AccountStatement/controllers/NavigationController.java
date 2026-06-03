@@ -153,7 +153,7 @@ public class NavigationController {
 	public String NewStatementRequest(@RequestParam(name="tableData", required = false)String tableData,@RequestParam(name = "channel", required = false) String channel,@RequestParam(name = "formmode", required = false) String formmode, Model md,
 			@RequestParam(value = "fd",required = false) String fromdate,@RequestParam(name = "statementtype", required = false) String statementtype,
 			@RequestParam(value = "td",required = false) String todate,@RequestParam(value = "statementFormat",required = false) String statementFormat,
-			@RequestParam(value="marketingFile",required = false) MultipartFile marketingFile,
+			@RequestParam(value="marketingFile",required = false) MultipartFile marketingFile,@RequestParam(name = "selectedStatements", required = false) String selectedStatements,
 			HttpServletRequest req) throws ParseException, JsonParseException, JsonMappingException, IOException {
 		
 		if(formmode==null) {
@@ -164,7 +164,7 @@ public class NavigationController {
 			md.addAttribute( "Types",cust_table_rep.getDistinctAccountTypes());
 			md.addAttribute( "schmtype",generalMasterTbRepo.getschmtype());
 			md.addAttribute("formmode","StatementRequest");
-			
+			md.addAttribute("statementTypes", new ArrayList<>());
 		}else if(formmode.equals("Preview")) {
 			
 			
@@ -208,7 +208,15 @@ public class NavigationController {
 				}	
 			
 			md.addAttribute("tranInquiry", transactionInquiryRep.findAllCustomind(Acid));
-			
+			List<String> statementTypes = new ArrayList<>();
+
+			if (selectedStatements != null && !selectedStatements.isEmpty()) {
+			    statementTypes = new ObjectMapper().readValue(
+			        selectedStatements,
+			        new TypeReference<List<String>>() {}
+			    );
+			}
+			md.addAttribute("statementTypes", statementTypes);
 			
 			if (fromdate!=null & todate!=null) {
 				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -552,6 +560,15 @@ public class NavigationController {
 			return "redirect:/Dashboard";
 		}
 		return "redirect:login?invalidotp";
+	}
+	@GetMapping("/getSchemeType")
+	@ResponseBody
+	public String getSchemeType(@RequestParam String acid) {
+
+	    String schemeType =
+	    		generalMasterTbRepo.getSchemeTypeByAcid(acid);
+
+	    return schemeType;
 	}
 
 

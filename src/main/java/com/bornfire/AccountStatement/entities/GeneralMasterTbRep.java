@@ -47,5 +47,10 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 		       nativeQuery = true)
 		GeneralMasterTbEntity findByAcctid(String acid);
 	
+	@Query(value =
+		    "select schm_type from GENERAL_MASTER_TB where acid = ?1",
+		    nativeQuery = true)
+		String getSchemeTypeByAcid(String acid);
+	
 
 }
