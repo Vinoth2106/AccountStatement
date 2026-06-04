@@ -192,7 +192,8 @@ public class NavigationController {
 				 customerId=accountdata.getCustomerId();
 			 }
 		    
-			
+			 md.addAttribute("accountsJson",
+				        new ObjectMapper().writeValueAsString(accountList));
 							
 				if(Accountnum!=null) {
 					System.out.println("Accountnum="+Accountnum);

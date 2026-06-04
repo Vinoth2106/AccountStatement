@@ -1223,7 +1223,9 @@ td:nth-child(7) {
 										<input type="hidden" id="channel" th:value="${channel}">
 										<input type="hidden" id="statementFormat" th:value="${statementFormat}">
 										<input type="hidden" id="marketingFile" th:value="${marketingFile}">
-
+										<input type="hidden"
+										       id="accountsJson"
+										       th:value="${accountsJson}">
 									</div>
 
 								</div>
@@ -2821,7 +2823,7 @@ function loadPreviewData(accountNo){
                 tbody.append(row);
 
             });
-
+			showButtonsForAccount(accountNo);
         },
 
         error : function(xhr, status, error){
@@ -2834,6 +2836,70 @@ function loadPreviewData(accountNo){
 
     });
 
+}
+
+function showButtonsForAccount(accountNo){
+
+    let accounts =
+        JSON.parse($("#accountsJson").val());
+
+    let acc =
+        accounts.find(a =>
+            a.accountNumber === accountNo);
+
+    if(!acc) return;
+
+    let type = acc.accountType;
+
+    $("#statementSwitcher").empty();
+
+    if(type === "SBA" ||
+       type === "CAA" ||
+       type === "DDA"){
+
+        $("#statementSwitcher").append(`
+            <button class="btn btn-primary statement-btn"
+                    data-type="Savings_AccountStatement">
+                Account Statement
+            </button>
+
+            <button class="btn btn-outline-primary statement-btn"
+                    data-type="Savings_InterestCertificate">
+                Interest Certificate
+            </button>
+        `);
+    }
+
+    else if(type === "LAA" ||
+            type === "CLA" ||
+            type === "PCA"){
+
+        $("#statementSwitcher").append(`
+            <button class="btn btn-primary statement-btn"
+                    data-type="Loan_Statement">
+                Loan Statement
+            </button>
+        `);
+    }
+
+    else if(type === "TDA" ||
+            type === "FBA"){
+
+        $("#statementSwitcher").append(`
+            <button class="btn btn-primary statement-btn"
+                    data-type="FD_DepositStatement">
+                Deposit Statement
+            </button>
+
+            <button class="btn btn-outline-primary statement-btn"
+                    data-type="FD_InterestCertificate">
+                Interest Certificate
+            </button>
+        `);
+    }
+
+    $("#statementSwitcher .statement-btn:first")
+        .trigger("click");
 }
 
 function loadStatementTypeByScheme(schemeType){
