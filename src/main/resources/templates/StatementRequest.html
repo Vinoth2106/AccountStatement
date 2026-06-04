@@ -2448,7 +2448,9 @@ function addHidden(form, name, value) {
 	function generatebtn(){
 		var channel = document.getElementById('channel').value;
 		var statementFormat = document.getElementById('statementFormat').value;
-		alert(statementFormat);
+		//alert(statementFormat);
+		
+	
 		
 		var Language =document.getElementById("languageToggle").checked? "arabic" : "normal";
 		//alert(Language)
@@ -2472,6 +2474,8 @@ function addHidden(form, name, value) {
 	    var fromDate = document.getElementById('fromdate').value;
 	    var toDate = document.getElementById('todatehd').value;	    
 	    var accountlist = document.getElementById("accounts").value;
+	    var selectedStatements = JSON.parse($("#selectedStatementsJson").val() || "[]");
+
 	    
 	    let form =document.createElement("form");
 	    form.method = "POST";
@@ -2492,6 +2496,7 @@ function addHidden(form, name, value) {
 	    addHidden(form,"fromdate",fromDate);
 
 	    addHidden(form,"todate",toDate);
+	    addHidden(form, "selectedStatements",JSON.stringify(selectedStatements));
 
 	    document.body.appendChild(form);
 

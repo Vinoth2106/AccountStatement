@@ -182,6 +182,7 @@ public class NavigationController {
 			md.addAttribute("fdInterestRate", "5.25%");
 			md.addAttribute("maturityDate", "04-06-2027");
 			md.addAttribute("maturityAmount", "105250");
+			md.addAttribute("currency", "AED");
 			
 			 List<AccountDTO> accountList=null;
 			 AccountDTO accountdata=null;

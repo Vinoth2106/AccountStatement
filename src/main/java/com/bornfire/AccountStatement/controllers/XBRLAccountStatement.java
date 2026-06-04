@@ -73,6 +73,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
@@ -232,88 +233,245 @@ public class XBRLAccountStatement {
 
 	}
 	
+	
 	@RequestMapping(value = "/ReportDownloadPDF", method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseBody public InputStreamResource AMLReportDownloadFormattedDate(HttpServletResponse response, @RequestParam(value = "reportId", required = false) String reportId,
-			@RequestParam(value = "acid", required = false) String acid, @RequestParam(value = "fromdate", required = false) String fromdate, @RequestParam(value = "todate", required = false) String todate,
-			@RequestParam(value = "userid", required = false) String userid, @RequestParam(value = "filetype", required = false) String filetype, @RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "accountnumber", required = false) String accountnumber, @RequestParam(value = "Acctname", required = false) String Acctname,@RequestParam("accounts") String accounts)
-			throws IOException, SQLException, ParseException {
-		
+	@ResponseBody
+	public InputStreamResource AMLReportDownloadFormattedDate(
+	        HttpServletResponse response,
+
+	        @RequestParam(value = "reportId", required = false)
+	        String reportId,
+
+	        @RequestParam(value = "acid", required = false)
+	        String acid,
+
+	        @RequestParam(value = "fromdate", required = false)
+	        String fromdate,
+
+	        @RequestParam(value = "todate", required = false)
+	        String todate,
+
+	        @RequestParam(value = "userid", required = false)
+	        String userid,
+
+	        @RequestParam(value = "filetype", required = false)
+	        String filetype,
+
+	        @RequestParam(value = "category", required = false)
+	        String category,
+
+	        @RequestParam(value = "accountnumber", required = false)
+	        String accountnumber,
+
+	        @RequestParam(value = "Acctname", required = false)
+	        String Acctname,
+
+	        @RequestParam("accounts")
+	        String accounts,
+
+	        @RequestParam(value = "selectedStatements", required = false)
+	        String selectedStatements)
+
+	        throws IOException, SQLException, ParseException {
+
 	    response.setContentType("application/octet-stream");
 
 	    ObjectMapper mapper = new ObjectMapper();
 
-	    List<AccountDTO> accountList = mapper.readValue( accounts, new TypeReference<List<AccountDTO>>() {});
-	    
-	    if(accountList!=null) {
-	    	AccountDTO getaccountdata= accountList.get(0);
-	    	if(getaccountdata.getScheduleType()!=null && getaccountdata.getScheduleType().equalsIgnoreCase("Yes") ) {
-	    		schedulestatementservice.Schedule(null, accountList,"PDF");
-	    	}
+	    List<String> statements =
+	            mapper.readValue(
+	                    selectedStatements,
+	                    new TypeReference<List<String>>() {
+	                    });
+
+	    List<AccountDTO> accountList =
+	            mapper.readValue(
+	                    accounts,
+	                    new TypeReference<List<AccountDTO>>() {
+	                    });
+
+	    if (accountList != null && !accountList.isEmpty()) {
+
+	        AccountDTO getaccountdata = accountList.get(0);
+
+	        if (getaccountdata.getScheduleType() != null
+	                && getaccountdata.getScheduleType()
+	                        .equalsIgnoreCase("Yes")) {
+
+	            schedulestatementservice.Schedule(
+	                    null,
+	                    accountList,
+	                    "PDF");
+	        }
 	    }
 
-	    SimpleDateFormat dateFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+	    SimpleDateFormat dateFormat1 =
+	            new SimpleDateFormat("dd-MM-yyyy");
 
-	    SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MMM-yyyy");
+	    SimpleDateFormat formatter1 =
+	            new SimpleDateFormat("dd-MMM-yyyy");
 
-	    Date ConDateFromdate = dateFormat1.parse(fromdate);
+	    Date ConDateFromdate =
+	            dateFormat1.parse(fromdate);
 
-	    String strDate2 = formatter1.format(ConDateFromdate);
+	    fromdate =
+	            formatter1.format(ConDateFromdate);
 
-	    fromdate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy") .parse(strDate2));
-	    Date ConToDate = dateFormat1.parse(todate);
-	    String strDate1 = formatter1.format(ConToDate);
-	    todate = formatter1.format(new SimpleDateFormat("dd-MMM-yyyy").parse(strDate1));
+	    Date ConToDate =
+	            dateFormat1.parse(todate);
+
+	    todate =
+	            formatter1.format(ConToDate);
 
 	    InputStreamResource resource = null;
 
 	    try {
 
 	        logger.info(
-	                "Getting download File :" + reportId
-	        );
+	                "Getting download File : "
+	                        + reportId);
+
+	        List<File> generatedFiles =
+	                new ArrayList<File>();
+
+	        if (accountList != null
+	                && !accountList.isEmpty()) {
+
+	            for (AccountDTO acc : accountList) {
+
+	                for (String statementType : statements) {
+
+	                    File pdfFile = null;
+
+	                    // ACCOUNT STATEMENT
+
+	                    if (statementType
+	                            .contains("AccountStatement")) {
+
+	                        pdfFile =
+	                                getDownloadFileScr(
+	                                        acc.getAcid(),
+	                                        userid,
+	                                        reportId,
+	                                        fromdate,
+	                                        todate,
+	                                        null,
+	                                        null,
+	                                        "pdf",
+	                                        category,
+	                                        acc.getAccountNumber(),
+	                                        acc.getCustomerName());
+	                    }
+
+	                    // FD DEPOSIT RECEIPT
+
+	                    else if (statementType
+	                            .equalsIgnoreCase(
+	                                    "FD_DepositReceipt")) {
+
+	                        pdfFile =
+	                        		generateFDDepositReceipt();
+	                    }
+
+	                    // FD DEPOSIT STATEMENT
+
+	                    else if (statementType
+	                            .equalsIgnoreCase(
+	                                    "FD_DepositStatement")) {
+	                    	
+	                    	
+							
+							 pdfFile = generateFDDepositStatement();
+							 
+	                    }
+
+	                    // INTEREST CERTIFICATE
+
+	                    else if (statementType
+	                            .contains(
+	                                    "InterestCertificate")) {
+
+							
+							  pdfFile = generateInterestCertificate();
+							 
+	                    }
+	                    
+	                    else if (statementType.contains("FD_DepositAdvice")) {
+	                    	 pdfFile = generateDepositAdvice(); 
+	                    }
+
+	                    if (pdfFile != null) {
+
+	                        generatedFiles.add(pdfFile);
+	                    }
+	                }
+	            }
+	        }
 
 	        // SINGLE PDF
 
-	        if(accountList != null && accountList.size() == 1){
+	        if (generatedFiles.size() == 1) {
 
-	            AccountDTO acc =accountList.get(0);
+	            File pdfFile =
+	                    generatedFiles.get(0);
 
-	            File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName());
+	            response.setContentType(
+	                    "application/pdf");
 
-	            response.setContentType("application/pdf");
+	            response.setHeader(
+	                    "Content-Disposition",
+	                    "attachment; filename="
+	                            + pdfFile.getName());
 
-	            response.setHeader("Content-Disposition","attachment; filename="+ pdfFile.getName());
-
-	            resource = new InputStreamResource(new FileInputStream(pdfFile));
-	            
+	            resource =
+	                    new InputStreamResource(
+	                            new FileInputStream(
+	                                    pdfFile));
 	        }
 
-	        // MULTIPLE PDF ZIP
+	        // ZIP FILE
 
-	        else if(accountList != null && accountList.size() > 1){
+	        else {
 
-	            String zipFileName ="AccountStatements.zip";
-	            File zipFile = new File(zipFileName);
-	            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+	            String zipFileName =
+	                    "Statements_"
+	                            + System.currentTimeMillis()
+	                            + ".zip";
 
-	            for(AccountDTO acc : accountList){
+	            File zipFile =
+	                    new File(zipFileName);
 
-	                File pdfFile = getDownloadFileScr(acc.getAcid(),userid,reportId,fromdate,todate,null,null,"pdf",category,acc.getAccountNumber(),acc.getCustomerName());
+	            ZipOutputStream zos =
+	                    new ZipOutputStream(
+	                            new FileOutputStream(
+	                                    zipFile));
 
-	                FileInputStream fis = new FileInputStream(pdfFile);
+	            for (File pdfFile : generatedFiles) {
 
-	                ZipEntry zipEntry = new ZipEntry(pdfFile.getName());
+	                FileInputStream fis =
+	                        new FileInputStream(
+	                                pdfFile);
 
-	                zos.putNextEntry(zipEntry);
+	                ZipEntry zipEntry =
+	                        new ZipEntry(
+	                                pdfFile.getName());
 
-	                byte[] bytes = new byte[1024];
+	                zos.putNextEntry(
+	                        zipEntry);
 
-	                int length;
+	                byte[] buffer =
+	                        new byte[1024];
 
-	                while((length = fis.read(bytes)) >= 0){
+	                int len;
 
-	                    zos.write(bytes, 0, length);
+	                while ((len =
+	                        fis.read(buffer))
+	                        > 0) {
+
+	                    zos.write(
+	                            buffer,
+	                            0,
+	                            len);
 	                }
 
 	                fis.close();
@@ -323,29 +481,29 @@ public class XBRLAccountStatement {
 
 	            zos.close();
 
-	            response.setContentType("application/zip");
+	            response.setContentType(
+	                    "application/zip");
 
-	            response.setHeader("Content-Disposition","attachment; filename="+ zipFile.getName());
+	            response.setHeader(
+	                    "Content-Disposition",
+	                    "attachment; filename="
+	                            + zipFileName);
 
-	            resource =new InputStreamResource(new FileInputStream(zipFile));
+	            resource =
+	                    new InputStreamResource(
+	                            new FileInputStream(
+	                                    zipFile));
 	        }
 
-	        // DEFAULT
-
-	        else{
-
-	            File repfile =getDownloadFileScr(acid,userid,reportId,fromdate,todate,null,null,filetype,category,accountnumber,Acctname);
-	            response.setHeader("Content-Disposition","attachment; filename=" + repfile.getName());
-	            resource = new InputStreamResource(new FileInputStream(repfile));
-	        }
-
-	    } catch (JRException e) {
+	    } catch (Exception e) {
 
 	        e.printStackTrace();
 	    }
 
 	    return resource;
 	}
+	
+	
 	
 	@RequestMapping(value = "/ReportDownloadPDFAr", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody public InputStreamResource AMLReportDownloadFormattedDateAr(HttpServletResponse response, @RequestParam(value = "reportId", required = false) String reportId,
@@ -1382,6 +1540,978 @@ public class XBRLAccountStatement {
 
 	}
 	
+	
+	public File generateFDDepositStatement() {
+
+	    File outputFile = null;
+
+	    try {
+
+	        String fileName =
+	                "FD_DepositStatement_" +
+	                System.currentTimeMillis() +
+	                ".pdf";
+
+	        Document document =
+	                new Document(PageSize.A4);
+
+	        PdfWriter.getInstance(
+	                document,
+	                new FileOutputStream(fileName));
+
+	        document.open();
+
+	        // FONTS
+
+	        com.itextpdf.text.Font titleFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.TIMES_ROMAN,
+	                        24,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font headerFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        12,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font normalFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        11,
+	                        com.itextpdf.text.Font.NORMAL);
+
+	        // LOGO
+
+	        Image logo =
+	                Image.getInstance(
+	                        getClass()
+	                        .getClassLoader()
+	                        .getResource("static/images/icici.png"));
+
+	        logo.scaleToFit(90, 90);
+	        logo.setAlignment(Element.ALIGN_CENTER);
+
+	        document.add(logo);
+
+	        // TITLE
+
+	        Paragraph title = new Paragraph();
+	        title.setAlignment(Element.ALIGN_CENTER);
+
+	        Chunk titleChunk =
+	                new Chunk(
+	                        "Deposit Statement",
+	                        titleFont);
+
+	        title.add(titleChunk);
+
+	        document.add(title);
+
+	        document.add(new Paragraph(" "));
+
+	        // RECEIPT INFO
+
+	        PdfPTable receiptTable =
+	                new PdfPTable(2);
+
+	        receiptTable.setWidthPercentage(100);
+
+	        receiptTable.setWidths(
+	                new float[] {70,30});
+
+	        PdfPCell blank =
+	                new PdfPCell();
+
+	        blank.setBorder(0);
+
+	        receiptTable.addCell(blank);
+
+	        PdfPCell right =
+	                new PdfPCell();
+
+	        right.setBorder(0);
+
+	        Paragraph p1 = new Paragraph();
+	        p1.add(new Chunk("Receipt ID : R-00115", headerFont));
+
+	        Paragraph p2 = new Paragraph();
+	        p2.add(new Chunk("Date : 04/08/2025", headerFont));
+
+	        right.addElement(p1);
+	        right.addElement(p2);
+
+	        receiptTable.addCell(right);
+
+	        document.add(receiptTable);
+
+	        document.add(new Paragraph(" "));
+
+	        // BLUE LINE
+
+	        PdfPTable line =
+	                new PdfPTable(1);
+
+	        line.setWidthPercentage(100);
+
+	        PdfPCell lineCell =
+	                new PdfPCell();
+
+	        lineCell.setFixedHeight(8);
+	        lineCell.setBorder(0);
+	        lineCell.setBackgroundColor(
+	                new BaseColor(0,102,204));
+
+	        line.addCell(lineCell);
+
+	        document.add(line);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // CUSTOMER DETAILS
+
+	        Paragraph received =
+	                new Paragraph();
+
+	        received.add(
+	                new Chunk(
+	                        "Received From:",
+	                        headerFont));
+
+	        document.add(received);
+
+	        document.add(
+	                new Paragraph(
+	                        "VINOTH KUMAR"));
+
+	        document.add(new Paragraph(" "));
+
+	        Paragraph address =
+	                new Paragraph();
+
+	        address.add(
+	                new Chunk(
+	                        "Address",
+	                        headerFont));
+
+	        document.add(address);
+
+	        document.add(
+	                new Paragraph(
+	                        "Dubai, UAE"));
+
+	        document.add(new Paragraph(" "));
+
+	        Paragraph acc =
+	                new Paragraph();
+
+	        acc.add(
+	                new Chunk(
+	                        "Account Number",
+	                        headerFont));
+
+	        document.add(acc);
+
+	        document.add(
+	                new Paragraph(
+	                        "1234567890"));
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // DEPOSIT INFORMATION
+
+	        Paragraph depTitle =
+	                new Paragraph();
+
+	        depTitle.add(
+	                new Chunk(
+	                        "Deposit Information",
+	                        headerFont));
+
+	        document.add(depTitle);
+
+	        document.add(new Paragraph(" "));
+
+	        PdfPTable table =
+	                new PdfPTable(3);
+
+	        table.setWidthPercentage(100);
+
+	        table.setWidths(
+	                new float[] {20,60,20});
+
+	        addHeader(table,"Type");
+	        addHeader(table,"Description");
+	        addHeader(table,"Amount");
+
+	        addData(table,"FD");
+	        addData(table,"Fixed Deposit Amount");
+	        addData(table,"100,000.00");
+
+	        addData(table,"Interest");
+	        addData(table,"Interest Amount");
+	        addData(table,"5,250.00");
+
+	        document.add(table);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // TOTAL
+
+	        PdfPTable totalTable =
+	                new PdfPTable(2);
+
+	        totalTable.setWidthPercentage(40);
+	        totalTable.setHorizontalAlignment(
+	                Element.ALIGN_RIGHT);
+
+	        PdfPCell totalLbl =
+	                new PdfPCell();
+
+	        totalLbl.setBackgroundColor(
+	                new BaseColor(0,102,204));
+
+	        totalLbl.addElement(
+	                new Paragraph(
+	                        "Total Amount"));
+
+	        PdfPCell totalAmt =
+	                new PdfPCell();
+
+	        totalAmt.setBackgroundColor(
+	                new BaseColor(0,102,204));
+
+	        totalAmt.addElement(
+	                new Paragraph(
+	                        "105,250.00"));
+
+	        totalTable.addCell(totalLbl);
+	        totalTable.addCell(totalAmt);
+
+	        document.add(totalTable);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        Paragraph sign =
+	                new Paragraph();
+
+	        sign.setAlignment(
+	                Element.ALIGN_RIGHT);
+
+	        sign.add(
+	                new Chunk(
+	                        "Authorized Signature",
+	                        headerFont));
+
+	        document.add(sign);
+
+	        document.close();
+
+	        outputFile =
+	                new File(fileName);
+
+	    } catch(Exception e){
+
+	        e.printStackTrace();
+	    }
+
+	    return outputFile;
+	}
+	
+	
+	private void addHeader(
+	        PdfPTable table,
+	        String value){
+
+	    PdfPCell cell =
+	            new PdfPCell();
+
+	    cell.setBackgroundColor(
+	            BaseColor.LIGHT_GRAY);
+
+	    cell.setHorizontalAlignment(
+	            Element.ALIGN_CENTER);
+
+	    Paragraph p =
+	            new Paragraph();
+
+	    p.add(new Chunk(value));
+
+	    cell.addElement(p);
+
+	    table.addCell(cell);
+	}
+
+	private void addData(
+	        PdfPTable table,
+	        String value){
+
+	    PdfPCell cell =
+	            new PdfPCell();
+
+	    cell.setHorizontalAlignment(
+	            Element.ALIGN_CENTER);
+
+	    Paragraph p =
+	            new Paragraph();
+
+	    p.add(new Chunk(value));
+
+	    cell.addElement(p);
+
+	    table.addCell(cell);
+	}
+	
+	
+	public File generateFDDepositReceipt() {
+
+	    File outputFile = null;
+
+	    try {
+
+	        String fileName =
+	        		
+	                "FD_Deposit_Receipt_" +
+	                System.currentTimeMillis() +
+	                ".pdf";
+
+	        
+	        Document document =
+	                new Document(PageSize.A4);
+
+	        PdfWriter writer =
+	                PdfWriter.getInstance(
+	                        document,
+	                        new FileOutputStream(fileName));
+
+	        document.open();
+
+	        // Fonts
+
+	        com.itextpdf.text.Font titleFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        16,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font headerFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        10,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font normalFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        10,
+	                        com.itextpdf.text.Font.NORMAL);
+
+	        // Logo
+
+	        Image logo =
+	                Image.getInstance(
+	                        getClass()
+	                        .getClassLoader()
+	                        .getResource(
+	                                "static/images/icici.png"));
+
+	        logo.scaleToFit(120, 60);
+	        logo.setAlignment(Element.ALIGN_CENTER);
+
+	        document.add(logo);
+
+	        // Title
+
+	        Paragraph title = new Paragraph();
+	        title.setAlignment(Element.ALIGN_CENTER);
+
+	        Chunk titleChunk =
+	                new Chunk(
+	                        "FIXED DEPOSIT RECEIPT",
+	                        titleFont);
+
+	        title.add(titleChunk);
+
+	        document.add(title);
+
+	        document.add(new Paragraph(" "));
+
+	        // Customer Details Table
+
+	        PdfPTable detailTable =
+	                new PdfPTable(2);
+
+	        detailTable.setWidthPercentage(100);
+
+	        detailTable.setWidths(
+	                new float[] {30f, 70f});
+
+	        addRow(
+	                detailTable,
+	                "Customer Name",
+	                "VINOTH KUMAR",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Customer ID",
+	                "CIF000123",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Account Number",
+	                "1234567890",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Deposit Number",
+	                "FD20260001",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Currency",
+	                "AED",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Deposit Amount",
+	                "100,000.00",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Interest Rate",
+	                "5.25 %",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Deposit Date",
+	                "01-Jun-2026",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Maturity Date",
+	                "01-Jun-2027",
+	                headerFont,
+	                normalFont);
+
+	        addRow(
+	                detailTable,
+	                "Maturity Amount",
+	                "105,250.00",
+	                headerFont,
+	                normalFont);
+
+	        document.add(detailTable);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Terms
+
+	        Paragraph termsTitle =
+	                new Paragraph();
+
+	        termsTitle.add(
+	                new Chunk(
+	                        "Terms & Conditions",
+	                        headerFont));
+
+	        document.add(termsTitle);
+
+	        document.add(
+	                new Paragraph(
+	                        "1. Deposit is subject to bank rules."));
+
+	        document.add(
+	                new Paragraph(
+	                        "2. Premature withdrawal charges may apply."));
+
+	        document.add(
+	                new Paragraph(
+	                        "3. Interest will be paid as per scheme."));
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Signature
+
+	        Paragraph sign =
+	                new Paragraph();
+
+	        sign.setAlignment(
+	                Element.ALIGN_RIGHT);
+
+	        sign.add(
+	                new Chunk(
+	                        "Authorized Signatory",
+	                        headerFont));
+
+	        document.add(sign);
+
+	        document.close();
+
+	        outputFile =
+	                new File(fileName);
+
+	    } catch (Exception e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return outputFile;
+	}
+	
+	private void addRow(
+	        PdfPTable table,
+	        String label,
+	        String value,
+	        com.itextpdf.text.Font headerFont,
+	        com.itextpdf.text.Font normalFont) {
+
+	    Phrase labelPhrase = new Phrase();
+	    labelPhrase.add(
+	            new Chunk(
+	                    label,
+	                    headerFont));
+
+	    PdfPCell labelCell =
+	            new PdfPCell(labelPhrase);
+
+	    labelCell.setBackgroundColor(
+	            BaseColor.LIGHT_GRAY);
+
+	    labelCell.setPadding(6);
+
+	    table.addCell(labelCell);
+
+	    Phrase valuePhrase = new Phrase();
+	    valuePhrase.add(
+	            new Chunk(
+	                    value,
+	                    normalFont));
+
+	    PdfPCell valueCell =
+	            new PdfPCell(valuePhrase);
+
+	    valueCell.setPadding(6);
+
+	    table.addCell(valueCell);
+	}
+	
+	
+	public File generateInterestCertificate() {
+
+	    File outputFile = null;
+
+	    try {
+
+	        String fileName =
+	                "Interest_Certificate_" +
+	                System.currentTimeMillis() +
+	                ".pdf";
+
+	        Document document =
+	                new Document(PageSize.A4, 40, 40, 40, 40);
+
+	        PdfWriter.getInstance(
+	                document,
+	                new FileOutputStream(fileName));
+
+	        document.open();
+
+	        // Fonts
+
+	        com.itextpdf.text.Font titleFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        16,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font headerFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        12,
+	                        com.itextpdf.text.Font.BOLD);
+
+	        com.itextpdf.text.Font normalFont =
+	                new com.itextpdf.text.Font(
+	                        com.itextpdf.text.Font.FontFamily.HELVETICA,
+	                        11,
+	                        com.itextpdf.text.Font.NORMAL);
+
+	        // Logo
+
+	        Image logo =
+	                Image.getInstance(
+	                        getClass()
+	                        .getClassLoader()
+	                        .getResource("static/images/icici.png"));
+
+	        logo.scaleToFit(100, 60);
+	        logo.setAlignment(Element.ALIGN_CENTER);
+
+	        document.add(logo);
+
+	        document.add(new Paragraph(" "));
+
+	        // Title
+
+	        Paragraph title = new Paragraph();
+	        title.setAlignment(Element.ALIGN_CENTER);
+	        title.add(new Chunk(
+	                "INTEREST CERTIFICATE",
+	                titleFont));
+
+	        document.add(title);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Customer Details
+
+	        Paragraph customer = new Paragraph();
+	        customer.add(new Chunk(
+	                "Customer Name : VINOTH KUMAR",
+	                headerFont));
+
+	        document.add(customer);
+
+	        Paragraph acc = new Paragraph();
+	        acc.add(new Chunk(
+	                "Account Number : 1234567890",
+	                headerFont));
+
+	        document.add(acc);
+
+	        Paragraph period = new Paragraph();
+	        period.add(new Chunk(
+	                "Period : 01-Apr-2025 to 31-Mar-2026",
+	                headerFont));
+
+	        document.add(period);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Certificate Text
+
+	        Paragraph para1 = new Paragraph();
+	        para1.setAlignment(Element.ALIGN_JUSTIFIED);
+
+	        para1.add(new Chunk(
+	                "TO WHOMSOEVER IT MAY CONCERN",
+	                headerFont));
+
+	        document.add(para1);
+
+	        document.add(new Paragraph(" "));
+
+	        Paragraph para2 = new Paragraph();
+
+	        para2.add(new Chunk(
+	                "This is to certify that the total interest credited "
+	              + "to the above account during the financial year "
+	              + "01-Apr-2025 to 31-Mar-2026 is AED 5,250.00 "
+	              + "(Five Thousand Two Hundred Fifty Only).",
+	                normalFont));
+
+	        document.add(para2);
+
+	        document.add(new Paragraph(" "));
+
+	        Paragraph para3 = new Paragraph();
+
+	        para3.add(new Chunk(
+	                "This certificate is issued on the request of the customer "
+	              + "for income tax and official purposes.",
+	                normalFont));
+
+	        document.add(para3);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Summary Table
+
+	        PdfPTable table =
+	                new PdfPTable(2);
+
+	        table.setWidthPercentage(70);
+
+	        table.setWidths(
+	                new float[] {50,50});
+
+	        addInterestRow(
+	                table,
+	                "Interest Amount",
+	                "AED 5,250.00");
+
+	        addInterestRow(
+	                table,
+	                "Financial Year",
+	                "2025-2026");
+
+	        addInterestRow(
+	                table,
+	                "Currency",
+	                "AED");
+
+	        document.add(table);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // Footer
+
+	        Paragraph footer =
+	                new Paragraph();
+
+	        footer.add(new Chunk(
+	                "This is a system generated certificate and "
+	              + "does not require signature.",
+	                normalFont));
+
+	        document.add(footer);
+
+	        document.add(new Paragraph(" "));
+
+	        Paragraph bank =
+	                new Paragraph();
+
+	        bank.setAlignment(
+	                Element.ALIGN_RIGHT);
+
+	        bank.add(new Chunk(
+	                "Authorized Signatory",
+	                headerFont));
+
+	        document.add(bank);
+
+	        document.close();
+
+	        outputFile =
+	                new File(fileName);
+
+	    } catch (Exception e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return outputFile;
+	}
+	
+	
+	private void addInterestRow(
+	        PdfPTable table,
+	        String label,
+	        String value) {
+
+	    PdfPCell cell1 =
+	            new PdfPCell();
+
+	    cell1.addElement(
+	            new Paragraph(label));
+
+	    cell1.setBackgroundColor(
+	            BaseColor.LIGHT_GRAY);
+
+	    table.addCell(cell1);
+
+	    PdfPCell cell2 =
+	            new PdfPCell();
+
+	    cell2.addElement(
+	            new Paragraph(value));
+
+	    table.addCell(cell2);
+	}
+	
+	
+	public File generateDepositAdvice() {
+
+	    File outputFile = null;
+
+	    try {
+
+	        String fileName =
+	                "Deposit_Advice_" +
+	                System.currentTimeMillis() +
+	                ".pdf";
+
+	        Document document =
+	                new Document(PageSize.A4);
+
+	        PdfWriter.getInstance(
+	                document,
+	                new FileOutputStream(fileName));
+
+	        document.open();
+
+	        // LOGO
+
+	        try {
+
+	            Image logo =
+	                    Image.getInstance(
+	                            getClass()
+	                            .getClassLoader()
+	                            .getResource("static/images/icici.png"));
+
+	            logo.scaleToFit(120, 60);
+	            logo.setAlignment(Element.ALIGN_CENTER);
+
+	            document.add(logo);
+
+	        } catch (Exception e) {
+
+	            e.printStackTrace();
+	        }
+
+	        // TITLE
+
+	        Paragraph title = new Paragraph();
+	        title.setAlignment(Element.ALIGN_CENTER);
+	        title.add("DEPOSIT ADVICE");
+
+	        document.add(title);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // CUSTOMER DETAILS
+
+	        Paragraph p1 = new Paragraph();
+	        p1.add("Customer Name : VINOTH KUMAR");
+	        document.add(p1);
+
+	        Paragraph p2 = new Paragraph();
+	        p2.add("Customer ID : CIF000123");
+	        document.add(p2);
+
+	        Paragraph p3 = new Paragraph();
+	        p3.add("Account Number : 1234567890");
+	        document.add(p3);
+
+	        Paragraph p4 = new Paragraph();
+	        p4.add("Deposit Number : FD202600001");
+	        document.add(p4);
+
+	        Paragraph p5 = new Paragraph();
+	        p5.add("Deposit Type : Fixed Deposit");
+	        document.add(p5);
+
+	        Paragraph p6 = new Paragraph();
+	        p6.add("Currency : AED");
+	        document.add(p6);
+
+	        Paragraph p7 = new Paragraph();
+	        p7.add("Deposit Amount : 100,000.00");
+	        document.add(p7);
+
+	        Paragraph p8 = new Paragraph();
+	        p8.add("Interest Rate : 5.25%");
+	        document.add(p8);
+
+	        Paragraph p9 = new Paragraph();
+	        p9.add("Deposit Date : 01-Jun-2026");
+	        document.add(p9);
+
+	        Paragraph p10 = new Paragraph();
+	        p10.add("Maturity Date : 01-Jun-2027");
+	        document.add(p10);
+
+	        Paragraph p11 = new Paragraph();
+	        p11.add("Maturity Amount : 105,250.00");
+	        document.add(p11);
+
+	        Paragraph p12 = new Paragraph();
+	        p12.add("Nominee : NOMINEE NAME");
+	        document.add(p12);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // PAYMENT INSTRUCTION
+
+	        Paragraph paymentHeader = new Paragraph();
+	        paymentHeader.add("PAYMENT INSTRUCTION");
+	        document.add(paymentHeader);
+
+	        Paragraph payment = new Paragraph();
+	        payment.add(
+	                "Interest will be credited to the linked savings account.");
+	        document.add(payment);
+
+	        document.add(new Paragraph(" "));
+
+	        // REMARKS
+
+	        Paragraph remarksHeader = new Paragraph();
+	        remarksHeader.add("REMARKS");
+	        document.add(remarksHeader);
+
+	        Paragraph remarks = new Paragraph();
+	        remarks.add("Auto Renewal Enabled.");
+	        document.add(remarks);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // NOTE
+
+	        Paragraph note = new Paragraph();
+	        note.add(
+	                "This is a system generated Deposit Advice and does not require signature.");
+
+	        document.add(note);
+
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+	        document.add(new Paragraph(" "));
+
+	        // SIGNATURE
+
+	        Paragraph sign = new Paragraph();
+	        sign.setAlignment(Element.ALIGN_RIGHT);
+	        sign.add("Authorized Signatory");
+
+	        document.add(sign);
+
+	        document.close();
+
+	        outputFile = new File(fileName);
+
+	    } catch (Exception e) {
+
+	        e.printStackTrace();
+	    }
+
+	    return outputFile;
+	}
 	
 
 }
