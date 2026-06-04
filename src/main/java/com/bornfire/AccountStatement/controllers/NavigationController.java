@@ -451,6 +451,8 @@ public class NavigationController {
 	    }
 
 	    response.put("customerName",account.getAcct_name());
+	    response.put("interestRate",account.getInt_rate());
+	    response.put("interestAmount",account.getEmiamount());
 	    response.put("accountNumber",account.getAcct_number());
 	    response.put("currency",account.getAcct_crncy_code());
 	    response.put("acid",account.getAcid());

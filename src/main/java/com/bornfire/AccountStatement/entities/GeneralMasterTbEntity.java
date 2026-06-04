@@ -73,6 +73,7 @@ public class GeneralMasterTbEntity {
 	private BigDecimal	accr_bal_lc;
 	private BigDecimal	sme_turn_over;
 	private String	cust_type_code_2;
+	private BigDecimal	emiamount;
 	public String getAcct_number() {
 		return acct_number;
 	}
@@ -403,6 +404,13 @@ public class GeneralMasterTbEntity {
 	public void setCust_type_code_2(String cust_type_code_2) {
 		this.cust_type_code_2 = cust_type_code_2;
 	}
+	
+	public BigDecimal getEmiamount() {
+		return emiamount;
+	}
+	public void setEmiamount(BigDecimal emiamount) {
+		this.emiamount = emiamount;
+	}
 	public GeneralMasterTbEntity(String acct_number, String acct_name, String cust_id, String schm_code,
 			String schm_type, String acct_opn_date, BigDecimal int_rate, BigDecimal acct_balance_amt_ac,
 			String acct_crncy_code, String isic_code, String nature_of_cust, String nre_flg, String country,
@@ -415,7 +423,8 @@ public class GeneralMasterTbEntity {
 			BigDecimal rep_period_mths, BigDecimal rep_period_days, BigDecimal sanct_amt, String restructured_flg,
 			Date renewal_date, BigDecimal shdl_num, Date rep_shdl_date, Date payoff_date, String payoff_flg,
 			BigDecimal dpd_cntr, String security_type, BigDecimal non_fund_based_amt, Date maturity_date,
-			BigDecimal accr_bal_ac, BigDecimal accr_bal_lc, BigDecimal sme_turn_over, String cust_type_code_2) {
+			BigDecimal accr_bal_ac, BigDecimal accr_bal_lc, BigDecimal sme_turn_over, String cust_type_code_2,
+			BigDecimal emiamount) {
 		super();
 		this.acct_number = acct_number;
 		this.acct_name = acct_name;
@@ -472,11 +481,13 @@ public class GeneralMasterTbEntity {
 		this.accr_bal_lc = accr_bal_lc;
 		this.sme_turn_over = sme_turn_over;
 		this.cust_type_code_2 = cust_type_code_2;
+		this.emiamount = emiamount;
 	}
 	public GeneralMasterTbEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	
 	
 

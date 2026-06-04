@@ -626,6 +626,17 @@ input:checked+.slider:before {
 transform : rotate(360deg);
 }
 }
+
+th:nth-child(7),
+td:nth-child(7) {
+    display: none;
+}
+
+#selectedTable th:nth-child(6),
+#selectedTable td:nth-child(6) {
+    display: none;
+}
+
 </style>
 
 </head>
@@ -1531,7 +1542,10 @@ $(document).ready(function(){
         pageLength : 5,
         lengthChange : false,
         ordering : false,
-        destroy : true
+        destroy : true,
+		columnDefs: [
+		       { targets: [5], visible: false } // Hide ACID column
+		   ]
 
     });
 	 changeStatementType();
@@ -1729,7 +1743,11 @@ function getAccountdata(filterValue){
 
                 ordering : false,
 
-                destroy : true
+                destroy : true	,		
+				
+				columnDefs: [
+				      { targets: [6], visible: false } // Hide ACID column
+				  ]
 
             });
 
@@ -1990,54 +2008,27 @@ function getStatementTypeByAcid(acid){
 
             switch(schemeType){
 
-                case "SBA":
-                case "CAA":
-                case "DDA":
-                    statementDropdown.append(
-                        '<option value="Account">Account Statement</option>'
-                    );
-                    statementDropdown.append(
-                        '<option value="Interest">Interest Statement</option>'
-                    );
-                    break;
+				case "SBA":
+				case "CAA":
+				case "DDA":
+				    enableStatementOptions("SAVINGS");
+				    break;
 
-                case "TDA":
-                case "FBA":
-                    statementDropdown.append(
-                        '<option value="Deposit">Deposit Statement</option>'
-                    );
-                    statementDropdown.append(
-                        '<option value="Interest">Interest Statement</option>'
-                    );
-                    break;
+				case "TDA":
+				case "FBA":
+				    enableStatementOptions("FD");
+				    break;
 
-                case "LAA":
-                case "CLA":
-                case "PCA":
-                    statementDropdown.append(
-                        '<option value="Loan">Loan Statement</option>'
-                    );
-                    break;
+				case "LAA":
+				case "CLA":
+				case "PCA":
+				    enableStatementOptions("LOAN");
+				    break;
 
-                case "ODA":
-                case "OAP":
-                    statementDropdown.append(
-                        '<option value="Overdraft">Overdraft Statement</option>'
-                    );
-                    break;
-
-                case "OAB":
-                case "OSP":
-                    statementDropdown.append(
-                        '<option value="Office">Office Account Statement</option>'
-                    );
-                    break;
-
-                default:
-                    statementDropdown.append(
-                        '<option value="Account">Account Statement</option>'
-                    );
-                    break;
+				case "ODA":
+				case "OAP":
+				    enableStatementOptions("CURRENT");
+				    break;
             }
 
             statementDropdown.prop("selectedIndex", 1);
@@ -2918,12 +2909,81 @@ function loadStatementTypeByScheme(schemeType){
 }
 
 function showStatementPopup() {
+
+    $(".stmt-option")
+        .prop("disabled", true)
+        .prop("checked", false);
+
+    let accountTypes = [];
+
+    selectedTable.rows().every(function () {
+
+        let row = this.data();
+
+        let accountType =
+            $('<div>').html(row[4]).text().trim();
+
+        accountTypes.push(accountType.toUpperCase());
+
+    });
+
+    accountTypes = [...new Set(accountTypes)];
+
+    accountTypes.forEach(function(type){
+
+        if(type.includes("SAVINGS")
+           || type === "SBA"
+           || type === "CAA"
+           || type === "DDA"){
+
+            $(".savings-option")
+                .prop("disabled", false);
+        }
+
+        if(type.includes("CURRENT")){
+
+            $(".current-option")
+                .prop("disabled", false);
+        }
+
+        if(type.includes("FD")
+           || type.includes("FIXED")
+           || type === "TDA"
+           || type === "FBA"){
+
+            $(".fd-option")
+                .prop("disabled", false);
+        }
+
+        if(type.includes("LOAN")
+           || type === "LAA"
+           || type === "CLA"
+           || type === "PCA"){
+
+            $(".loan-option")
+                .prop("disabled", false);
+        }
+
+    });
+
     $("#statementTypeModal").modal("show");
 }
 
 function submitPreview() {
 
     let selectedStatements = [];
+	let enabledCheckboxes =
+	    $(".stmt-option:not(:disabled)");
+
+	let checkedCheckboxes =
+	    $(".stmt-option:not(:disabled):checked");
+
+	if(enabledCheckboxes.length > 0 &&
+	   checkedCheckboxes.length === 0){
+
+	    alert("Please select at least one statement type");
+	    return;
+	}
 
     $("input[name='statementOption']:checked").each(function () {
         selectedStatements.push($(this).val());
@@ -2959,10 +3019,10 @@ $(document).on("click",".statement-btn",function(){
     $("#depositStatementTemplate").hide();
     $("#fdInterestTemplate").hide();
 
-    if(type === "Savings_AccountStatement"){
-        $("#statementHeader").text("Account Statement");
-        $("#accountStatementTemplate").fadeIn();
-    }
+	if(type.includes("AccountStatement")){
+	    $("#statementHeader").text("Account Statement");
+	    $("#accountStatementTemplate").fadeIn();
+	}
 
     if(type === "Savings_InterestCertificate"){
         $("#statementHeader").text("Interest Certificate");
@@ -2978,7 +3038,15 @@ $(document).on("click",".statement-btn",function(){
         $("#statementHeader").text("FD Interest Certificate");
         $("#fdInterestTemplate").fadeIn();
     }
+	if(type.includes("InterestCertificate")){
+	    $("#statementHeader").text("Interest Certificate");
+	    $("#interestCertificateTemplate").fadeIn();
+	}
 
+	if(type.includes("DepositStatement")){
+	    $("#statementHeader").text("Deposit Statement");
+	    $("#depositStatementTemplate").fadeIn();
+	}
 });
 
 function switchStatement(type){
@@ -3033,6 +3101,29 @@ $(document).on("click",".statement-btn",function(){
     );
 
 });
+
+function enableStatementOptions(type){
+
+    $(".stmt-option")
+        .prop("disabled", true)
+        .prop("checked", false);
+
+    if(type === "SAVINGS"){
+        $(".savings-option").prop("disabled", false);
+    }
+
+    else if(type === "CURRENT"){
+        $(".current-option").prop("disabled", false);
+    }
+
+    else if(type === "FD"){
+        $(".fd-option").prop("disabled", false);
+    }
+
+    else if(type === "LOAN"){
+        $(".loan-option").prop("disabled", false);
+    }
+}
 </script>
 
 <!-- Statement Type Popup -->
@@ -3064,7 +3155,8 @@ $(document).on("click",".statement-btn",function(){
                                 <label>
                                     <input type="checkbox"
                                            name="statementOption"
-                                           value="Savings_AccountStatement">
+                                           value="Savings_AccountStatement"
+										    class="stmt-option savings-option">
                                     Account Statement
                                 </label>
                                 <br>
@@ -3072,7 +3164,8 @@ $(document).on("click",".statement-btn",function(){
                                 <label>
                                     <input type="checkbox"
                                            name="statementOption"
-                                           value="Savings_InterestCertificate">
+                                           value="Savings_InterestCertificate"
+										   class="stmt-option savings-option">
                                     Interest Certificate
                                 </label>
                             </td>
@@ -3084,7 +3177,8 @@ $(document).on("click",".statement-btn",function(){
                                 <label>
                                     <input type="checkbox"
                                            name="statementOption"
-                                           value="Current_AccountStatement">
+                                           value="Current_AccountStatement"
+										    class="stmt-option current-option">
                                     Account Statement
                                 </label>
                             </td>
@@ -3096,19 +3190,33 @@ $(document).on("click",".statement-btn",function(){
                                 <label>
                                     <input type="checkbox"
                                            name="statementOption"
-                                           value="FD_DepositStatement">
+                                           value="FD_DepositStatement"
+										     class="stmt-option fd-option">
                                     Deposit Statement
                                 </label>
                                 <br>
 
                                 <label>
-                                    <input type="checkbox"
-                                           name="statementOption"
-                                           value="FD_InterestCertificate">
+									<input type="checkbox"
+									       name="statementOption"
+									       value="FD_InterestCertificate"
+									       class="stmt-option fd-option">
                                     Interest Certificate
                                 </label>
                             </td>
                         </tr>
+						<tr>
+						    <td>Loan</td>
+						    <td>
+						        <label>
+									<input type="checkbox"
+									       name="statementOption"
+									       value="Loan_Statement"
+									       class="stmt-option loan-option">
+						            Loan Statement
+						        </label>
+						    </td>
+						</tr>
 
                     </tbody>
                 </table>

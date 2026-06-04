@@ -21,7 +21,7 @@ public interface GeneralMasterTbRep extends CrudRepository<GeneralMasterTbEntity
 	@Query(value = "select DISTINCT schm_type from GENERAL_MASTER_TB order by schm_type ", nativeQuery = true)
 	List<String> getschmtype();
 	
-	@Query(value = "select a.CUST_ID,a.ACCT_NAME,b.PREFERREDEMAIL,a.ACCT_NUMBER,b.CUST_TYPE_CODE,a.acid,a.ACCT_CRNCY_CODE,a.ACCT_BALANCE_AMT_AC from GENERAL_MASTER_TB a left join CUST_TABLE b on a.CUST_ID=b.ORGKEY where (b.CUST_TYPE_CODE=?1 or b.ORGKEY=?1 or a.schm_type=?1) ", nativeQuery = true)
+	@Query(value = "select a.CUST_ID,a.ACCT_NAME,b.PREFERREDEMAIL,a.ACCT_NUMBER,a.schm_type,a.acid,a.ACCT_CRNCY_CODE,a.ACCT_BALANCE_AMT_AC from GENERAL_MASTER_TB a left join CUST_TABLE b on a.CUST_ID=b.ORGKEY where (b.CUST_TYPE_CODE=?1 or b.ORGKEY=?1 or a.schm_type=?1) ", nativeQuery = true)
 	List<Object> findAllCustombytype(String filterValue);
 	
 	
