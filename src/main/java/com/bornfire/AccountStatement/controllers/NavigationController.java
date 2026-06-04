@@ -81,7 +81,9 @@ public class NavigationController {
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
 			HttpServletRequest req) {
 		
-		md.addAttribute("recentActivities", Service_audit_table_Rep.findTop4RecentActivities());
+		//md.addAttribute("recentActivities", Service_audit_table_Rep.findTop4RecentActivities());
+		
+		md.addAttribute("recentActivities", ScheduleStatementService.getHistorylist());
 		
 		Map<String, String> accountsStats = calculateMonthlyGrowthStats(YearMonth.now().toString());
 		md.addAttribute("accountsCount",accountsStats.get("count"));
@@ -315,6 +317,18 @@ public class NavigationController {
 	public List<ScheduleHistory_Entity> getHistory(@RequestParam("scheduleId") BigDecimal scheduleId) {
 		return ScheduleStatementService.getHistory(scheduleId);
 	}
+	
+	@RequestMapping(value = "getFailedAccounts", method = RequestMethod.POST)
+	@ResponseBody
+	public List<ScheduleHistory_Entity> getFailedHistory(@RequestParam("scheduleId") BigDecimal scheduleId,@RequestParam("runId") BigDecimal runId) {
+		
+		List<ScheduleHistory_Entity>  dataaccount = ScheduleStatementService.getfieldHistory(scheduleId,runId);
+		
+		System.out.println("dataaccount="+dataaccount.size()+scheduleId+runId);
+		return dataaccount;
+	}
+	
+	
 
 	@RequestMapping(value = "UserAudit", method = RequestMethod.GET)
 	public String getAuditLogs(
@@ -361,11 +375,19 @@ public class NavigationController {
 	
 	
 	@RequestMapping(value = "StatementHistory", method = { RequestMethod.GET, RequestMethod.POST })
-	public String StatementHistory(@RequestParam(name = "frequency", required = false) String frequency, Model md,
+	public String StatementHistory(@RequestParam(name = "Status", required = false) String Status, Model md,
 			HttpServletRequest req) {
 		
-		List<Cust_table_entity> custlist=cust_table_rep.getcustlist();
-		md.addAttribute("custlist", custlist);
+		if(Status!=null) {
+	
+			md.addAttribute("Statementdata", ScheduleStatementService.getFailedDeliveries(Status));
+			
+		}else {
+			
+			md.addAttribute("Statementdata", ScheduleStatementService.getHistorylist());
+		}
+	
+		
 
 		return "StatementHistory";
 	}
@@ -528,7 +550,8 @@ public class NavigationController {
 		Date prevStart = Date.from(previousMonth.atDay(1).atStartOfDay(zone).toInstant());
 		Date prevEnd = Date.from(previousMonth.atEndOfMonth().atTime(LocalTime.MAX).atZone(zone).toInstant());
 
-		long currentCount = cust_table_rep.countByCreatedDateBetween(currentStart, currentEnd);
+		//long currentCount = cust_table_rep.countByCreatedDateBetween(currentStart, currentEnd);
+		long currentCount = cust_table_rep.count();
 		long prevCount = cust_table_rep.countByCreatedDateBetween(prevStart, prevEnd);
 
 		String percentageFormatted;

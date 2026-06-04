@@ -255,8 +255,8 @@
 					</div>
 				</div>
 
-				<div class="col-lg-3 col-md-6 mb-4">
-					<div class="stat-card">
+				<div class="col-lg-3 col-md-6 mb-4" >
+					<div class="stat-card" tyle="cursor: pointer;" onclick="sucessStatements()">
 						<div class="stat-title">Statements Generated</div>
 
 						<div class="stat-value" id="generatedCountDisplay"
@@ -322,30 +322,89 @@
 			</div>
 
 		</div>
+		
+			<!-- <div class="col-lg-4">
 
-				<div class="col-lg-4">
+			<div class="dashboard-box">
+
+				<div class="box-title">
+					Recent Activities
+				</div>
+
+				<div class="activity-item">
+
+					<div class="activity-dot blue"></div>
+
+					<div class="activity-content">
+					
+					<div class="activity-text">
+							Statement generated for 112233445566
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 10:30 AM
+						</div>
+
+					</div>
+
+				</div>
+				
+				<div class="activity-item">
+
+					<div class="activity-dot green"></div>
+
+					<div class="activity-content">
+
+						<div class="activity-text">
+							Bulk statements generated for 150 accounts
+						</div>
+
+						<div class="activity-time">
+							08 May 2026 09:15 AM
+						</div>
+
+					</div>
+					</div>
+				</div>
+			</div> -->
+			
+
+				 <div class="col-lg-4">
 					<div class="dashboard-box">
 						<div class="box-title">Recent Activities</div>
 
 						<div class="activity-item"
 							th:each="activity : ${recentActivities}">
 
-							<div class="activity-dot blue"></div>
+							<div th:if="${activity.deliveryStatus == 'Success'}" class="activity-dot green" ></div>
 
+							<div th:if="${activity.deliveryStatus == 'Failed'}"  class="activity-dot red"></div>
+							
+							
 							<div class="activity-content">
 
-								<div class="activity-text" th:text="${activity.func_code}">
-									Statement generated for 112233445566</div>
+								<div class="activity-text">
 
-								<div class="activity-time"
-									th:text="${#dates.format(activity.entry_time, 'dd MMM yyyy hh:mm a')}">
-									08 May 2026 10:30 AM</div>
+									    <span th:if="${activity.deliveryStatus == 'Success'}">
+									        Statement generated for
+									        <span th:text="${activity.accountNumber}"></span>
+									    </span>
+									
+									    <span th:if="${activity.deliveryStatus == 'Failed'}">
+									        Statement generation failed for
+									        <span th:text="${activity.accountNumber}"></span>
+									    </span>
+									
+								</div>
+
+								<div class="activity-time">
+									<span th:text="${activity.dateSent}"></span>&nbsp;<span th:text="${activity.timeSent}"></span> </div>
 
 							</div>
 						</div>
 
 					</div>
-				</div>
+				</div> 
 
 			</div>
 
@@ -364,10 +423,11 @@
 				<thead>
 
 					<tr>
-
-						<th>Account Number</th>
+						
+						<th>Customer ID</th>
 						<th>Customer Name</th>
-						<th>Statement Type</th>
+						<th>Account Number</th>
+						<th>Account Type</th>
 						<th>Date</th>
 						<th>Status</th>
 
@@ -377,35 +437,18 @@
 
 				<tbody>
 
-					<tr>
+					<tr th:each="recentActiv :${recentActivities}">
 
-						<td>1122334455</td>
-						<td>Rakesh Kumar</td>
-						<td>Savings Statement</td>
-						<td>18-05-2026</td>
-						<td class="status-success">Completed</td>
-
-					</tr>
-
-					<tr>
-
-						<td>2233445566</td>
-						<td>Arun Kumar</td>
-						<td>Loan Statement</td>
-						<td>18-05-2026</td>
-						<td class="status-pending">Pending</td>
+						<td th:text="${recentActiv.customerId}">1122334455</td>
+						<td th:text="${recentActiv.customerName}">Rakesh Kumar</td>
+						<td th:text="${recentActiv.accountNumber}">Savings Statement</td>
+						<td th:text="${recentActiv.accountType}">Savings Statement</td>
+						<td th:text="${recentActiv.dateSent}">18-05-2026</td>
+						<td th:text="${recentActiv.deliveryStatus}" class="status-success">Completed</td>
 
 					</tr>
 
-					<tr>
-
-						<td>3344556677</td>
-						<td>Vignesh</td>
-						<td>Current Account</td>
-						<td>17-05-2026</td>
-						<td class="status-failed">Failed</td>
-
-					</tr>
+					
 
 				</tbody>
 
@@ -487,7 +530,11 @@ new Chart(ctx, {
 });
 
 function FailedStatements(){
-	location.href = "/AccountStatement/FailedStatements";
+	location.href = "/AccountStatement/StatementHistory?Status=Failed";
+}
+
+function sucessStatements(){
+	location.href = "/AccountStatement/StatementHistory?Status=Success";
 }
 
 document.addEventListener("DOMContentLoaded", function() {

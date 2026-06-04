@@ -322,35 +322,49 @@
                     <thead>
                         <tr>
                             <th><div class="th-content">Customer ID <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 0)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">Customer Name <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 0)"></i><div class="filter-dropdown"></div></div></th>
+                            
                             <th><div class="th-content">Account Number <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 1)"></i><div class="filter-dropdown"></div></div></th>
-                            <th><div class="th-content">Period <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 2)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Requested On <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 3)"></i><div class="filter-dropdown"></div></div></th>
                            <!--  <th><div class="th-content">Format <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th> -->
                             <th><div class="th-content">Mail Id <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 4)"></i><div class="filter-dropdown"></div></div></th>
                             <th><div class="th-content">Status <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 5)"></i><div class="filter-dropdown"></div></div></th>
+                            <th><div class="th-content">log <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event, 5)"></i><div class="filter-dropdown"></div></div></th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="custlistdata : ${custlist}">
-                            <td th:text="${custlistdata?.orgkey}"></td>
-                            <td th:text="${custlistdata?.cust_last_name}"></td>
-                            <td th:text="${#dates.format(custlistdata?.cust_dob, 'dd-MM-yyyy')}"></td>
-                            <!-- <td th:text="${custlistdata?.phone_cell}"></td> -->
-                            <td th:text="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}"></td>
-                            <td th:text="${custlistdata?.preferredemail}"></td>
-                            <!-- <td th:text="${custlistdata?.country}"></td> -->
-                            <td>Sucess</td>
-                            <td>
-                                <a href="javascript:void(0)" 
-                                   th:attr="onclick=|downloadStatement('${custlistdata?.orgkey}')|"
-                                   class="action-icon" 
-                                   title="Download">
-                                    <i class="fa fa-download"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
+					    <tr th:each="Statement : ${Statementdata}">
+					        <td th:text="${Statement.customerId}"></td>
+					        <td th:text="${Statement.customerName}"></td>
+					        <td th:text="${Statement.accountNumber}"></td>
+					        <td th:text="${Statement.dateSent}"></td>
+					        <td th:text="${Statement.customerEmailId}"></td>
+					        <td th:text="${Statement.deliveryStatus}"></td>
+					        <td th:text="${Statement.errorReason}"></td>
+					
+					        <td>
+					
+					            <!-- Failed -->
+					            <button th:if="${Statement.deliveryStatus == 'Failed'}"
+					                    class="btn btn-success btn-sm"
+					                    
+					                    th:onclick="|rerunAccount('${Statement.scheduleId}','${Statement.runid}')|"
+					                    title="Run">
+					                <i class="fa fa-play"></i>
+					            </button>
+					
+					            <!-- Success -->
+					            <button th:if="${Statement.deliveryStatus == 'Success'}"
+					                    class="btn btn-danger btn-sm"
+					                    disabled
+					                    title="Already Successful">
+					                <i class="fa fa-check"></i>
+					            </button>
+					
+					        </td>
+					    </tr>
+					</tbody>
                 </table>
             </div>
             

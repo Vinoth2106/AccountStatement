@@ -68,9 +68,19 @@ public class ScheduleStatementService {
 	public List<ScheduleHistory_Entity> getHistory(BigDecimal scheduleId) {
 		return historyRepo.findByScheduleId(scheduleId);
 	}
+	
+	public List<ScheduleHistory_Entity> getHistorylist() {
+		return historyRepo.findBySchedulelist();
+	}
+	
+	public List<ScheduleHistory_Entity> getfieldHistory(BigDecimal scheduleId,BigDecimal runId) {
+		return historyRepo.findByFailedScheduleId(scheduleId,runId);
+	}
 
-	public List<ScheduleHistory_Entity> getFailedDeliveries() {
-		return historyRepo.findByDeliveryStatus("Failed");
+
+	public List<ScheduleHistory_Entity> getFailedDeliveries(String Status) {
+		System.out.println("Status=="+Status);
+		return historyRepo.findByDeliveryStatus(Status);
 	}
 
 	@Transactional
