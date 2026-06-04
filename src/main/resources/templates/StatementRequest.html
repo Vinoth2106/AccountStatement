@@ -1344,6 +1344,17 @@ td:nth-child(7) {
 				<div id="accountStatementTemplate" style="display:none;">
 
 					        <div class="table-container">
+					        
+					       
+						<input type="hidden" id="reportId" th:value="${reportId}">
+						<input type="hidden" id="acidhd" th:value="${acid}"> 
+						<input type="hidden" id="userid" th:value="${userid}">
+						<input type="hidden" id="category" th:value="${category}">
+						<input type="hidden" id="accountnumberhd" th:value="${accountnumber}">
+						<input type="hidden" id="Acctname" th:value="${Acctname}">
+						<input type="hidden" id="fromdate" th:value="${opr_datefd}">
+						<input type="hidden" id="todatehd" th:value="${opr_datetd}">
+						<input type="hidden" id="customerId" th:value="${customerId}">
 
 					            <table class="table align-middle">
 
@@ -2558,9 +2569,12 @@ function addHidden(form, name, value) {
 
 function loadPreviewData(accountNo){
 
+	
     var fromDate = document.getElementById("fromdate").value;
+    
     var toDate = document.getElementById("todatehd").value;
 
+    
     // VALIDATION
 
     if(fromDate === ""){
@@ -2573,6 +2587,8 @@ function loadPreviewData(accountNo){
         return;
 
     }
+    
+   
 
     $.ajax({
 
@@ -2584,7 +2600,7 @@ function loadPreviewData(accountNo){
             toDate : toDate
         },
         success : function(data){
-
+			
             console.log(data);
 
             let openingBalance = Number(data.openingBalance || 0);
