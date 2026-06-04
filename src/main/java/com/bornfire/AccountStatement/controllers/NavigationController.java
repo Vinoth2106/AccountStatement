@@ -172,6 +172,17 @@ public class NavigationController {
 			
 			//System.out.println(marketingFile.getOriginalFilename());
 			ObjectMapper mapper = new ObjectMapper();
+			md.addAttribute("receiptNo", "DR20260001");
+			md.addAttribute("transactionRef", "TXN123456");
+			md.addAttribute("valueDate", new Date());
+			md.addAttribute("branchName", "Main Branch");
+
+			md.addAttribute("fdNumber", "FD100001");
+			md.addAttribute("depositAmount", "100000");
+			md.addAttribute("fdInterestRate", "5.25%");
+			md.addAttribute("maturityDate", "04-06-2027");
+			md.addAttribute("maturityAmount", "105250");
+			
 			 List<AccountDTO> accountList=null;
 			 AccountDTO accountdata=null;
 			 String Accountnum=null;
@@ -179,7 +190,7 @@ public class NavigationController {
 			 String Acid=null;
 			 String customerId=null;
 			 
-			  
+			
 			 if(tableData!=null) {
 				   accountList =mapper.readValue(tableData,new TypeReference<List<AccountDTO>>() {});
 				   accountdata=accountList.get(0);
@@ -220,7 +231,7 @@ public class NavigationController {
 			    );
 			}
 			md.addAttribute("statementTypes", statementTypes);
-			
+			md.addAttribute("selectedStatements", selectedStatements);
 			if (fromdate!=null & todate!=null) {
 				SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 				SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MMM/yyyy");

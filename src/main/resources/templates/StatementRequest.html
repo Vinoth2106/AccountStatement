@@ -1226,6 +1226,9 @@ td:nth-child(7) {
 										<input type="hidden"
 										       id="accountsJson"
 										       th:value="${accountsJson}">
+											   <input type="hidden"
+											          id="selectedStatementsJson"
+											          th:value="${selectedStatements}">
 									</div>
 
 								</div>
@@ -1328,13 +1331,7 @@ td:nth-child(7) {
 
 					    <div id="statementSwitcher">
 
-							<button type="button"
-							        class="btn btn-sm statement-btn"
-							        th:each="stmt,iter : ${statementTypes}"
-							        th:data-type="${stmt}"
-							        th:text="${#strings.replace(stmt,'_',' ')}"
-							        th:classappend="${iter.index == 0} ? ' btn-primary active' : ' btn-outline-primary'">
-							</button>
+							
 
 					    </div>
 
@@ -1502,6 +1499,126 @@ td:nth-child(7) {
 					        </div>
 
 					    </div>
+						
+						<!-- DEPOSIT RECEIPT -->
+
+						<div id="depositReceiptTemplate" style="display:none;">
+
+						    <div class="card p-4">
+
+						        <h4 class="text-center mb-4">Deposit Receipt</h4>
+
+						        <div class="row">
+
+						            <div class="col-md-3">
+						                <label>Receipt No</label>
+						                <p th:text="${receiptNo}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Customer Name</label>
+						                <p th:text="${Acctname}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Account Number</label>
+						                <p th:text="${accountnumber}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Currency</label>
+						                <p th:text="${currency}"></p>
+						            </div>
+
+						        </div>
+
+						        <div class="row mt-3">
+
+						            <div class="col-md-3">
+						                <label>Deposit Amount</label>
+						                <p th:text="${depositAmount}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Value Date</label>
+						                <p th:text="${valueDate}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Transaction Ref</label>
+						                <p th:text="${transactionRef}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Branch</label>
+						                <p th:text="${branchName}"></p>
+						            </div>
+
+						        </div>
+
+						    </div>
+
+						</div>
+						<!-- DEPOSIT ADVICE -->
+
+						<div id="depositAdviceTemplate" style="display:none;">
+
+						    <div class="card p-4">
+
+						        <h4 class="text-center mb-4">Deposit Advice</h4>
+
+						        <div class="row">
+
+						            <div class="col-md-3">
+						                <label>Deposit Number</label>
+						                <p th:text="${fdNumber}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Customer Name</label>
+						                <p th:text="${Acctname}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Account Number</label>
+						                <p th:text="${accountnumber}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Currency</label>
+						                <p th:text="${currency}"></p>
+						            </div>
+
+						        </div>
+
+						        <div class="row mt-3">
+
+						            <div class="col-md-3">
+						                <label>Principal Amount</label>
+						                <p th:text="${depositAmount}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Interest Rate</label>
+						                <p th:text="${fdInterestRate}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Maturity Date</label>
+						                <p th:text="${maturityDate}"></p>
+						            </div>
+
+						            <div class="col-md-3">
+						                <label>Maturity Amount</label>
+						                <p th:text="${maturityAmount}"></p>
+						            </div>
+
+						        </div>
+
+						    </div>
+
+						</div>
+						
 
 					</div>
 					</div>
@@ -2720,27 +2837,21 @@ function loadPreviewData(accountNo){
             // NO DATA
             // =========================
 
-            if(data.transactions == null ||
-               data.transactions.length == 0){
+			if(data.transactions == null ||
+			   data.transactions.length == 0){
 
-                tbody.append(
+			    tbody.append(
+			        '<tr>' +
+			        '<td colspan="8" style="text-align:center;color:red;">' +
+			        'No Data Found' +
+			        '</td>' +
+			        '</tr>'
+			    );
 
-                    '<tr>' +
+			    showButtonsForAccount(accountNo);
 
-                        '<td colspan="8" ' +
-                        'style="text-align:center;color:red;">' +
-
-                            'No Data Found' +
-
-                        '</td>' +
-
-                    '</tr>'
-
-                );
-
-                return;
-
-            }
+			    return;
+			}
 
             // =========================
             // LOAD TRANSACTIONS
@@ -2850,57 +2961,115 @@ function showButtonsForAccount(accountNo){
     if(!acc) return;
 
     let type = acc.accountType;
+	let selectedStatements = [];
 
+	try{
+	    selectedStatements =
+	        JSON.parse($("#selectedStatementsJson").val() || "[]");
+	}catch(e){
+	    selectedStatements = [];
+	}
+
+	console.log(selectedStatements);
     $("#statementSwitcher").empty();
 
-    if(type === "SBA" ||
-       type === "CAA" ||
-       type === "DDA"){
+	if(type === "SBA" ||
+	   type === "CAA" ||
+	   type === "DDA"){
 
-        $("#statementSwitcher").append(`
-            <button class="btn btn-primary statement-btn"
-                    data-type="Savings_AccountStatement">
-                Account Statement
-            </button>
+	    if(selectedStatements.includes("Savings_AccountStatement")){
 
-            <button class="btn btn-outline-primary statement-btn"
-                    data-type="Savings_InterestCertificate">
-                Interest Certificate
-            </button>
-        `);
-    }
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-primary statement-btn"
+	                    data-type="Savings_AccountStatement">
+	                Account Statement
+	            </button>
+	        `);
+	    }
 
-    else if(type === "LAA" ||
-            type === "CLA" ||
-            type === "PCA"){
+	    if(selectedStatements.includes("Savings_InterestCertificate")){
 
-        $("#statementSwitcher").append(`
-            <button class="btn btn-primary statement-btn"
-                    data-type="Loan_Statement">
-                Loan Statement
-            </button>
-        `);
-    }
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-outline-primary statement-btn"
+	                    data-type="Savings_InterestCertificate">
+	                Interest Certificate
+	            </button>
+	        `);
+	    }
+	}
 
-    else if(type === "TDA" ||
-            type === "FBA"){
+	else if(type === "LAA" ||
+	        type === "CLA" ||
+	        type === "PCA"){
 
-        $("#statementSwitcher").append(`
-            <button class="btn btn-primary statement-btn"
-                    data-type="FD_DepositStatement">
-                Deposit Statement
-            </button>
+	    if(selectedStatements.includes("Loan_Statement")){
 
-            <button class="btn btn-outline-primary statement-btn"
-                    data-type="FD_InterestCertificate">
-                Interest Certificate
-            </button>
-        `);
-    }
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-primary statement-btn"
+	                    data-type="Loan_Statement">
+	                Loan Statement
+	            </button>
+	        `);
+	    }
+	}
 
-    $("#statementSwitcher .statement-btn:first")
-        .trigger("click");
+	else if(type === "TDA" || type === "FBA"){
+
+	    if(selectedStatements.includes("FD_DepositStatement")){
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-primary statement-btn"
+	                    data-type="FD_DepositStatement">
+	                Deposit Statement
+	            </button>
+	        `);
+	    }
+
+	    if(selectedStatements.includes("FD_DepositReceipt")){
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-outline-primary statement-btn"
+	                    data-type="FD_DepositReceipt">
+	                Deposit Receipt
+	            </button>
+	        `);
+	    }
+
+	    if(selectedStatements.includes("FD_DepositAdvice")){
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-outline-primary statement-btn"
+	                    data-type="FD_DepositAdvice">
+	                Deposit Advice
+	            </button>
+	        `);
+	    }
+
+	    if(selectedStatements.includes("FD_InterestCertificate")){
+	        $("#statementSwitcher").append(`
+	            <button class="btn btn-outline-primary statement-btn"
+	                    data-type="FD_InterestCertificate">
+	                Interest Certificate
+	            </button>
+	        `);
+	    }
+	}
+	if($("#statementSwitcher .statement-btn").length > 0){
+
+	    $("#statementSwitcher .statement-btn:first")
+	        .trigger("click");
+	}
 }
+$(document).ready(function(){
+
+    let accounts =
+        JSON.parse($("#accountsJson").val());
+
+    if(accounts && accounts.length > 0){
+
+        showButtonsForAccount(
+            accounts[0].accountNumber
+        );
+    }
+
+});
 
 function loadStatementTypeByScheme(schemeType){
 
@@ -3100,7 +3269,8 @@ $(document).on("click",".statement-btn",function(){
     $("#interestCertificateTemplate").hide();
     $("#depositStatementTemplate").hide();
     $("#fdInterestTemplate").hide();
-
+	$("#depositReceiptTemplate").hide();
+	 $("#depositAdviceTemplate").hide();
 	if(type.includes("AccountStatement")){
 	    $("#statementHeader").text("Account Statement");
 	    $("#accountStatementTemplate").fadeIn();
@@ -3149,7 +3319,18 @@ function switchStatement(type){
     }
     else if(type === "FD_InterestCertificate"){
         $("#fdInterestTemplate").show();
-    }
+    }		else if(type === "FD_DepositReceipt"){
+
+		    $("#statementHeader").text("Deposit Receipt");
+		    $("#depositReceiptTemplate").show();
+
+		}
+		else if(type === "FD_DepositAdvice"){
+
+		    $("#statementHeader").text("Deposit Advice");
+		    $("#depositAdviceTemplate").show();
+
+		}
 
     $("#statementHeader").text(type.replaceAll("_"," "));
 }
@@ -3266,27 +3447,55 @@ function enableStatementOptions(type){
                             </td>
                         </tr>
 
-                        <tr>
-                            <td>Fixed Deposit</td>
-                            <td>
-                                <label>
-                                    <input type="checkbox"
-                                           name="statementOption"
-                                           value="FD_DepositStatement"
-										     class="stmt-option fd-option">
-                                    Deposit Statement
-                                </label>
-                                <br>
+						<tr>
+						    <td>Fixed Deposit</td>
 
-                                <label>
-									<input type="checkbox"
-									       name="statementOption"
-									       value="FD_InterestCertificate"
-									       class="stmt-option fd-option">
-                                    Interest Certificate
-                                </label>
-                            </td>
-                        </tr>
+						    <td>
+
+						        <label>
+						            <input type="checkbox"
+						                   class="stmt-option fd-option"
+						                   name="statementOption"
+						                   value="FD_DepositStatement">
+
+						            Deposit Statement
+						        </label>
+
+						        <br>
+
+						        <label>
+						            <input type="checkbox"
+						                   class="stmt-option fd-option"
+						                   name="statementOption"
+						                   value="FD_DepositReceipt">
+
+						            Deposit Receipt
+						        </label>
+
+						        <br>
+
+						        <label>
+						            <input type="checkbox"
+						                   class="stmt-option fd-option"
+						                   name="statementOption"
+						                   value="FD_DepositAdvice">
+
+						            Deposit Advice
+						        </label>
+
+						        <br>
+
+						        <label>
+						            <input type="checkbox"
+						                   class="stmt-option fd-option"
+						                   name="statementOption"
+						                   value="FD_InterestCertificate">
+
+						            Interest Certificate
+						        </label>
+
+						    </td>
+						</tr>
 						<tr>
 						    <td>Loan</td>
 						    <td>
