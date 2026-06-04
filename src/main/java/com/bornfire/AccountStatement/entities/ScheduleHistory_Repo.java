@@ -17,6 +17,9 @@ public interface ScheduleHistory_Repo extends JpaRepository<ScheduleHistory_Enti
 	@Query("SELECT h FROM ScheduleHistory_Entity h WHERE h.scheduleId = :scheduleId and h.runid =:runid ORDER BY h.dateSent DESC")
 	List<ScheduleHistory_Entity> findByFailedScheduleId(@Param("scheduleId") BigDecimal scheduleId,@Param("runid") BigDecimal runid);
 	
+	@Query("SELECT h FROM ScheduleHistory_Entity h WHERE h.scheduleId = :scheduleId and h.runid =:runid and ACCOUNT_NUMBER =:ACCOUNT_NUMBER  ORDER BY h.dateSent DESC")
+	ScheduleHistory_Entity getFailedScheduleId(@Param("scheduleId") BigDecimal scheduleId,@Param("runid") BigDecimal runid,String ACCOUNT_NUMBER);
+	
 	List<ScheduleHistory_Entity> findByDeliveryStatus(String deliveryStatus);
 	
 	@Query("SELECT h FROM ScheduleHistory_Entity h WHERE h.deliveryStatus = 'Failed' ORDER BY h.dateSent DESC")

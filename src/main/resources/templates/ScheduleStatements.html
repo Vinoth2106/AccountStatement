@@ -854,6 +854,24 @@ tbody tr:hover {
 		    });
 		}
 		
+		function rerunAccount(scheduleId,runId,accountNumber){
+			alert(scheduleId);
+			
+			$.ajax({
+		        url : "./rerunAccounts",
+		        type : "POST",
+		        data : {
+		        	scheduleId : scheduleId,
+		            runId : runId,
+		            accountNumber : accountNumber
+		        },
+		        success : function(data){
+		        	if(data==='Reruned Sucessfully'){
+		        		showFailedAccounts(scheduleId, runId)
+		        	}
+		        }
+			})
+		}
 		
 
 		function closeHist() {

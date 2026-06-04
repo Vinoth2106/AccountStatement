@@ -45,6 +45,7 @@ import com.bornfire.AccountStatement.entities.Cust_table_rep;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbEntity;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbRep;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
+import com.bornfire.AccountStatement.entities.ScheduleHistory_Repo;
 import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
 import com.bornfire.AccountStatement.entities.UserAuditLevel_Entity;
 import com.bornfire.AccountStatement.entities.UserAuditRepo;
@@ -67,6 +68,9 @@ public class NavigationController {
 	
 	@Autowired
 	GeneralMasterTbRep generalMasterTbRepo;	
+	
+	@Autowired
+	ScheduleHistory_Repo historyRepo;
 
 	@Autowired
 	AuditServicesRep userAuditRepo;
@@ -339,6 +343,19 @@ public class NavigationController {
 		
 		System.out.println("dataaccount="+dataaccount.size()+scheduleId+runId);
 		return dataaccount;
+	}
+	
+	@RequestMapping(value = "rerunAccounts", method = RequestMethod.POST)
+	@ResponseBody
+	public String RerunAccounts(@RequestParam("scheduleId") BigDecimal scheduleId,@RequestParam("runId") BigDecimal runId,
+			@RequestParam("accountNumber") String accountNumber) {
+		
+		ScheduleHistory_Entity  dataaccount = ScheduleStatementService.getfieldrerun(scheduleId,runId,accountNumber);
+		dataaccount.setDeliveryStatus("Success");
+		dataaccount.setErrorReason("Success");
+		historyRepo.save(dataaccount);
+		
+		return "Reruned Sucessfully";
 	}
 	
 	

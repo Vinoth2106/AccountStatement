@@ -2499,6 +2499,7 @@ function addHidden(form, name, value) {
 	    addHidden(form, "selectedStatements",JSON.stringify(selectedStatements));
 
 	    document.body.appendChild(form);
+	    document.getElementById("loader").style.display = "flex";
 
 	    form.submit();
 
@@ -2524,7 +2525,7 @@ function addHidden(form, name, value) {
 	    formData.append("fromdate", fromDate);
 	    formData.append("todate", toDate);
 	    formData.append("accounts", accountlist);
-	    formData.append("channel", channel);
+	    formDta.append("channel", channel);
 
 	    // SHOW LOADER
 

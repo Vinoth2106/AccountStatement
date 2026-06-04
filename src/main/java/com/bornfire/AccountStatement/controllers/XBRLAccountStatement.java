@@ -1751,7 +1751,7 @@ public class XBRLAccountStatement {
 	        addData(table,"100,000.00");
 
 	        addData(table,"Interest");
-	        addData(table,"Interest Amount");
+	        addData(table,"Interest Amount To Be Paid");
 	        addData(table,"5,250.00");
 
 	        document.add(table);

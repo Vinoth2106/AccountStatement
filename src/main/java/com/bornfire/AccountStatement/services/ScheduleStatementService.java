@@ -76,6 +76,10 @@ public class ScheduleStatementService {
 	public List<ScheduleHistory_Entity> getfieldHistory(BigDecimal scheduleId,BigDecimal runId) {
 		return historyRepo.findByFailedScheduleId(scheduleId,runId);
 	}
+	
+	public ScheduleHistory_Entity getfieldrerun(BigDecimal scheduleId,BigDecimal runId,String Accountnumber) {
+		return historyRepo.getFailedScheduleId(scheduleId,runId,Accountnumber);
+	}
 
 
 	public List<ScheduleHistory_Entity> getFailedDeliveries(String Status) {
