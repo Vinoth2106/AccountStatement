@@ -275,7 +275,7 @@
 					Requests Pending
 				</div>
 
-				<div class="stat-value">
+				<div class="stat-value" id="reqpending">
 					10
 				</div>
 
@@ -373,35 +373,41 @@
 					<div class="dashboard-box">
 						<div class="box-title">Recent Activities</div>
 
-						<div class="activity-item"
-							th:each="activity : ${recentActivities}">
+						<th:block th:each="activity, stat : ${recentActivities}">
+						    <div class="activity-item" th:if="${stat.index < 4}">
 
-							<div th:if="${activity.deliveryStatus == 'Success'}" class="activity-dot green" ></div>
+						        <div th:if="${activity.deliveryStatus == 'Success'}"
+						             class="activity-dot green"></div>
 
-							<div th:if="${activity.deliveryStatus == 'Failed'}"  class="activity-dot red"></div>
-							
-							
-							<div class="activity-content">
+						        <div th:if="${activity.deliveryStatus == 'Failed'}"
+						             class="activity-dot red"></div>
 
-								<div class="activity-text">
+						        <div class="activity-content">
 
-									    <span th:if="${activity.deliveryStatus == 'Success'}">
-									        Statement generated for
-									        <span th:text="${activity.accountNumber}"></span>
-									    </span>
-									
-									    <span th:if="${activity.deliveryStatus == 'Failed'}">
-									        Statement generation failed for
-									        <span th:text="${activity.accountNumber}"></span>
-									    </span>
-									
-								</div>
+						            <div class="activity-text">
 
-								<div class="activity-time">
-									<span th:text="${activity.dateSent}"></span>&nbsp;<span th:text="${activity.timeSent}"></span> </div>
+						                <span th:if="${activity.deliveryStatus == 'Success'}">
+						                    Statement generated for
+						                    <span th:text="${activity.accountNumber}"></span>
+						                </span>
 
-							</div>
-						</div>
+						                <span th:if="${activity.deliveryStatus == 'Failed'}">
+						                    Statement generation failed for
+						                    <span th:text="${activity.accountNumber}"></span>
+						                </span>
+
+						            </div>
+
+						            <div class="activity-time">
+						                <span th:text="${activity.dateSent}"></span>
+						                &nbsp;
+						                <span th:text="${activity.timeSent}"></span>
+						            </div>
+
+						        </div>
+
+						    </div>
+						</th:block>
 
 					</div>
 				</div> 
@@ -563,6 +569,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 return response.json(); 
             })
             .then(data => {
+				const selectedMonth = monthValue.split("-")[1];
+
+				if(selectedMonth === "05"){
+				    
+				
+				    document.getElementById('reqpending').textContent = 0;
+
+				    return;
+				}
             	
             	document.getElementById('accountsCountDisplay').textContent = data.accountsCount;
                 document.getElementById('accountsPercentageDisplay').textContent = data.accountsPercentage + ' From Last Month';
