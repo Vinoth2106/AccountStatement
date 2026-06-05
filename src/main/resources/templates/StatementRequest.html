@@ -2499,9 +2499,11 @@ function addHidden(form, name, value) {
 	    addHidden(form, "selectedStatements",JSON.stringify(selectedStatements));
 
 	    document.body.appendChild(form);
-	    document.getElementById("loader").style.display = "flex";
+	    //document.getElementById("loader").style.display = "flex";
 
 	    form.submit();
+	    
+	   //document.getElementById("loader").style.display = "none";
 
 	}
 
