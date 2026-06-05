@@ -2516,6 +2516,8 @@ function addHidden(form, name, value) {
 
 	    var accountlist =
 	        document.getElementById("accounts").value;
+	    
+	    var selectedStatements = JSON.parse($("#selectedStatementsJson").val() || "[]");
 
 	    let formData = new FormData();
 
@@ -2525,7 +2527,9 @@ function addHidden(form, name, value) {
 	    formData.append("fromdate", fromDate);
 	    formData.append("todate", toDate);
 	    formData.append("accounts", accountlist);
-	    formDta.append("channel", channel);
+	    formData.append("channel", channel);
+	    formData.append("channel", channel);
+	    //addHidden(formData, "selectedStatements",JSON.stringify(selectedStatements));
 
 	    // SHOW LOADER
 
