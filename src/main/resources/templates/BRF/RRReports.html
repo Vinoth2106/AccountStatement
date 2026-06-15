@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+	<title>BRF Reports</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+	<meta content="Coderthemes" name="author">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="assets/images/favicon.ico">
+	<!-- App css -->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+
+	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
+	
+	<script th:src="@{/js/bootstrap411.js}"></script>
+	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
+	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
+	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+	<style>
+
+body{
+    background:#f5f7fb;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.page-container{
+    padding:25px;
+}
+
+/* TOP HEADER */
+
+.top-header{
+    background:white;
+    padding:10px 25px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.page-title{
+    font-size:28px;
+    font-weight:700;
+    color:#0b1c54;
+}
+
+.search-box{
+    width:350px;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    height:48px;
+    border-radius:14px;
+    border:1px solid #ddd;
+    padding-left:45px;
+    outline:none;
+}
+
+.search-box i{
+    position:absolute;
+    left:16px;
+    top:15px;
+    color:gray;
+}
+
+/* CUSTOMER SECTION */
+
+.Report_data{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.section-title{
+    font-size:22px;
+    font-weight:700;
+    color:#0b1c54;
+    margin-bottom:20px;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+}
+
+
+table thead th {
+   background: #bdbdbd !important;
+    color: #000000 !important;
+    font-weight: bold;
+    font-size: 13px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 14px !important;
+    border-bottom: 2px solid var(--bm-border) !important;
+    border-top: none !important;
+    white-space: nowrap;
+   
+}
+
+table td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+    font-size: 12px !important;
+    vertical-align:middle;
+}
+
+/* STATUS */
+
+.status-active{
+    background:#d4f8df;
+    color:green;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.status-inactive{
+    background:#ffe0e0;
+    color:red;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+/* BUTTONS */
+
+.action-btn{
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:10px;
+    margin-right:5px;
+}
+
+.edit-btn{
+    background:#e7f1ff;
+    color:#0d6efd;
+}
+
+.delete-btn{
+    background:#ffe5e5;
+    color:red;
+}
+
+/* TOGGLE */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 55px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #dcdcdc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #0d6efd;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* ACCOUNT TABLE */
+
+.account-section{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* MOBILE */
+
+@media(max-width:991px){
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+        margin-top:15px;
+    }
+
+    .table-responsive{
+        overflow-x:auto;
+    }
+
+}
+
+
+/* PAGINATION */
+
+.page-btn{
+
+    border:none;
+    padding:8px 14px;
+    margin:0 4px;
+    border-radius:8px;
+    background:#e5e7eb;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+}
+
+.page-btn:hover{
+    background:#0d6efd;
+    color:white;
+}
+
+.active-page{
+    background:#0d6efd !important;
+    color:white;
+}
+
+.page-btn:disabled{
+    opacity:0.5;
+    cursor:not-allowed;
+}
+/* PAGINATION WRAPPER */
+
+.pagination-wrapper{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+/* RECORD INFO */
+
+.record-info{
+
+    font-size:14px;
+    color:#555;
+    font-weight:500;
+}
+
+/* RIGHT BUTTON AREA */
+
+.pagination-buttons{
+
+    display:flex;
+    align-items:center;
+}
+
+/* SEARCH & FILTER GROUP */
+.search-filter-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-box {
+    width: 350px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    padding-left: 45px;
+    outline: none;
+}
+
+.search-box i {
+    position: absolute;
+    left: 16px;
+    top: 15px;
+    color: gray;
+}
+
+/* FILTER BUTTON — same as StatementHistory */
+.filter-btn {
+    height: 48px;
+    padding: 0 20px;
+    background-color: #f0f4fc;
+    color: #0b1c54;
+    border: 1px solid #dce4f2;
+    border-radius: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: #e2ecf9;
+    border-color: #bcd1ee;
+}
+
+/* RETAIL / CORPORATE TOGGLE */
+.cust-type-toggle {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.type-btn {
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: 2px solid #6c757d;
+    background: white;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+
+.type-btn.retail-btn.active {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.type-btn.corporate-btn.active {
+    background: #198754;
+    color: white;
+    border-color: #198754;
+}
+
+.th-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.filter-icon {
+    display: none !important;
+    cursor: pointer;
+    color: #555;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: background 0.15s ease;
+}
+
+.filter-icon:hover {
+    background-color: rgba(0,0,0,0.15);
+    color: #000;
+}
+
+.filter-icon.has-filter {
+    color: #0d6efd !important;
+    font-weight: bold;
+}
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 10px;
+    z-index: 1000;
+    text-transform: none;
+    font-weight: normal;
+    min-width: 190px;
+    max-height: 290px;
+}
+
+.dropdown-search-wrapper {
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.dropdown-search-wrapper input {
+    width: 100%;
+    height: 30px;
+    font-size: 12px;
+    padding: 4px 8px 4px 24px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.dropdown-search-wrapper i {
+    position: absolute;
+    left: 8px;
+    top: 9px;
+    font-size: 11px;
+    color: #888;
+}
+
+.filter-dropdown label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #333;
+    white-space: nowrap;
+}
+
+.filter-dropdown input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.filter-dropdown-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.filter-dropdown-buttons button {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.filter-dropdown-buttons .apply-btn {
+    background: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+/* RETAIL / CORPORATE SLIDER TOGGLE */
+.toggle-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toggle-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6c757d;
+    transition: color 0.3s;
+}
+
+.toggle-label.retail-label.active {
+    color: #0d6efd;
+}
+
+.toggle-label.corporate-label.active {
+    color: #198754;
+}
+
+.toggle-track {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    background: #dcdcdc;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.toggle-track.retail-active {
+    background: #0d6efd;
+}
+
+.toggle-track.corporate-active {
+    background: #198754;
+}
+
+.toggle-knob {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-track.corporate-active .toggle-knob {
+    transform: translateX(30px);
+}
+
+</style>
+</head>	
+
+<body>
+<div th:insert="AccountStatementHeader :: header"></div>
+
+<div class="main-wrapper" id="mainWrapper">
+
+<div class="page-container">
+
+    <!-- TOP HEADER -->
+
+    <div class="top-header">
+	    <div class="page-title">
+	       <i class="fa fa-bars"></i> 
+	    </div>
+	    
+	    <div class="search-filter-group">
+	       
+	        <button type="button" id="mainFilterBtn" class="filter-btn" onclick="toggleFilters()">
+	            <i class="fa fa-filter"></i> Filter
+	        </button>
+	    </div>
+	    
+	</div>
+
+    <!-- rr_rpt-->
+
+    <div class="Report_data">
+
+        
+
+        <div class="table-responsive">
+
+            <table class=" align-middle" id="customerTable">
+
+                <thead>
+
+                    <tr>
+					    <th style="position:relative;"><div class="th-content">Report Code<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,0)"></i><div class="filter-dropdown"></div></div></th>
+					    <th style="position:relative;"><div class="th-content">Report Name<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,1)"></i><div class="filter-dropdown"></div></div></th>
+					    <th style="position:relative;"><div class="th-content">Start Date<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,2)"></i><div class="filter-dropdown"></div></div></th>
+					    <th style="position:relative;"><div class="th-content">End Date<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,3)"></i><div class="filter-dropdown"></div></div></th>
+					    <th style="position:relative;"><div class="th-content">Status<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,4)"></i><div class="filter-dropdown"></div></div></th>
+					    <th>Action</th>
+					</tr>
+
+                </thead>
+
+                <tbody>
+                	
+                	<tr>
+                	</tr>
+                
+                
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+                
+
+    </div>
+    </div>
+
+</div>
+<script>
+
+function toggleDropdown(event, colIndex) {
+	
+    event.stopPropagation();
+
+    document.querySelectorAll(".filter-dropdown").forEach(div => {
+        if (div !== event.target.nextElementSibling) div.style.display = "none";
+    });
+
+    const dropdown = event.target.nextElementSibling;
+    if (dropdown.style.display === "block") { dropdown.style.display = "none"; return; }
+
+    const rows = document.querySelector('#customerTable tbody').getElementsByTagName("tr");
+    let uniqueValues = new Set();
+    for (let i = 0; i < rows.length; i++) {
+        let td = rows[i].getElementsByTagName("td")[colIndex];
+        if (td) uniqueValues.add((td.textContent || td.innerText).trim());
+    }
+
+    const totalCount   = uniqueValues.size;
+    const checkedCount = Array.from(uniqueValues).filter(val =>
+        !activeFilters[colIndex] || activeFilters[colIndex].includes(val)
+    ).length;
+    const isAllChecked = totalCount === checkedCount;
+
+    let html = `
+        <div class="dropdown-search-wrapper" onclick="event.stopPropagation()">
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Search..." onkeyup="filterDropdownList(this)">
+        </div>
+        <div class="checkbox-container" style="max-height:150px; overflow-y:auto;">
+            <label class="dropdown-item-label master-select-label" style="font-weight:600;border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:6px;">
+                <input type="checkbox" class="select-all-cb" ${isAllChecked ? 'checked' : ''} onchange="toggleSelectAllDropdown(this)">
+                <span>(Select All)</span>
+            </label>`;
+
+    uniqueValues.forEach(val => {
+        const isChecked = !activeFilters[colIndex] || activeFilters[colIndex].includes(val);
+        html += `<label class="dropdown-item-label">
+                    <input type="checkbox" class="item-cb" value="${val}" ${isChecked ? 'checked' : ''} data-col="${colIndex}" onchange="handleItemCheckboxChange(this)">
+                    <span>${val || '(Blank)'}</span>
+                 </label>`;
+    });
+
+    html += `</div>
+        <div class="filter-dropdown-buttons" onclick="event.stopPropagation()">
+            <button class="clear-btn" onclick="clearColumnFilter(event,${colIndex})">Reset</button>
+            <button class="apply-btn" onclick="applyColumnFilter(event,${colIndex})">OK</button>
+        </div>`;
+
+    dropdown.innerHTML = html;
+    dropdown.style.display = "block";
+}
+
+function toggleFilters() {
+    const mainBtn = document.getElementById("mainFilterBtn");
+    const icons   = document.querySelectorAll(".filter-icon");
+
+    mainBtn.classList.toggle("active");
+
+    icons.forEach(icon => {
+        if (mainBtn.classList.contains("active")) {
+            icon.style.setProperty("display", "inline-block", "important");
+        } else {
+            icon.style.setProperty("display", "none", "important");
+            const dd = icon.nextElementSibling;
+            if (dd) dd.style.display = "none";
+        }
+    });
+
+    if (!mainBtn.classList.contains("active")) {
+        clearAllFilters();
+    }
+}
+</script>
+</body>
+</html>

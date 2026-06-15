@@ -22,6 +22,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -618,6 +620,9 @@ public class NavigationController {
 		}
 		return "redirect:login?invalidotp";
 	}
+	
+	
+	
 	@GetMapping("/getSchemeType")
 	@ResponseBody
 	public String getSchemeType(@RequestParam String acid) {
@@ -626,6 +631,32 @@ public class NavigationController {
 	    		generalMasterTbRepo.getSchemeTypeByAcid(acid);
 
 	    return schemeType;
+	}
+	
+	
+	@RequestMapping(value = "monthly1", method = { RequestMethod.GET, RequestMethod.POST })
+	public String monthly1(Model md, HttpServletRequest req, @RequestParam(value = "report_date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date report_date) {
+		String roleId = (String) req.getSession().getAttribute("ROLEID");
+
+		// md.addAttribute("reportvalue", "RBS Reports");
+		// md.addAttribute("reportid", "RBSReports");
+
+		String domainid = (String) req.getSession().getAttribute("DOMAINID");
+		// md.addAttribute("reportsflag", "reportsflag");
+		md.addAttribute("menu", "Monthly 1 - BRF Report");
+
+		// md.addAttribute("reportlist", rrReportlist.getReportList());
+		//md.addAttribute("reportlist", rrReportlist.getReportListmonthly1());//all list of M1
+		//md.addAttribute("reportlist", rrReportlist.findReportsByRemarks("M1"));
+
+		if(report_date!=null && !report_date.equals(null)) {
+			System.out.println("report_date"+report_date);
+			//md.addAttribute("reportlist", rrReportlist.findDataByDate(report_date,"M1"));
+			//md.addAttribute("reportlist", rrReportlist.findDataMissing(report_date))//missing data for this date
+			md.addAttribute("reportDate", report_date);
+		}
+		
+		return "BRF/RRReports";
 	}
 
 
