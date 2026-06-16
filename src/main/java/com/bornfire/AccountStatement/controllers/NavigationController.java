@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -46,6 +47,7 @@ import com.bornfire.AccountStatement.entities.Cust_table_entity;
 import com.bornfire.AccountStatement.entities.Cust_table_rep;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbEntity;
 import com.bornfire.AccountStatement.entities.GeneralMasterTbRep;
+import com.bornfire.AccountStatement.entities.RRReportRepo;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Entity;
 import com.bornfire.AccountStatement.entities.ScheduleHistory_Repo;
 import com.bornfire.AccountStatement.entities.ScheduledStatement_Entity;
@@ -82,6 +84,8 @@ public class NavigationController {
 	@Autowired
 	Service_audit_table_Rep Service_audit_table_Rep;
 
+	@Autowired
+	RRReportRepo rrReportlist;
 	
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
@@ -644,6 +648,7 @@ public class NavigationController {
 		String domainid = (String) req.getSession().getAttribute("DOMAINID");
 		// md.addAttribute("reportsflag", "reportsflag");
 		md.addAttribute("menu", "Monthly 1 - BRF Report");
+		md.addAttribute("reportlist", rrReportlist.findReportsByRemarks("M1"));
 
 		// md.addAttribute("reportlist", rrReportlist.getReportList());
 		//md.addAttribute("reportlist", rrReportlist.getReportListmonthly1());//all list of M1
@@ -651,13 +656,28 @@ public class NavigationController {
 
 		if(report_date!=null && !report_date.equals(null)) {
 			System.out.println("report_date"+report_date);
-			//md.addAttribute("reportlist", rrReportlist.findDataByDate(report_date,"M1"));
+			md.addAttribute("reportlist", rrReportlist.findDataByDate(report_date,"M1"));
 			//md.addAttribute("reportlist", rrReportlist.findDataMissing(report_date))//missing data for this date
 			md.addAttribute("reportDate", report_date);
 		}
 		
 		return "BRF/RRReports";
 	}
-
+	@GetMapping("/checkDomainFlagwithdate")
+	@ResponseBody
+	public ResponseEntity<String> checkDomainFlagwithdate(@RequestParam String rptcode,
+			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,Model md) {
+		//System.out.println("Date : " + date);
+		md.addAttribute("reportDate", "2025-12-31");
+		List<Date> datelist = rrReportlist.getdatelist(rptcode);
+		System.out.println("rptcode="+rptcode);
+		for (Date eachdate : datelist) {
+			//System.out.println("Each date : " + eachdate);
+			if (eachdate != null && eachdate.compareTo(date) == 0) {
+				return ResponseEntity.ok("ENABLED");
+			}
+		}
+		return ResponseEntity.ok("DISABLED");
+	}
 
 }

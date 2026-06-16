@@ -587,15 +587,35 @@ input:checked + .slider:before {
 
                 </thead>
 
-                <tbody>
-                	
-                	<tr>
-                	</tr>
-                
-                
+					<tbody>
 
 
-                </tbody>
+													<tr th:if="${COUNT} == '0'">
+														<td colspan="9" style="text-align: center; color: red">No
+															Data Found</td>
+													</tr>
+													<tr th:each="userProfile : ${reportlist}"
+					th:attr="data-cust_id=${userProfile.srl_no}"
+					th:id="${userProfile.srl_no}" class="userlist">
+
+					<td class="reportcode"
+						th:attr="data-rptcode=${userProfile.rpt_code},data-fromdate=${#dates.format(userProfile.start_date, 'dd/MM/yyyy')},data-todate=${#dates.format(userProfile.end_date, 'dd/MM/yyyy')}"
+						th:text="${userProfile.rpt_code}"></td>
+
+					<td th:text="${userProfile.rpt_description}"></td>
+					<td th:text="${#dates.format(userProfile.start_date, 'dd/MM/yyyy')}"></td>
+					<td th:text="${#dates.format(userProfile.end_date, 'dd/MM/yyyy')}"></td>
+
+					<!-- Add an empty status column with rpt_code as data attr -->
+					<td class="rpt-status" th:attr="data-rptcode=${userProfile.rpt_code}">Loading...</td>
+					
+					<td> <i class="fas fa-play-circle" th:attr="data-srl_no=${userProfile.srl_no}" th:onclick="executeprocedurePerRow(this);" style="cursor:pointer"></i> </td>
+													
+													
+				</tr>
+
+
+												</tbody>
 
             </table>
 
@@ -681,6 +701,97 @@ function toggleFilters() {
         clearAllFilters();
     }
 }
+
+function executeprocedurePerRow(a){
+ 
+ if (window.location.pathname.includes("monthly1")) {			
+ const selectedDate = document.getElementById("dateinput").value;
+ 
+ var srl_no = a.getAttribute("data-srl_no");
+    
+    const generateBtn = this;
+    const originalText = generateBtn.innerText;
+    generateBtn.disabled = true;
+    generateBtn.innerText = 'Generating...';
+    //alert(srl_no);
+
+    $('#loader1').modal('show');
+    fetch(`./executeProcedure?reportDate=${encodeURIComponent(selectedDate)}&srl_no=${srl_no}`, {
+        method: 'POST'
+    })
+    .then(response => {
+        if (!response.ok) {
+        	 $('#loader1').modal('hide');
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); 
+    })
+    .then(data => {
+    	 $('#loader1').modal('hide');
+        alert('Procedure executed successfully!');	 
+        window.location.reload();
+    })
+    .catch(error => {
+    	 $('#loader1').modal('hide');
+        console.error('Error executing procedure:', error);
+        alert('Failed to execute procedure. Please try again.');
+    })
+    .finally(() => {
+    	 $('#loader1').modal('hide');
+        generateBtn.disabled = false;
+        generateBtn.innerText = originalText;
+    });
+ }
+ else{
+	 alert("Currently only available for Monthly 1 ")
+ }
+}
+
+function checkdate() {
+	 const selectedDate = document.getElementById("dateinput").value;
+	 //alert(selectedDate);
+    const statusCells = document.querySelectorAll(".rpt-status");
+
+    statusCells.forEach(cell => {
+        const rptCode = cell.getAttribute("data-rptcode");
+
+        fetch('./checkDomainFlagwithdate?rptcode=' + rptCode + '&date=' + selectedDate )
+            .then(response => response.text())
+            .then(result => {
+
+                let tdElement = cell.closest('tr').querySelector(".reportcode");
+                if (result === 'ENABLED') {
+                    cell.textContent = 'Enabled';
+                    cell.style.color = 'green';
+                    
+                    tdElement.classList.add("underline");
+                    tdElement.setAttribute("onclick", "getVali(this);");
+                    tdElement.style.cursor = "pointer";
+                    
+                    
+                } else if (result === 'DISABLED') {
+                    cell.textContent = 'Disabled';
+                    cell.style.color = 'red';
+                    $('#generatebtn').show();
+
+                    tdElement.classList.remove("underline");
+                    tdElement.removeAttribute("onclick");
+                    tdElement.style.cursor = "default"; 
+                    
+                } else {
+                    cell.textContent = 'Unknown';
+                    cell.style.color = 'gray';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching status for', rptCode, error);
+                cell.textContent = 'Error';
+                cell.style.color = 'orange';
+            });
+    });
+    
+}
+
 </script>
 </body>
 </html>
