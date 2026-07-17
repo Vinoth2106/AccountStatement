@@ -1,0 +1,755 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>BCDRS – BRF Validations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<link rel="shortcut icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+<link rel="icon"          th:href="@{/favicon.ico}" type="image/x-icon"/>
+
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"/>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/font-awesome/5.9.0/css/all.min.css"
+	th:href="@{/webjars/font-awesome/5.9.0/css/all.min.css}"/>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/jquery-ui/1.12.1/jquery-ui.min.css"
+	th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}"/>
+
+<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css"/>
+
+<script src="/webjars/jquery/3.4.1/jquery.min.js"
+	th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
+<script src="/webjars/popper.js/1.14.7/umd/popper.min.js"
+	th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
+<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
+	th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+	th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+	th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+	th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+
+<style>
+/* ── ROOT COLOUR TOKENS ── */
+:root {
+    --brand-dark:   #1a1d35;
+    --brand-purple: #6c63ff;
+    --brand-blue:   #0b1c54;
+    --bg-page:      #f0f2f5;
+    --bg-card:      #ffffff;
+    --border-light: #e8ecf4;
+    --text-main:    #1a1b2e;
+    --text-muted:   #7b8299;
+    --th-bg:        rgba(108, 99, 255, 0.10);
+    --th-color:     #3b3585;
+    --th-border:    rgba(108, 99, 255, 0.22);
+    --row-hover:    rgba(108, 99, 255, 0.04);
+    --status-green-bg: #e6f9f0;
+    --status-green-fg: #1a8a5a;
+    --status-red-bg:   #fff0f0;
+    --status-red-fg:   #c0392b;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    background: var(--bg-page);
+    font-family: 'Segoe UI', 'Inter', sans-serif;
+    margin: 0;
+}
+
+/* ── MAIN WRAPPER ── */
+.main-wrapper {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    min-height: 100vh;
+    transition: margin-left 0.3s, width 0.3s;
+}
+.main-wrapper.expanded {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+}
+.page-container { padding: 28px 28px 40px; }
+
+/* ── UNIFIED CARD ── */
+.report-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: 0 2px 16px rgba(26,29,53,0.08);
+    overflow: visible;
+}
+
+/* ── CARD HEADER STRIP ── */
+.card-header-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid var(--border-light);
+}
+.card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.card-icon {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 18px; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.28);
+}
+.card-title {
+    font-size: 18px; font-weight: 700;
+    color: var(--brand-blue); margin: 0; line-height: 1.2;
+}
+
+/* Right controls */
+.card-controls {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+
+/* Date display pill */
+.date-display-pill {
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #f8f7ff 0%, #f0eeff 100%);
+    border: 1.5px solid #e4e0ff;
+    border-radius: 14px; padding: 8px 16px;
+}
+.date-display-pill .dp-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px; flex-shrink: 0;
+}
+.date-display-pill .dp-label {
+    font-size: 10px; font-weight: 700;
+    color: var(--brand-purple); text-transform: uppercase;
+    letter-spacing: 0.8px; display: block; margin: 0;
+    line-height: 1;
+}
+.date-display-pill .dp-value {
+    font-size: 14px; font-weight: 700;
+    color: var(--text-main); display: block; margin: 2px 0 0;
+}
+
+/* Action buttons */
+.action-btn {
+    height: 44px; padding: 0 20px;
+    border: none; border-radius: 14px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    color: white; font-weight: 600; font-size: 13px;
+    display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.28);
+    white-space: nowrap;
+}
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(108,99,255,0.38);
+}
+.action-btn.secondary {
+    background: #f0f4fc;
+    color: var(--brand-blue);
+    border: 1.5px solid #dce4f2;
+    box-shadow: none;
+}
+.action-btn.secondary:hover {
+    background: #e2ecf9; border-color: #bcd1ee;
+}
+
+/* ── TABLE ── */
+.table-responsive { overflow-x: auto; }
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table thead th {
+    background: #f8fafc;
+    /* color: var(--th-color) !important; */
+    font-weight: 700; font-size: 12px !important;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    padding: 9px 16px !important;
+    border-bottom: 1px solid var(--th-border) !important;
+    border-top: none !important;
+    white-space: nowrap; position: relative;
+}
+table tbody tr { transition: background 0.15s; }
+table tbody tr:hover { background: var(--row-hover); }
+table td {
+    padding: 9px 16px;
+    border-bottom: 1px solid #f0f2f6;
+    font-size: 13px; color: var(--text-main);
+    vertical-align: middle;
+}
+table tbody tr:last-child td { border-bottom: none; }
+
+/* ── STATUS PILLS ── */
+.status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 13px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+.status-pill.ok       { background: var(--status-green-bg); color: var(--status-green-fg); }
+.status-pill.not-ok   { background: var(--status-red-bg);   color: var(--status-red-fg); }
+.status-pill.unknown  { background: #f3f4f8; color: var(--text-muted); }
+
+/* ── VIEW BUTTON (table cell) ── */
+.view-btn {
+    width: 28px; height: 28px;
+    border-radius: 8px; border: none;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    color: white; font-size: 11px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(108,99,255,0.28);
+    transition: all 0.2s;
+}
+.view-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108,99,255,0.38);
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center; padding: 60px 20px; color: var(--text-muted);
+}
+.empty-state i { font-size: 42px; margin-bottom: 14px; color: #cdd0de; display: block; }
+.empty-state p { font-size: 14px; margin: 0; }
+
+/* ── CARD FOOTER ── */
+.card-footer-strip {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-light);
+    border-radius: 0 0 20px 20px;
+    background: #fafbfd;
+}
+
+/* ── LOADER ── */
+#loader1 .modal-content {
+    border-radius: 16px; border: none;
+    box-shadow: 0 8px 32px rgba(26,29,53,0.18);
+    text-align: center; padding: 36px 28px;
+    background: white;
+}
+#loader1 .modal-body { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.loader-spinner {
+    width: 52px; height: 52px;
+    border: 4px solid #e8e4ff;
+    border-top-color: var(--brand-purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── GENERATE MODAL ── */
+.brf-modal .modal-content {
+    border-radius: 16px; border: none;
+    box-shadow: 0 8px 32px rgba(26,29,53,0.18);
+    overflow: hidden;
+}
+.brf-modal-header {
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.brf-modal-header h5 { color: white; font-weight: 700; margin: 0; font-size: 15px; }
+.brf-modal-header .close-x {
+    background: rgba(255,255,255,0.2); border: none;
+    border-radius: 8px; color: white;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: background 0.2s;
+}
+.brf-modal-header .close-x:hover { background: rgba(255,255,255,0.35); }
+
+.brf-modal-subheader {
+    padding: 12px 24px 4px;
+    border-bottom: 1px solid var(--border-light);
+}
+.brf-modal-subheader h6 { color: var(--brand-blue); font-weight: 700; margin: 0; }
+
+.brf-modal-body {
+    padding: 16px 20px 20px;
+    max-height: 480px; overflow-y: auto;
+}
+
+.brf-modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-light);
+    display: flex; justify-content: center; gap: 12px;
+}
+
+/* validation / alert modals */
+.alert-modal .modal-content { border-radius: 16px; border: none; overflow: hidden; }
+.alert-modal .modal-header {
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    border-bottom: none; padding: 14px 20px;
+}
+.alert-modal .modal-title { color: white; font-weight: 700; font-size: 14px; }
+.alert-modal .close { color: white; opacity: 0.8; }
+.alert-modal .close:hover { opacity: 1; }
+
+/* responsive */
+@media (max-width: 991px) {
+    .card-header-strip { flex-direction: column; align-items: flex-start; }
+    .card-controls { width: 100%; }
+}
+</style>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var reportlist = /*[[${reportlist}]]*/null;
+var frequency;
+
+function check(a) {
+    var srl_no = a.getAttribute("data-srl_no");
+    var rpt_code = a.getAttribute("data-rpt_code");
+    var report_date = a.getAttribute("data-todate");
+    var url = "./BRFValidationsChk?srl_no=" + srl_no + "&rpt_code=" + rpt_code + "&report_date=" + report_date;
+    $("#reportform").attr('action', url);
+    var options = { success: showResponse };
+    $("#reportform").ajaxSubmit(options);
+    function showResponse(responseText) {
+        if (responseText.genID == "1") {
+            alert(responseText.status);
+            location.reload();
+        } else {
+            alert(responseText.status);
+        }
+    }
+}
+
+function refreshpage(a) {
+    location.href = "brfValidations?rpt_code=" + $("#disablerpt_code").val();
+}
+
+function back(a) {
+    var remarks = a.getAttribute("data-remarks");
+    var roleid = a.getAttribute("data-roleId");
+    if (roleid === "ADM" || roleid === "GEN" || roleid === "Superadmin") {
+        if (remarks) {
+            var rest = remarks.replace(/\s/g, "");
+            var res = rest.toLowerCase();
+            location.href = "/AccountStatement/" + res;
+        } else {
+            var reportcode = a.getAttribute("data-reportcode");
+            var todate = a.getAttribute("data-todate");
+            if (reportcode && todate) {
+                location.href = "/AccountStatement/BRFValidations?rptcode=" + reportcode + "&todate=" + todate;
+            } else {
+                window.history.back();
+            }
+        }
+    } else {
+        if      (roleid === "HR") location.href = "/AccountStatement/hrmodel";
+        else if (roleid === "IT") location.href = "/AccountStatement/itmodel";
+        else if (roleid === "OP") location.href = "/AccountStatement/opmodel";
+        else if (roleid === "AC") location.href = "/AccountStatement/acmodel";
+    }
+}
+
+function getReport(a) {
+    $('#loader1').modal('show');
+    var fromdate  = a.getAttribute("data-fromdate");
+    var todate    = a.getAttribute("data-todate");
+    var asondate  = a.getAttribute("data-todate");
+    var reportid  = a.getAttribute("data-rptcode");
+    var form = $('#reportform')[0];
+    $("#reportform").attr('action', `Reports/${reportid}?dtltype=report&fromdate=${fromdate}&todate=${todate}&asondate=${asondate}`);
+
+    let showModal = false;
+    $('tbody .userlist').each(function () {
+        var cur_status = $(this).find('td').eq(4).text().trim();
+        if (cur_status === 'Not ok') showModal = true;
+    });
+
+    if (showModal) {
+        $('#loader1').modal('hide');
+        $('#validationModal').modal('show');
+        $('#confirmGenerateReport').off('click').one('click', function () {
+            if (confirm("Do you want to open report?")) {
+                $('#loader1').modal('show');
+                const type = 'RBS';
+                $("#reportform").attr('action', `Reports/${reportid}?dtltype=report&fromdate=${fromdate}&todate=${todate}&type=${type}&asondate=${asondate}`);
+                form.submit();
+            }
+        });
+    } else {
+        const callUrl = `./Reports/${reportid}/PrecheckRR?fromdate=${fromdate}&todate=${todate}`;
+        $.ajax({
+            type: 'GET', url: callUrl,
+            success: function (data) {
+                if (data === 'success') {
+                    if (confirm("Do you want to open report?")) {
+                        const type = 'RBS';
+                        $("#reportform").attr('action', `Reports/${reportid}?dtltype=report&fromdate=${fromdate}&todate=${todate}&type=${type}&asondate=${asondate}`);
+                        form.submit();
+                    }
+                    $('#loader1').modal('hide');
+                } else {
+                    $('#loader1').modal('hide');
+                    $("#alertmsg").text(data);
+                    $("#alert").modal("toggle");
+                }
+            },
+            error: function () {
+                $('#loader1').modal('hide');
+                $("#alertmsg").text("Error occurred while processing the request.");
+                $("#alert").modal("toggle");
+            }
+        });
+    }
+}
+
+$(document).ready(function () {
+    $('#validationModal').on('shown.bs.modal', function () {
+        $('#loader1').modal('hide');
+    });
+});
+
+function runsummaryprocedure(a) {
+    var rptcode = a.getAttribute("data-rptcode");
+    var todate  = a.getAttribute("data-todate");
+    alert("Report code :" + rptcode + " Date : " + todate);
+    $('#loader1').modal('show');
+    fetch(`./executeSummaryProcedure?reportDate=${todate}&rpt_code=${rptcode}`, { method: 'POST' })
+        .then(r => { if (!r.ok) { $('#loader1').modal('hide'); throw new Error('Network error'); } return r.json(); })
+        .then(() => { $('#loader1').modal('hide'); alert('Procedure executed successfully!'); window.location.reload(); })
+        .catch(() => { $('#loader1').modal('hide'); alert('Failed to execute procedure. Please try again.'); })
+        .finally(() => { $('#loader1').modal('hide'); });
+}
+
+function generatepopup(a) {
+    let selectedDate = document.getElementById("disableDate1").value;
+    var srlno = a.getAttribute("data-srlno");
+    const myModal = document.getElementById('generateModal');
+    myModal.classList.add('show');
+    myModal.style.display = 'block';
+    document.body.classList.add('modal-open');
+
+    const tableBody = document.getElementById('modalTableBody');
+    tableBody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Loading...</td></tr>';
+    fetch(`./brfvalidationdetails?reportdate=${selectedDate}&srlno=${srlno}`)
+        .then(r => { if (!r.ok) throw new Error("Network error"); return r.json(); })
+        .then(data => {
+            tableBody.innerHTML = '';
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="text-center p-4">No modifications found.</td></tr>';
+                document.getElementById('popupgeneratebtn').style.display = 'none';
+                return;
+            }
+            const srclistArray   = data?.srclist   || [];
+            const errorlistArray = data?.errorlist  || [];
+            const calclistArray  = data?.calclist   || [];
+            const destlistArray  = data?.destlist   || [];
+
+            srclistArray.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.reportname}</td><td>${item.srlno}</td><td>${item.desc}</td><td>${item.value}</td>`;
+                tableBody.appendChild(tr);
+            });
+            errorlistArray.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="4">${item.desc}</td>`;
+                tableBody.appendChild(tr);
+            });
+            calclistArray.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="3">${item.desc}</td><td>${item.value}</td>`;
+                tableBody.appendChild(tr);
+            });
+            destlistArray.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.reportname}</td><td>${item.srlno}</td><td>${item.desc}</td><td>${item.value}</td>`;
+                tableBody.appendChild(tr);
+            });
+        })
+        .catch(() => {
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger p-4">Failed to load data.</td></tr>';
+        });
+}
+
+$(document).ready(function () {
+    $('#closebtn').on('click', function () {
+        $('#generateModal').removeClass('show').css('display', 'none');
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+    });
+});
+/*]]>*/
+</script>
+</head>
+
+<body>
+<div th:insert="AccountStatementHeader :: header"></div>
+
+<div class="main-wrapper" id="mainWrapper">
+<div class="page-container">
+
+    <!-- ══ UNIFIED CARD ══ -->
+    <div class="report-card">
+
+        <!-- ── Card Header ── -->
+        <div class="card-header-strip">
+
+            <!-- Left: icon + title -->
+            <div class="card-title-group">
+                <div class="card-icon"><i class="fa fa-check-square"></i></div>
+                <div>
+                    <p class="card-title">BRF Report Validations</p>
+                </div>
+            </div>
+
+            <!-- Right: date display + optional resubmission -->
+            <div class="card-controls">
+
+                <!-- Resubmission button (conditional) -->
+                <button type="button" class="action-btn"
+                    th:attr="data-rptcode=${rptcode},data-todate=${rpt_date}"
+                    id="runprocedurebtn"
+                    th:onclick="runsummaryprocedure(this);"
+                    th:if="${reportlist1.remarks_5 == 'M1'}">
+                    <i class="fa fa-refresh"></i> Resubmission
+                </button>
+
+                <!-- Report Date pill -->
+                <div class="date-display-pill">
+                    <div class="dp-icon"><i class="fa fa-calendar"></i></div>
+                    <div>
+                        <span class="dp-label">Report Date</span>
+                        <input type="text"
+                            style="border:none;background:transparent;outline:none;font-size:14px;font-weight:700;color:var(--text-main);min-width:110px;padding:0;"
+                            readonly
+                            th:value="${rpt_date}" id="disableDate1" value=""
+                            autocomplete="off"/>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- /card-header-strip -->
+
+        <!-- ── Table ── -->
+        <form action="#" th:object="${reportform}" method="post"
+            autocomplete="off" id="reportform">
+            <input type="hidden" th:value="${reportDate1}" id="reportdates"/>
+
+            <!-- Empty state -->
+            <div th:if="${reportlist == null or #lists.isEmpty(reportlist)}"
+                class="empty-state">
+                <i class="fa fa-inbox"></i>
+                <p>No validations found for this report.</p>
+            </div>
+
+            <div class="table-responsive" th:unless="${reportlist == null or #lists.isEmpty(reportlist)}">
+                <table id="usertable">
+                    <thead>
+                        <tr>
+                            <th>Validation Details</th>
+                            <th>Report Code</th>
+                            <th>Validation</th>
+                            <th>Description</th>
+                            <th style="text-align:center;">View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="userProfile : ${reportlist}" class="userlist">
+                            <td style="display:none;">
+                                <input type="text" name="todate" id="disableDate"
+                                    th:value="${reportDate1}" class="col-sm-3 form-control"
+                                    placeholder="dd/mm/yyyy"/>
+                            </td>
+                            <td th:text="${userProfile.val_det}"></td>
+                            <td th:text="${userProfile.val_tables}"></td>
+
+                            <th:block th:switch="${userProfile?.cur_status}">
+                                <td th:case="'Y'">
+                                    <span class="status-pill ok">
+                                        <i class="fa fa-check-circle"></i> Ok
+                                    </span>
+                                </td>
+                                <td th:case="'N'">
+                                    <span class="status-pill not-ok">
+                                        <i class="fa fa-times-circle"></i> Not ok
+                                    </span>
+                                </td>
+                                <td th:case="*">
+                                    <span class="status-pill unknown">—</span>
+                                </td>
+                                <td th:text="${userProfile.remarks2}"></td>
+                            </th:block>
+
+                            <td style="text-align:center;">
+                                <button class="view-btn" type="button"
+                                    th:attr="data-srlno=${userProfile.srl_no}"
+                                    th:onclick="generatepopup(this);"
+                                    title="View Details">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ── Card Footer ── -->
+            <div class="card-footer-strip">
+                <button type="button" class="action-btn"
+                    id="btnDownload"
+                    th:attr="data-rptcode=${reportlist1.rpt_code},data-fromdate=${#dates.format(reportlist1.start_date,'dd/MM/yyyy')},data-todate=${#dates.format(reportlist1.end_date,'dd/MM/yyyy')}"
+                    onclick="getReport(this);" form="reportform">
+                    <i class="fa fa-file-text-o"></i> Report
+                </button>
+
+                <button type="button" class="action-btn secondary"
+                    th:attr="data-remarks=${reportlist1.remarks_4},data-roleId=${RoleId}"
+                    id="btnBack" onclick="back(this);">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+            </div>
+
+        </form>
+
+    </div><!-- /report-card -->
+
+</div><!-- /page-container -->
+</div><!-- /main-wrapper -->
+
+
+<!-- ══ VALIDATION FAILED MODAL ══ -->
+<div class="modal fade alert-modal" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validationModalLabel">
+                    <i class="fa fa-exclamation-triangle mr-2"></i> Validation Failed
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:20px 24px;">
+                <p style="color:var(--text-main);margin:0;">Validation failed: Do you still want to generate the report?</p>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid var(--border-light);padding:12px 20px;">
+                <button type="button" class="action-btn secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
+                <button type="button" class="action-btn" id="confirmGenerateReport">
+                    <i class="fa fa-file-text-o"></i> Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══ ALERT MODAL ══ -->
+<div class="modal fade alert-modal" id="alert">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-info-circle mr-2"></i> Notice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align:center;padding:20px 24px;">
+                <p id="alertmsg" style="color:var(--text-main);margin:0 0 16px;"></p>
+                <button type="button" class="action-btn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══ LOADER MODAL ══ -->
+<div class="modal fade" id="loader1" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="loader-spinner"></div>
+                <div>
+                    <p style="font-weight:700;color:#1a1b2e;margin:0;font-size:15px;">Processing</p>
+                    <p style="color:#7b8299;font-size:12px;margin:4px 0 0;">Please wait…</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══ GENERATE / VIEW DETAIL MODAL ══ -->
+<div class="modal fade brf-modal" id="generateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width:860px;">
+        <div class="modal-content">
+
+            <!-- Purple header -->
+            <div class="brf-modal-header">
+                <h5><i class="fa fa-check-square mr-2"></i> Validation Details</h5>
+                <button class="close-x" id="closebtn" type="button" aria-label="Close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Sub-header -->
+            <div class="brf-modal-subheader">
+                <h6>BANK OF BARODA</h6>
+            </div>
+
+            <!-- Body -->
+            <div class="brf-modal-body">
+                <p id="alertpopupmsg1" class="text-wrap text-break" style="display:none;"></p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100 mb-0 text-left">
+                        <thead>
+                            <tr>
+                                <th>Table Name</th>
+                                <th>Serial No</th>
+                                <th>Description</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="brf-modal-footer">
+                <button type="button" class="action-btn" id="popupgeneratebtn"
+                    onclick="executeprocedureAll()" style="display:none;" title="Execute procedure">
+                    <i class="fa fa-play"></i> Generate
+                </button>
+                <button type="button" class="action-btn secondary" id="closebtn2">
+                    <i class="fa fa-times"></i> Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// Wire up second close button alias
+$(document).ready(function () {
+    $('#closebtn2, #closebtn').on('click', function () {
+        $('#generateModal').removeClass('show').css('display', 'none');
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+    });
+});
+</script>
+
+</body>
+</html>

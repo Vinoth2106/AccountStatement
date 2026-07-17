@@ -2,381 +2,339 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
 <meta charset="UTF-8">
-	<title>BRF Reports</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
-	<meta content="Coderthemes" name="author">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- App favicon -->
-	<link rel="shortcut icon" href="assets/images/favicon.ico">
-	<!-- App css -->
-	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.css.map}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/materialdesignicons.min.css.map}" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdn.materialdesignicons.com/4.5.95/css/materialdesignicons.min.css">
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css">
+<title>BRF Reports</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="shortcut icon" href="assets/images/favicon.ico">
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/icons.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/app.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/materialdesignicons.min.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">	
+<script src="/webjars/jquery/3.4.1/jquery.min.js"
+    th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
 
-	<link th:href="@{/css/bhms-modern.css}" rel="stylesheet" type="text/css">
-	
-	<script th:src="@{/js/bootstrap411.js}"></script>
-	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js" th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+<script src="/webjars/popper.js/1.14.7/umd/popper.min.js"
+    th:src="@{/webjars/popper.js/1.14.7/umd/popper.min.js}"></script>
 
-	<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js" th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
-	<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js" th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/jquery.dataTables.min.js" th:src="@{/webjars/datatables/1.10.19/js/jquery.dataTables.min.js}"></script>
-	<script src="/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js" th:src="@{/webjars/datatables/1.10.19/js/dataTables.bootstrap4.min.js}"></script>
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-	<style>
+<script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
+    th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 
-body{
-    background:#f5f7fb;
-    font-family:'Segoe UI',sans-serif;
+<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"
+    th:src="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.js}"></script>
+
+<script src="/webjars/jquery-form/4.2.2/jquery.form.min.js"
+    th:src="@{/webjars/jquery-form/4.2.2/jquery.form.min.js}"></script>
+
+<script src="/webjars/jquery-validation/1.19.0/jquery.validate.min.js"
+    th:src="@{/webjars/jquery-validation/1.19.0/jquery.validate.min.js}"></script>
+<style>
+/* ── ROOT COLOUR TOKENS (match AccountStatementHeader palette) ── */
+:root {
+    --brand-dark:   #1a1d35;
+    --brand-purple: #6c63ff;
+    --brand-blue:   #0b1c54;
+    --bg-page:      #f0f2f5;
+    --bg-card:      #ffffff;
+    --border-light: #e8ecf4;
+    --text-main:    #1a1b2e;
+    --text-muted:   #7b8299;
+    --th-bg:        rgba(108, 99, 255, 0.10);   /* transparent blue header */
+    --th-color:     #3b3585;
+    --th-border:    rgba(108, 99, 255, 0.22);
+    --row-hover:    rgba(108, 99, 255, 0.04);
+    --status-green-bg: #e6f9f0;
+    --status-green-fg: #1a8a5a;
+    --status-red-bg:   #fff0f0;
+    --status-red-fg:   #c0392b;
 }
 
-.page-container{
-    padding:25px;
+/* ── GLOBAL ── */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    background: var(--bg-page);
+    font-family: 'Segoe UI', 'Inter', sans-serif;
+    margin: 0;
 }
 
-/* TOP HEADER */
-
-.top-header{
-    background:white;
-    padding:10px 25px;
-    border-radius:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+/* ── MAIN WRAPPER (leaves room for the fixed sidebar) ── */
+.main-wrapper {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    min-height: 100vh;
+    transition: margin-left 0.3s, width 0.3s;
+}
+.main-wrapper.expanded {
+    margin-left: 240px;
+    width: calc(100% - 240px);
 }
 
-.page-title{
-    font-size:28px;
-    font-weight:700;
-    color:#0b1c54;
-}
+/* ── PAGE CONTAINER ── */
+.page-container { padding: 28px 28px 40px; }
 
-.search-box{
-    width:350px;
-    position:relative;
-}
-
-.search-box input{
-    width:100%;
-    height:48px;
-    border-radius:14px;
-    border:1px solid #ddd;
-    padding-left:45px;
-    outline:none;
-}
-
-.search-box i{
-    position:absolute;
-    left:16px;
-    top:15px;
-    color:gray;
-}
-
-/* CUSTOMER SECTION */
-
-.Report_data{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    margin-bottom:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-.section-title{
-    font-size:22px;
-    font-weight:700;
-    color:#0b1c54;
-    margin-bottom:20px;
-}
-
-/* TABLE */
-
-table{
-    width:100%;
-}
-
-
-table thead th {
-   background: #bdbdbd !important;
-    color: #000000 !important;
-    font-weight: bold;
-    font-size: 13px !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 12px 14px !important;
-    border-bottom: 2px solid var(--bm-border) !important;
-    border-top: none !important;
-    white-space: nowrap;
-   
-}
-
-table td{
-    padding:15px;
-    border-bottom:1px solid #eee;
-    font-size: 12px !important;
-    vertical-align:middle;
-}
-
-/* STATUS */
-
-.status-active{
-    background:#d4f8df;
-    color:green;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:13px;
-}
-
-.status-inactive{
-    background:#ffe0e0;
-    color:red;
-    padding:6px 14px;
-    border-radius:20px;
-    font-size:13px;
-}
-
-/* BUTTONS */
-
-.action-btn{
-    width:35px;
-    height:35px;
-    border:none;
-    border-radius:10px;
-    margin-right:5px;
-}
-
-.edit-btn{
-    background:#e7f1ff;
-    color:#0d6efd;
-}
-
-.delete-btn{
-    background:#ffe5e5;
-    color:red;
-}
-
-/* TOGGLE */
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 55px;
-    height: 28px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #dcdcdc;
-    transition: .4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #0d6efd;
-}
-
-input:checked + .slider:before {
-    transform: translateX(24px);
-}
-
-/* ACCOUNT TABLE */
-
-.account-section{
-    background:white;
-    border-radius:18px;
-    padding:25px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* MOBILE */
-
-@media(max-width:991px){
-
-    .top-header{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .search-box{
-        width:100%;
-        margin-top:15px;
-    }
-
-    .table-responsive{
-        overflow-x:auto;
-    }
-
-}
-
-
-/* PAGINATION */
-
-.page-btn{
-
-    border:none;
-    padding:8px 14px;
-    margin:0 4px;
-    border-radius:8px;
-    background:#e5e7eb;
-    cursor:pointer;
-    font-size:14px;
-    font-weight:600;
-}
-
-.page-btn:hover{
-    background:#0d6efd;
-    color:white;
-}
-
-.active-page{
-    background:#0d6efd !important;
-    color:white;
-}
-
-.page-btn:disabled{
-    opacity:0.5;
-    cursor:not-allowed;
-}
-/* PAGINATION WRAPPER */
-
-.pagination-wrapper{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:20px;
-    flex-wrap:wrap;
-}
-
-/* RECORD INFO */
-
-.record-info{
-
-    font-size:14px;
-    color:#555;
-    font-weight:500;
-}
-
-/* RIGHT BUTTON AREA */
-
-.pagination-buttons{
-
-    display:flex;
-    align-items:center;
-}
-
-/* SEARCH & FILTER GROUP */
-.search-filter-group {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.search-box {
-    width: 350px;
-    position: relative;
-}
-
-.search-box input {
-    width: 100%;
-    height: 48px;
-    border-radius: 14px;
-    border: 1px solid #ddd;
-    padding-left: 45px;
-    outline: none;
-}
-
-.search-box i {
-    position: absolute;
-    left: 16px;
-    top: 15px;
-    color: gray;
-}
-
-/* FILTER BUTTON — same as StatementHistory */
-.filter-btn {
-    height: 48px;
-    padding: 0 20px;
-    background-color: #f0f4fc;
-    color: #0b1c54;
-    border: 1px solid #dce4f2;
-    border-radius: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background-color: #e2ecf9;
-    border-color: #bcd1ee;
-}
-
-/* RETAIL / CORPORATE TOGGLE */
-.cust-type-toggle {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.type-btn {
-    padding: 7px 18px;
+/* ══════════════════════════════════════════
+   UNIFIED CARD  — header + table in one box
+   ══════════════════════════════════════════ */
+.report-card {
+    background: var(--bg-card);
     border-radius: 20px;
-    border: 2px solid #6c757d;
-    background: white;
-    color: #6c757d;
-    font-weight: 600;
-    font-size: 13px;
+    box-shadow: 0 2px 16px rgba(26, 29, 53, 0.08);
+    overflow: visible;
+}
+
+/* ── CARD HEADER STRIP ── */
+.card-header-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+/* Left: icon + title + breadcrumb */
+.card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.card-icon {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.28);
+}
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--brand-blue);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Right: date picker + filter button */
+.card-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Date picker pill  */
+.date-picker-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #f8f7ff 0%, #f0eeff 100%);
+    border: 1.5px solid #e4e0ff;
+    border-radius: 14px;
+    padding: 8px 16px;
     cursor: pointer;
     transition: all 0.25s;
 }
-
-.type-btn.retail-btn.active {
-    background: #0d6efd;
+.date-picker-pill:hover,
+.date-picker-pill:focus-within {
+    border-color: var(--brand-purple);
+    box-shadow: 0 4px 16px rgba(108,99,255,0.15);
+}
+.date-picker-pill .dp-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    border-color: #0d6efd;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.date-picker-pill label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--brand-purple);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: block;
+    margin: 0;
+    line-height: 1;
+    cursor: pointer;
+}
+.date-picker-pill input[type="date"] {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 0;
+    min-width: 120px;
 }
 
-.type-btn.corporate-btn.active {
-    background: #198754;
+/* Check-date button */
+.check-btn {
+    height: 48px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
     color: white;
-    border-color: #198754;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.28);
+}
+.check-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(108,99,255,0.38);
 }
 
+/* Filter button */
+.filter-btn {
+    height: 48px;
+    padding: 0 18px;
+    border: 1.5px solid #dce4f2;
+    border-radius: 14px;
+    background: #f0f4fc;
+    color: var(--brand-blue);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+    background: #e2ecf9;
+    border-color: #bcd1ee;
+}
+.filter-btn.active { color: var(--brand-purple); border-color: var(--brand-purple); }
+
+/* Result count badge */
+.result-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: #f3f4f8;
+    border-radius: 20px;
+    padding: 4px 12px;
+    white-space: nowrap;
+}
+
+/* ══════════════════════════
+   TABLE
+   ══════════════════════════ */
+.table-responsive { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* ── THEAD — transparent blue (matching header brand) ── */
+table thead th {
+    background: #f8fafc;
+    /* color: var(--th-color) !important; */
+    font-weight: 700;
+    font-size: 12px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 9px 16px !important;
+    border-bottom: 1px solid var(--th-border) !important;
+    border-top: none !important;
+    white-space: nowrap;
+    position: relative;
+}
+table thead tr:first-child th:first-child { border-radius: 0; }
+table thead tr:first-child th:last-child  { border-radius: 0; }
+
+/* ── TBODY ── */
+table tbody tr {
+    transition: background 0.15s;
+}
+table tbody tr:hover {
+    background: var(--row-hover);
+}
+table td {
+    padding: 7px 16px;
+    border-bottom: 1px solid #f0f2f6;
+    font-size: 13px;
+    color: var(--text-main);
+    vertical-align: middle;
+}
+table tbody tr:last-child td { border-bottom: none; }
+
+/* RPT code link style */
+td.reportcode.underline {
+    color: var(--brand-purple);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ── STATUS PILLS ── */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.status-pill.enabled  { background: var(--status-green-bg); color: var(--status-green-fg); }
+.status-pill.disabled { background: var(--status-red-bg);   color: var(--status-red-fg); }
+.status-pill.loading  { 
+	background: #f3f4f8;
+	color: var(--text-muted);
+	padding: 4px 9px;      /* Reduced padding from 5px 13px */
+    font-size: 12px;       /* Slightly smaller text */
+	}
+	
+.status-pill.loading .fa-spin {
+   font-size: 10px;       /* Makes the loading icon itself smaller */
+}
+.status-pill.error    { background: #fff5e6; color: #c87f0a; }
+
+/* ── ACTION BUTTON ── */
+.run-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: none;
+    background: linear-gradient(135deg, var(--brand-purple), #8b83ff);
+    color: white;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(108,99,255,0.28);
+    transition: all 0.2s;
+}
+.run-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(108,99,255,0.38);
+}
+
+/* ── th-content flex ── */
 .th-content {
     display: flex;
     align-items: center;
@@ -384,414 +342,513 @@ input:checked + .slider:before {
     gap: 8px;
 }
 
+/* ── FILTER ICON ── */
 .filter-icon {
     display: none !important;
     cursor: pointer;
-    color: #555;
-    padding: 4px;
+    color: var(--th-color);
+    padding: 3px 5px;
     border-radius: 4px;
-    font-size: 12px;
-    transition: background 0.15s ease;
+    font-size: 11px;
+    transition: background 0.15s;
 }
+.filter-icon:hover { background: rgba(108,99,255,0.15); }
+.filter-icon.has-filter { color: var(--brand-purple) !important; }
 
-.filter-icon:hover {
-    background-color: rgba(0,0,0,0.15);
-    color: #000;
-}
-
-.filter-icon.has-filter {
-    color: #0d6efd !important;
-    font-weight: bold;
-}
-
+/* ── COLUMN FILTER DROPDOWN ── */
 .filter-dropdown {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     background: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(26,29,53,0.14);
     padding: 10px;
     z-index: 1000;
     text-transform: none;
     font-weight: normal;
-    min-width: 190px;
+    min-width: 200px;
     max-height: 290px;
 }
-
-.dropdown-search-wrapper {
-    position: relative;
-    margin-bottom: 8px;
-}
-
+.dropdown-search-wrapper { position: relative; margin-bottom: 8px; }
 .dropdown-search-wrapper input {
     width: 100%;
     height: 30px;
     font-size: 12px;
-    padding: 4px 8px 4px 24px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 4px 8px 4px 26px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
     outline: none;
 }
-
-.dropdown-search-wrapper i {
-    position: absolute;
-    left: 8px;
-    top: 9px;
-    font-size: 11px;
-    color: #888;
-}
-
+.dropdown-search-wrapper i { position: absolute; left: 9px; top: 9px; font-size: 11px; color: #aaa; }
 .filter-dropdown label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    color: #333;
-    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 5px; font-size: 12px; cursor: pointer; color: #444; white-space: nowrap;
 }
-
-.filter-dropdown input[type="checkbox"] {
-    cursor: pointer;
-}
-
 .filter-dropdown-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #eee;
+    display: flex; justify-content: space-between;
+    margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;
 }
-
 .filter-dropdown-buttons button {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background: #f8f9fa;
-    cursor: pointer;
+    font-size: 11px; padding: 4px 10px; border-radius: 5px;
+    border: 1px solid #ddd; background: #f8f9fa; cursor: pointer;
 }
-
 .filter-dropdown-buttons .apply-btn {
-    background: #0d6efd;
-    color: white;
-    border-color: #0d6efd;
+    background: var(--brand-purple); color: white; border-color: var(--brand-purple);
 }
+.clear-btn:hover { background: #e9ecef; }
 
-/* RETAIL / CORPORATE SLIDER TOGGLE */
-.toggle-switch-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
 }
+.empty-state i { font-size: 42px; margin-bottom: 14px; color: #cdd0de; display: block; }
+.empty-state p { font-size: 14px; margin: 0; }
 
-.toggle-label {
-    font-size: 16px;
-    font-weight: 700;
-    color: #6c757d;
-    transition: color 0.3s;
+/* ── LOADER MODAL ── */
+#loader1.modal .modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 8px 32px rgba(26,29,53,0.18);
+    text-align: center;
+    padding: 36px 28px;
 }
-
-.toggle-label.retail-label.active {
-    color: #0d6efd;
-}
-
-.toggle-label.corporate-label.active {
-    color: #198754;
-}
-
-.toggle-track {
-    position: relative;
-    width: 60px;
-    height: 30px;
-    background: #dcdcdc;
-    border-radius: 34px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.toggle-track.retail-active {
-    background: #0d6efd;
-}
-
-.toggle-track.corporate-active {
-    background: #198754;
-}
-
-.toggle-knob {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 22px;
-    height: 22px;
-    background: white;
+#loader1.modal .modal-body { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.loader-spinner {
+    width: 52px; height: 52px;
+    border: 4px solid #e8e4ff;
+    border-top-color: var(--brand-purple);
     border-radius: 50%;
-    transition: transform 0.3s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    animation: spin 0.8s linear infinite;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.toggle-track.corporate-active .toggle-knob {
-    transform: translateX(30px);
+/* ── RESPONSIVE ── */
+@media (max-width: 991px) {
+    .card-header-strip { flex-direction: column; align-items: flex-start; }
+    .card-controls { width: 100%; }
+    .date-picker-pill { flex: 1; }
 }
-
 </style>
-</head>	
+</head>
 
 <body>
-<div th:insert="AccountStatementHeader :: header"></div>
+
+<!-- Sidebar injected from fragment -->
+	<div th:insert="AccountStatementHeader :: header"></div>
 
 <div class="main-wrapper" id="mainWrapper">
-
 <div class="page-container">
 
-    <!-- TOP HEADER -->
+    <!-- ══ UNIFIED CARD (header + table merged) ══ -->
+    <div class="report-card">
 
-    <div class="top-header">
-	    <div class="page-title">
-	       <i class="fa fa-bars"></i> 
-	    </div>
-	    
-	    <div class="search-filter-group">
-	       
-	        <button type="button" id="mainFilterBtn" class="filter-btn" onclick="toggleFilters()">
-	            <i class="fa fa-filter"></i> Filter
-	        </button>
-	    </div>
-	    
-	</div>
+        <!-- ── Card Header ── -->
+        <div class="card-header-strip">
 
-    <!-- rr_rpt-->
+            <!-- Left: icon + title -->
+            <div class="card-title-group">
+                <div class="card-icon"><i class="fa fa-bar-chart"></i></div>
+                <div>
+                    <p class="card-title" th:text="${menu != null ? menu : 'BRF Reports'}">Monthly 1 - BRF Report</p>
+                </div>
+            </div>
 
-    <div class="Report_data">
+            <!-- Right: date picker + check + filter -->
+            <div class="card-controls">
 
-        
+                <!-- Date picker -->
+                <form method="POST" th:action="@{/monthly1}" style="margin:0;display:flex;align-items:center;gap:10px;">
+                    <div class="date-picker-pill">
+                        <div class="dp-icon"><i class="fa fa-calendar"></i></div>
+                        <div>
+                            <label for="dateinput">Report Date</label>
+                            <input type="date" id="dateinput" name="report_date"
+                                   th:value="${reportDate != null ? #dates.format(reportDate,'yyyy-MM-dd') : ''}"
+                                   onchange="this.form.submit(); checkdate();">
+                        </div>
+                    </div>
+                    <button type="submit" class="check-btn">
+                        <i class="fa fa-search"></i> Check Status
+                    </button>
+                </form>
 
-        <div class="table-responsive">
+                <!-- Filter toggle -->
+                <button type="button" id="mainFilterBtn" class="filter-btn" onclick="toggleFilters()">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
 
-            <table class=" align-middle" id="customerTable">
-
-                <thead>
-
-                    <tr>
-					    <th style="position:relative;"><div class="th-content">Report Code<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,0)"></i><div class="filter-dropdown"></div></div></th>
-					    <th style="position:relative;"><div class="th-content">Report Name<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,1)"></i><div class="filter-dropdown"></div></div></th>
-					    <th style="position:relative;"><div class="th-content">Start Date<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,2)"></i><div class="filter-dropdown"></div></div></th>
-					    <th style="position:relative;"><div class="th-content">End Date<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,3)"></i><div class="filter-dropdown"></div></div></th>
-					    <th style="position:relative;"><div class="th-content">Status<i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,4)"></i><div class="filter-dropdown"></div></div></th>
-					    <th>Action</th>
-					</tr>
-
-                </thead>
-
-					<tbody>
-
-
-													<tr th:if="${COUNT} == '0'">
-														<td colspan="9" style="text-align: center; color: red">No
-															Data Found</td>
-													</tr>
-													<tr th:each="userProfile : ${reportlist}"
-					th:attr="data-cust_id=${userProfile.srl_no}"
-					th:id="${userProfile.srl_no}" class="userlist">
-
-					<td class="reportcode"
-						th:attr="data-rptcode=${userProfile.rpt_code},data-fromdate=${#dates.format(userProfile.start_date, 'dd/MM/yyyy')},data-todate=${#dates.format(userProfile.end_date, 'dd/MM/yyyy')}"
-						th:text="${userProfile.rpt_code}"></td>
-
-					<td th:text="${userProfile.rpt_description}"></td>
-					<td th:text="${#dates.format(userProfile.start_date, 'dd/MM/yyyy')}"></td>
-					<td th:text="${#dates.format(userProfile.end_date, 'dd/MM/yyyy')}"></td>
-
-					<!-- Add an empty status column with rpt_code as data attr -->
-					<td class="rpt-status" th:attr="data-rptcode=${userProfile.rpt_code}">Loading...</td>
-					
-					<td> <i class="fas fa-play-circle" th:attr="data-srl_no=${userProfile.srl_no}" th:onclick="executeprocedurePerRow(this);" style="cursor:pointer"></i> </td>
-													
-													
-				</tr>
-
-
-												</tbody>
-
-            </table>
-
+            </div>
         </div>
-                
 
-    </div>
-    </div>
+        <!-- ── Table ── -->
+        <div class="table-responsive">
+            <table id="customerTable">
+                <thead>
+                    <tr>
+                        <th style="position:relative;">
+                            <div class="th-content">Report Code
+                                <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,0)"></i>
+                                <div class="filter-dropdown"></div>
+                            </div>
+                        </th>
+                        <th style="position:relative;">
+                            <div class="th-content">Report Name
+                                <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,1)"></i>
+                                <div class="filter-dropdown"></div>
+                            </div>
+                        </th>
+                        <th style="position:relative;">
+                            <div class="th-content">Start Date
+                                <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,2)"></i>
+                                <div class="filter-dropdown"></div>
+                            </div>
+                        </th>
+                        <th style="position:relative;">
+                            <div class="th-content">End Date
+                                <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,3)"></i>
+                                <div class="filter-dropdown"></div>
+                            </div>
+                        </th>
+                       <th style="position:relative; text-align: center;">
+					    <div class="th-content" style="justify-content: center;">Status
+					        <i class="fa fa-filter filter-icon" onclick="toggleDropdown(event,4)"></i>
+					        <div class="filter-dropdown"></div>
+					    </div>
+					</th>
+					<th style="text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- No data row -->
+                    <tr th:if="${COUNT} == '0'">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fa fa-inbox"></i>
+                                <p>No data found for the selected date.</p>
+                            </div>
+                        </td>
+                    </tr>
 
+                    <!-- Data rows -->
+                    <tr th:each="userProfile : ${reportlist}"
+                        th:attr="data-cust_id=${userProfile.srl_no}"
+                        th:id="${userProfile.srl_no}"
+                        class="userlist">
+
+                        <td class="reportcode underline"
+                            th:attr="data-rptcode=${userProfile.rpt_code},
+                                     data-fromdate=${#dates.format(userProfile.start_date,'dd/MM/yyyy')},
+                                     data-todate=${#dates.format(userProfile.end_date,'dd/MM/yyyy')}"
+                            onclick="getVali(this)"
+                            th:text="${userProfile.rpt_code}">
+                        </td>
+
+                        <td th:text="${userProfile.rpt_description}"></td>
+                        <td th:text="${#dates.format(userProfile.start_date,'dd/MM/yyyy')}"></td>
+                        <td th:text="${#dates.format(userProfile.end_date,'dd/MM/yyyy')}"></td>
+
+                        <!-- Status — populated by checkdate() via fetch -->
+                       <td class="rpt-status" style="text-align:center">
+
+						    <span th:if="${userProfile.domain == 'Y'}"
+						          class="status-pill enabled">
+						        <i class="fa fa-check-circle"></i> Enabled
+						    </span>
+						
+						    <span th:if="${userProfile.domain != 'Y'}"
+						          class="status-pill disabled">
+						        <i class="fa fa-times-circle"></i> Disabled
+						    </span>
+						
+						</td>
+
+                        <!-- Run action -->
+                        <td style="text-align: center;">
+					    <button class="run-btn"
+					            th:attr="data-srl_no=${userProfile.srl_no}"
+					            onclick="executeprocedurePerRow(this)"
+					            title="Execute Report">
+					        <i class="fa fa-play"></i>
+					    </button>
+					</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!-- /table-responsive -->
+
+    </div><!-- /report-card -->
+
+</div><!-- /page-container -->
+</div><!-- /main-wrapper -->
+
+<!-- Loader Modal -->
+<div class="modal fade" id="loader1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="loader-spinner"></div>
+                <div>
+                    <p style="font-weight:700;color:#1a1b2e;margin:0;font-size:15px;">Processing Report</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script>
+/* ── Column filter state ── */
+var activeFilters = {};
 
 function toggleDropdown(event, colIndex) {
-	
     event.stopPropagation();
-
-    document.querySelectorAll(".filter-dropdown").forEach(div => {
-        if (div !== event.target.nextElementSibling) div.style.display = "none";
+    document.querySelectorAll('.filter-dropdown').forEach(div => {
+        if (div !== event.target.nextElementSibling) div.style.display = 'none';
     });
-
     const dropdown = event.target.nextElementSibling;
-    if (dropdown.style.display === "block") { dropdown.style.display = "none"; return; }
+    if (dropdown.style.display === 'block') { dropdown.style.display = 'none'; return; }
 
-    const rows = document.querySelector('#customerTable tbody').getElementsByTagName("tr");
+    const rows = document.querySelector('#customerTable tbody').getElementsByTagName('tr');
     let uniqueValues = new Set();
     for (let i = 0; i < rows.length; i++) {
-        let td = rows[i].getElementsByTagName("td")[colIndex];
+        let td = rows[i].getElementsByTagName('td')[colIndex];
         if (td) uniqueValues.add((td.textContent || td.innerText).trim());
     }
 
-    const totalCount   = uniqueValues.size;
-    const checkedCount = Array.from(uniqueValues).filter(val =>
-        !activeFilters[colIndex] || activeFilters[colIndex].includes(val)
-    ).length;
-    const isAllChecked = totalCount === checkedCount;
-
-    let html = `
-        <div class="dropdown-search-wrapper" onclick="event.stopPropagation()">
-            <i class="fa fa-search"></i>
-            <input type="text" placeholder="Search..." onkeyup="filterDropdownList(this)">
-        </div>
-        <div class="checkbox-container" style="max-height:150px; overflow-y:auto;">
-            <label class="dropdown-item-label master-select-label" style="font-weight:600;border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:6px;">
-                <input type="checkbox" class="select-all-cb" ${isAllChecked ? 'checked' : ''} onchange="toggleSelectAllDropdown(this)">
-                <span>(Select All)</span>
-            </label>`;
-
+    const isAllChecked = !activeFilters[colIndex] || activeFilters[colIndex].length === uniqueValues.size;
+    let html = `<div class="dropdown-search-wrapper" onclick="event.stopPropagation()">
+        <i class="fa fa-search"></i>
+        <input type="text" placeholder="Search…" onkeyup="filterDropdownList(this)">
+    </div>
+    <div class="checkbox-container" style="max-height:150px;overflow-y:auto;">
+        <label class="dropdown-item-label" style="font-weight:700;border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:6px;">
+            <input type="checkbox" class="select-all-cb" ${isAllChecked ? 'checked' : ''} onchange="toggleSelectAllDropdown(this)">
+            <span>(Select All)</span>
+        </label>`;
     uniqueValues.forEach(val => {
         const isChecked = !activeFilters[colIndex] || activeFilters[colIndex].includes(val);
-        html += `<label class="dropdown-item-label">
-                    <input type="checkbox" class="item-cb" value="${val}" ${isChecked ? 'checked' : ''} data-col="${colIndex}" onchange="handleItemCheckboxChange(this)">
-                    <span>${val || '(Blank)'}</span>
-                 </label>`;
+        html += `<label><input type="checkbox" class="item-cb" value="${val}" ${isChecked ? 'checked' : ''} data-col="${colIndex}" onchange="handleItemCheckboxChange(this)"><span>${val || '(Blank)'}</span></label>`;
     });
-
-    html += `</div>
-        <div class="filter-dropdown-buttons" onclick="event.stopPropagation()">
-            <button class="clear-btn" onclick="clearColumnFilter(event,${colIndex})">Reset</button>
-            <button class="apply-btn" onclick="applyColumnFilter(event,${colIndex})">OK</button>
-        </div>`;
-
+    html += `</div><div class="filter-dropdown-buttons" onclick="event.stopPropagation()">
+        <button class="clear-btn" onclick="clearColumnFilter(event,${colIndex})">Reset</button>
+        <button class="apply-btn"  onclick="applyColumnFilter(event,${colIndex})">OK</button>
+    </div>`;
     dropdown.innerHTML = html;
-    dropdown.style.display = "block";
+    dropdown.style.display = 'block';
+}
+
+function filterDropdownList(input) {
+    const term = input.value.toLowerCase();
+    input.closest('.filter-dropdown').querySelectorAll('label:not(.master-select-label)').forEach(lbl => {
+        lbl.style.display = lbl.textContent.toLowerCase().includes(term) ? '' : 'none';
+    });
+}
+
+function toggleSelectAllDropdown(cb) {
+    cb.closest('.filter-dropdown').querySelectorAll('.item-cb').forEach(c => c.checked = cb.checked);
+}
+
+function handleItemCheckboxChange(cb) {
+    const dd = cb.closest('.filter-dropdown');
+    const all = dd.querySelectorAll('.item-cb');
+    const checked = dd.querySelectorAll('.item-cb:checked');
+    dd.querySelector('.select-all-cb').checked = all.length === checked.length;
+}
+
+function applyColumnFilter(event, colIndex) {
+    event.stopPropagation();
+    const dd = event.target.closest('.filter-dropdown');
+    const checked = Array.from(dd.querySelectorAll('.item-cb:checked')).map(c => c.value);
+    activeFilters[colIndex] = checked;
+    const icon = dd.previousElementSibling;
+    if (icon) icon.classList.toggle('has-filter', checked.length > 0);
+    applyAllFilters();
+    dd.style.display = 'none';
+}
+
+function clearColumnFilter(event, colIndex) {
+    event.stopPropagation();
+    delete activeFilters[colIndex];
+    const dd = event.target.closest('.filter-dropdown');
+    dd.querySelectorAll('.item-cb, .select-all-cb').forEach(c => c.checked = true);
+    const icon = dd.previousElementSibling;
+    if (icon) icon.classList.remove('has-filter');
+    applyAllFilters();
+}
+
+function clearAllFilters() {
+    activeFilters = {};
+    document.querySelectorAll('.filter-icon').forEach(i => i.classList.remove('has-filter'));
+    applyAllFilters();
+}
+
+function applyAllFilters() {
+    const rows = document.querySelectorAll('#customerTable tbody tr.userlist');
+    rows.forEach(row => {
+        let show = true;
+        Object.keys(activeFilters).forEach(col => {
+            const td = row.getElementsByTagName('td')[col];
+            if (td) {
+                const val = (td.textContent || td.innerText).trim();
+                if (!activeFilters[col].includes(val)) show = false;
+            }
+        });
+        row.style.display = show ? '' : 'none';
+    });
 }
 
 function toggleFilters() {
-    const mainBtn = document.getElementById("mainFilterBtn");
-    const icons   = document.querySelectorAll(".filter-icon");
-
-    mainBtn.classList.toggle("active");
-
-    icons.forEach(icon => {
-        if (mainBtn.classList.contains("active")) {
-            icon.style.setProperty("display", "inline-block", "important");
-        } else {
-            icon.style.setProperty("display", "none", "important");
-            const dd = icon.nextElementSibling;
-            if (dd) dd.style.display = "none";
-        }
+    const btn = document.getElementById('mainFilterBtn');
+    btn.classList.toggle('active');
+    const active = btn.classList.contains('active');
+    document.querySelectorAll('.filter-icon').forEach(icon => {
+        icon.style.setProperty('display', active ? 'inline-block' : 'none', 'important');
+        if (!active) { const dd = icon.nextElementSibling; if (dd) dd.style.display = 'none'; }
     });
+    if (!active) clearAllFilters();
+}
 
-    if (!mainBtn.classList.contains("active")) {
-        clearAllFilters();
+/* ── Execute procedure per row ── */
+function executeprocedurePerRow(btn) {
+    if (!window.location.pathname.includes('monthly1')) {
+        alert('Currently only available for Monthly 1');
+        return;
     }
-}
-
-function executeprocedurePerRow(a){
- 
- if (window.location.pathname.includes("monthly1")) {			
- const selectedDate = document.getElementById("dateinput").value;
- 
- var srl_no = a.getAttribute("data-srl_no");
-    
-    const generateBtn = this;
-    const originalText = generateBtn.innerText;
-    generateBtn.disabled = true;
-    generateBtn.innerText = 'Generating...';
-    //alert(srl_no);
-
+    const selectedDate = document.getElementById('dateinput').value;
+    if (!selectedDate) { alert('Please select a report date first.'); return; }
+    const srl_no = btn.getAttribute('data-srl_no');
+    btn.disabled = true;
+    const origHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
     $('#loader1').modal('show');
-    fetch(`./executeProcedure?reportDate=${encodeURIComponent(selectedDate)}&srl_no=${srl_no}`, {
-        method: 'POST'
-    })
-    .then(response => {
-        if (!response.ok) {
-        	 $('#loader1').modal('hide');
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); 
-    })
-    .then(data => {
-    	 $('#loader1').modal('hide');
-        alert('Procedure executed successfully!');	 
-        window.location.reload();
-    })
-    .catch(error => {
-    	 $('#loader1').modal('hide');
-        console.error('Error executing procedure:', error);
-        alert('Failed to execute procedure. Please try again.');
-    })
-    .finally(() => {
-    	 $('#loader1').modal('hide');
-        generateBtn.disabled = false;
-        generateBtn.innerText = originalText;
-    });
- }
- else{
-	 alert("Currently only available for Monthly 1 ")
- }
+
+    fetch(`./executeProcedure?reportDate=${encodeURIComponent(selectedDate)}&srl_no=${srl_no}`, { method: 'POST' })
+        .then(r => { if (!r.ok) throw new Error('Network error'); return r.json(); })
+        .then(() => { $('#loader1').modal('hide'); alert('Procedure executed successfully!'); window.location.reload(); })
+        .catch(err => { $('#loader1').modal('hide'); console.error(err); alert('Failed to execute procedure. Please try again.'); })
+        .finally(() => { btn.disabled = false; btn.innerHTML = origHTML; });
 }
 
-function checkdate() {
-	 const selectedDate = document.getElementById("dateinput").value;
-	 //alert(selectedDate);
-    const statusCells = document.querySelectorAll(".rpt-status");
+/* ── Check status for all rows by date ── */
+/* function checkdate() {
 
-    statusCells.forEach(cell => {
-        const rptCode = cell.getAttribute("data-rptcode");
+    const selectedDate = document.getElementById('dateinput').value;
 
-        fetch('./checkDomainFlagwithdate?rptcode=' + rptCode + '&date=' + selectedDate )
+    if (!selectedDate) {
+        return;
+    }
+
+    document.querySelectorAll('.rpt-status').forEach(cell => {
+
+        const rptCode = cell.getAttribute('data-rptcode');
+
+        cell.innerHTML =
+            '<span class="status-pill loading">' +
+            '<i class="fa fa-circle-o-notch fa-spin"></i> Checking' +
+            '</span>';
+
+        fetch('./checkDomainFlagwithdate?rptcode=' + rptCode + '&date=' + selectedDate)
             .then(response => response.text())
             .then(result => {
 
-                let tdElement = cell.closest('tr').querySelector(".reportcode");
-                if (result === 'ENABLED') {
-                    cell.textContent = 'Enabled';
-                    cell.style.color = 'green';
-                    
-                    tdElement.classList.add("underline");
-                    tdElement.setAttribute("onclick", "getVali(this);");
-                    tdElement.style.cursor = "pointer";
-                    
-                    
-                } else if (result === 'DISABLED') {
-                    cell.textContent = 'Disabled';
-                    cell.style.color = 'red';
-                    $('#generatebtn').show();
+                const codeCell = cell.closest('tr').querySelector('.reportcode');
 
-                    tdElement.classList.remove("underline");
-                    tdElement.removeAttribute("onclick");
-                    tdElement.style.cursor = "default"; 
-                    
+                if (result === 'ENABLED') {
+
+                    cell.innerHTML =
+                        '<span class="status-pill enabled">' +
+                        '<i class="fa fa-check-circle"></i> Enabled' +
+                        '</span>';
+
+                    codeCell.classList.add('underline');
+//                     codeCell.setAttribute('onclick', 'getVali(this)');
+                    codeCell.style.cursor = 'pointer';
+
+                } else if (result === 'DISABLED') {
+
+                    cell.innerHTML =
+                        '<span class="status-pill disabled">' +
+                        '<i class="fa fa-times-circle"></i> Disabled' +
+                        '</span>';
+
+                    codeCell.classList.remove('underline');
+//                     codeCell.removeAttribute('onclick');
+                    codeCell.style.cursor = 'default';
+
                 } else {
-                    cell.textContent = 'Unknown';
-                    cell.style.color = 'gray';
+
+                    cell.innerHTML =
+                        '<span class="status-pill loading">' +
+                        '<i class="fa fa-question-circle"></i> Unknown' +
+                        '</span>';
                 }
             })
             .catch(error => {
-                console.error('Error fetching status for', rptCode, error);
-                cell.textContent = 'Error';
-                cell.style.color = 'orange';
+
+                console.error(error);
+
+                cell.innerHTML =
+                    '<span class="status-pill error">' +
+                    '<i class="fa fa-exclamation-triangle"></i> Error' +
+                    '</span>';
             });
     });
-    
-}
+} */
 
+function getVali(ele) {
+
+    var reportid = ele.getAttribute("data-rptcode");
+    var todate = ele.getAttribute("data-todate");
+
+    $('#loader1').modal('show');
+
+    fetch('./checkDomainFlag?rptcode=' + reportid)
+        .then(response => response.text())
+        .then(result => {
+
+            $('#loader1').modal('hide');
+
+            if (result === 'ENABLED') {
+
+                window.location.href =
+                    './BRFValidations?rptcode=' +
+                    encodeURIComponent(reportid) +
+                    '&todate=' +
+                    encodeURIComponent(todate);
+
+            } else if (result === 'DISABLED') {
+
+                alert('This report is disabled.');
+
+            } else {
+
+                alert('Report not found.');
+            }
+        })
+        .catch(error => {
+
+            console.error('Error checking domain flag:', error);
+
+            $('#loader1').modal('hide');
+
+            alert('An error occurred while checking report status.');
+        });
+}
+/* Run initial status verification on document ready */
+// document.addEventListener("DOMContentLoaded", function () {
+//     if (window.location.pathname.includes("monthly1")) {
+//         checkdate();
+//     }
+// });
+
+/* Close dropdowns on outside click */
+document.addEventListener('click', () => {
+    document.querySelectorAll('.filter-dropdown').forEach(d => d.style.display = 'none');
+});
 </script>
 </body>
 </html>

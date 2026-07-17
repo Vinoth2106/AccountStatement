@@ -1,7 +1,13 @@
 package com.bornfire.AccountStatement.controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,27 +24,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.bornfire.AccountStatement.entities.AccountDTO;
 import com.bornfire.AccountStatement.entities.AuditServicesEntity;
@@ -56,10 +74,19 @@ import com.bornfire.AccountStatement.entities.UserAuditRepo;
 import com.bornfire.AccountStatement.entities.TransactionInquiry;
 import com.bornfire.AccountStatement.entities.TransactionInquiryRep;
 import com.bornfire.AccountStatement.services.ScheduleStatementService;
+import com.bornfire.AccountStatement.services.RegulatoryReportServices;
+import com.bornfire.AccountStatement.services.ReportServices;
+import com.bornfire.AccountStatement.services.BRF001ReportService;
+import com.bornfire.AccountStatement.services.BRF_DetailExcel_Service;
+import com.bornfire.AccountStatement.services.CalculationService;
+import com.bornfire.AccountStatement.services.Exceltopdfservice;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.sf.jasperreports.engine.JRException;
+
 import com.bornfire.AccountStatement.entities.Service_audit_table_Rep;
 import com.bornfire.AccountStatement.entities.Service_audit_table_entity;
 
@@ -86,6 +113,36 @@ public class NavigationController {
 
 	@Autowired
 	RRReportRepo rrReportlist;
+	
+	@Autowired
+	ReportServices reportServices;
+	
+	@Autowired
+	RegulatoryReportServices regreportServices;
+	
+	@Autowired
+	BRF001ReportService BRF001ReportService;
+	
+	@Autowired
+	BRF_DetailExcel_Service brf_DetailExcel_Service;
+	
+	@Autowired
+	Exceltopdfservice exceltopdfservice;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	private static final Logger logger = LoggerFactory.getLogger(NavigationController.class);
+	
+	private String pagesize;
+
+	public String getPagesize() {
+		return pagesize;
+	}
+
+	public void setPagesize(String pagesize) {
+		this.pagesize = pagesize;
+	}
 	
 	@RequestMapping(value = "Dashboard", method = { RequestMethod.GET, RequestMethod.POST })
 	public String dashboard(@RequestParam(name = "frequency", required = false) String frequency, Model md,
@@ -645,21 +702,31 @@ public class NavigationController {
 		// md.addAttribute("reportvalue", "RBS Reports");
 		// md.addAttribute("reportid", "RBSReports");
 
-		String domainid = (String) req.getSession().getAttribute("DOMAINID");
+//		String domainid = (String) req.getSession().getAttribute("DOMAINID");
 		// md.addAttribute("reportsflag", "reportsflag");
+		
+		 String sql = "SELECT * FROM RR_RPT_MAST t " +
+                 "WHERE t.REMARKS_5 = 'M1' " +
+                 "AND t.END_DATE = ( " +
+                 "  SELECT MAX(t2.END_DATE) FROM RR_RPT_MAST t2 " +
+                 "  WHERE t2.RPT_CODE = t.RPT_CODE AND t2.REMARKS_5 = 'M1' " +
+                 ") ORDER BY t.RPT_CODE";
+
+        List<Map<String, Object>> reportList = jdbcTemplate.queryForList(sql);	
+		
 		md.addAttribute("menu", "Monthly 1 - BRF Report");
-		md.addAttribute("reportlist", rrReportlist.findReportsByRemarks("M1"));
+		md.addAttribute("reportlist", reportList);
 
 		// md.addAttribute("reportlist", rrReportlist.getReportList());
 		//md.addAttribute("reportlist", rrReportlist.getReportListmonthly1());//all list of M1
 		//md.addAttribute("reportlist", rrReportlist.findReportsByRemarks("M1"));
 
-		if(report_date!=null && !report_date.equals(null)) {
-			System.out.println("report_date"+report_date);
-			md.addAttribute("reportlist", rrReportlist.findDataByDate(report_date,"M1"));
-			//md.addAttribute("reportlist", rrReportlist.findDataMissing(report_date))//missing data for this date
-			md.addAttribute("reportDate", report_date);
-		}
+//		if(report_date!=null && !report_date.equals(null)) {
+//			System.out.println("report_date"+report_date);
+//			md.addAttribute("reportlist", rrReportlist.findDataByDate(report_date,"M1"));
+//			//md.addAttribute("reportlist", rrReportlist.findDataMissing(report_date))//missing data for this date
+//			md.addAttribute("reportDate", report_date);
+//		}
 		
 		return "BRF/RRReports";
 	}
@@ -678,6 +745,427 @@ public class NavigationController {
 			}
 		}
 		return ResponseEntity.ok("DISABLED");
+	}
+	
+	@GetMapping("/checkDomainFlag")
+	@ResponseBody
+	public ResponseEntity<String> checkDomainFlag(@RequestParam String rptcode) {
+		
+		String sql = "SELECT * FROM RR_RPT_MAST WHERE RPT_CODE = ?";
+		
+		List<Map<String, Object>> report = jdbcTemplate.queryForList(sql, rptcode);
+		
+		if (report != null && !report.isEmpty()) {
+	        for (Map<String, Object> each : report) {
+	            // Extracts the DOMAIN column value from the map
+	            String domain = (String) each.get("DOMAIN");
+	            
+	            if ("Y".equalsIgnoreCase(domain)) {
+	                return ResponseEntity.ok("ENABLED");
+	            }
+	        }
+	        return ResponseEntity.ok("DISABLED");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NOT_FOUND");
+	    }
+		
+	}
+	
+	@Autowired
+	CalculationService CalculationService;
+	
+	@RequestMapping(value = "BRFValidations", method = { RequestMethod.GET, RequestMethod.POST })
+	public String BRFValidations(Model md, @RequestParam(value = "rptcode", required = false) String rptcode,
+			@RequestParam(value = "todate", required = false) String todate, HttpServletRequest req) {
+		String roleId = (String) req.getSession().getAttribute("ROLEID");
+		System.out.println("role id issssssssssssssssssssssssssss" + roleId);
+
+		// md.addAttribute("reportvalue", "RBS Reports");
+		// md.addAttribute("reportid", "RBSReports");
+
+		String domainid = (String) req.getSession().getAttribute("DOMAINID");
+		// md.addAttribute("reportsflag", "reportsflag");
+		// md.addAttribute("menu", "RBS Data Maintenance");
+
+		System.out.println("Report Date : "+todate);
+		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+		LocalDate parsedDate = LocalDate.parse(todate, inputFormatter);
+		String formattedDate = parsedDate.format(dateFormatter);
+		System.out.println("Report_Date Formatted Date : " + formattedDate);
+		
+		//md.addAttribute("reportlist", brfValidationsRepo.getValidationList(rptcode));
+		String sql1 = "SELECT * FROM RR_RPT_MAST WHERE rpt_code = ? AND end_date = ?";
+		Map<String, Object> report = jdbcTemplate.queryForMap(sql1, rptcode, formattedDate);
+
+		md.addAttribute("reportlist1", report);
+		//md.addAttribute("reportlist1", rrReportlist.getReportbyrptcode(rptcode));
+		md.addAttribute("RoleId", roleId);
+
+		md.addAttribute("rpt_date", todate);
+		md.addAttribute("rptcode", rptcode);
+		
+		String sql = "SELECT * FROM BBRF_REPORT_VALIDATION_TABLE WHERE rpt_code = ? ORDER BY srl_no";
+
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, rptcode);
+		
+		for (Map<String, Object> row : list) {
+
+		    String srcFormula = (String) row.get("SRC_FORMULA");
+		    String destFormula = (String) row.get("DEST_FORMULA");
+
+		    if (srcFormula != null && destFormula != null) {
+
+		        BigDecimal srcValue =
+		                CalculationService.calculate(srcFormula, formattedDate);
+
+		        BigDecimal destValue =
+		                CalculationService.calculate(destFormula, formattedDate);
+
+		        if (srcValue.compareTo(destValue) == 0) {
+		            row.put("CUR_STATUS", "Y");
+		        } else {
+		            row.put("CUR_STATUS", "N");
+		        }
+		    }
+		}
+		md.addAttribute("reportlist",list);
+		return "BRF/BRFValidations";
+	}
+	
+	DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+	
+	List<String> pageSizes = Arrays.asList("A2", "A3", "A4");
+	
+	@RequestMapping(value = "Reports/{reportid}", method = RequestMethod.POST)
+	public ModelAndView reportView(@PathVariable("reportid") String reportid,
+			@RequestParam(value = "function", required = false) String function,
+			@RequestParam("asondate") String asondate, @RequestParam(required = false) String fromdate,
+			@RequestParam("todate") String todate, @RequestParam(value = "currency", required = false) String currency,
+			@RequestParam(value = "subreportid", required = false) String subreportid,
+			@RequestParam(value = "secid", required = false) String secid,
+			@RequestParam(value = "dtltype", required = false) String dtltype,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "page", required = false) Optional<Integer> page,
+			@RequestParam(value = "size", required = false) Optional<Integer> size,
+			@RequestParam(value = "reportingTime", required = false) String reportingTime, Model md,
+			HttpServletRequest req, BigDecimal srl_no) {
+
+		String userid = (String) req.getSession().getAttribute("USERID");
+		String roleid = (String) req.getSession().getAttribute("ROLEID");
+		String accesscode = (String) req.getSession().getAttribute("ACCESSCODE");
+		// Logging Navigation
+		if (dtltype.equals("report")) {
+			md.addAttribute("menu", "XBRLReports");
+			/*
+			 * loginServices.SessionLogging("REPORTS" + reportid, "M8",
+			 * req.getSession().getId(), userid, req.getRemoteAddr(), "ACTIVE");
+			 */
+		} else {
+			md.addAttribute("menu", "XBRLArchives");
+			/*
+			 * loginServices.SessionLogging("ARCHREPORTS" + reportid, "M9",
+			 * req.getSession().getId(), userid, req.getRemoteAddr(), "ACTIVE");
+			 */
+		}
+
+		logger.info("Get Report :" + reportid);
+		logger.info("Get Report :" + asondate);
+		try {
+			asondate = dateFormat.format(new SimpleDateFormat("dd/MM/yyyy").parse(asondate));
+			fromdate = dateFormat.format(new SimpleDateFormat("dd/MM/yyyy").parse(fromdate));
+			todate = dateFormat.format(new SimpleDateFormat("dd/MM/yyyy").parse(todate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		logger.info("Get Report :" + asondate);
+		int currentPage = page.orElse(0);
+		int pageSize = size.orElse(Integer.parseInt(pagesize));
+
+		logger.info("Assigning Model Attributes :" + reportid);
+		// Assigning required Modal Attributes
+		md.addAttribute("UserId", userid);
+		md.addAttribute("RoleId", roleid);
+		md.addAttribute("UserCol", accesscode);
+
+		md.addAttribute("reportid", reportid);
+		md.addAttribute("asondate", asondate);
+		md.addAttribute("fromdate", fromdate);
+		md.addAttribute("todate", todate);
+		md.addAttribute("currency", currency);
+		md.addAttribute("dtltype", dtltype);
+		md.addAttribute("type", type);
+		md.addAttribute("reportingTime", reportingTime);
+		md.addAttribute("reportTitle", reportServices.getReportName(reportid));
+
+		logger.info("Getting ModelandView :" + reportid);
+		ModelAndView mv = new ModelAndView();
+		System.out.println("tttttttttttttt" + userid);
+
+		mv = regreportServices.getReportView(reportid, asondate, fromdate, todate, currency, dtltype, subreportid,
+				secid, reportingTime, PageRequest.of(currentPage, pageSize), srl_no, userid);
+
+		// System.out.println("----------------------");
+
+		// Page<Object> sup0700RepPage = (Page<Object>)
+		// mv.getModelMap().get("reportsummary");
+
+		// sup0700RepPage.getContent().forEach((a)-> System.out.println(a.toString()));
+		mv.addObject("pageSizes", pageSizes);
+		
+		return mv;
+
+	}
+	
+	@RequestMapping(value = "Reports/{reportid}/Summary", method = RequestMethod.GET)
+	public ModelAndView reportSummay(@PathVariable("reportid") String reportid,
+			@RequestParam("asondate") String asondate, @RequestParam("fromdate") String fromdate,
+			@RequestParam("todate") String todate, @RequestParam("currency") String currency,
+			@RequestParam(value = "subreportid", required = false) String subreportid,
+			@RequestParam(value = "secid", required = false) String secid,
+			@RequestParam(value = "dtltype", required = false) String dtltype,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "page", required = false) Optional<Integer> page,
+			@RequestParam(value = "size", required = false) Optional<Integer> size,
+			@RequestParam(value = "reportingTime", required = false) String reportingTime, Model md, BigDecimal srl_no,
+			HttpServletRequest req) {
+
+		logger.info("Getting Report Summary :" + reportid);
+
+		int currentPage = page.orElse(0);
+		int pageSize = size.orElse(Integer.parseInt(pagesize));
+
+		logger.info("Assigning Model Attributes :" + reportid);
+		md.addAttribute("menu", "XBRLReports");
+		md.addAttribute("reportid", reportid);
+		md.addAttribute("asondate", asondate);
+		md.addAttribute("fromdate", fromdate);
+		md.addAttribute("todate", todate);
+		md.addAttribute("type", type);
+		md.addAttribute("currency", currency);
+		md.addAttribute("reportingTime", reportingTime);
+		md.addAttribute("dtltype", dtltype);
+		md.addAttribute("reportTitle", reportServices.getReportName(reportid));
+		md.addAttribute("reportingTime", reportingTime);
+		md.addAttribute("displaymode", "summary");
+
+		String roleId = (String) req.getSession().getAttribute("ROLEID");
+		System.out.println("role id issssssssssssssssssssssssssss" + roleId);
+		md.addAttribute("operation", roleId);
+
+		logger.info("Getting ModelandView :" + reportid);
+		ModelAndView mv = regreportServices.getReportView(reportid, asondate, fromdate, todate, currency, dtltype,
+				subreportid, secid, reportingTime, PageRequest.of(currentPage, pageSize), srl_no, roleId);
+		
+		mv.addObject("pageSizes", pageSizes);
+
+		return mv;
+
+	}
+	
+	
+	@RequestMapping(value = "Reports/{reportid}/Details", method = RequestMethod.GET)
+	public ModelAndView reportDetail(@PathVariable("reportid") String reportid,
+			@RequestParam(value = "instancecode", required = false) String instancecode,
+			@RequestParam(value = "filter", required = false) String filter, @RequestParam("asondate") String asondate,
+			@RequestParam("fromdate") String fromdate, @RequestParam("todate") String todate,
+			@RequestParam("currency") String currency,
+			@RequestParam(value = "subreportid", required = false) String subreportid,
+			@RequestParam(value = "secid", required = false) String secid,
+			@RequestParam(value = "dtltype", required = false) String dtltype,
+			@RequestParam(value = "page", required = false) Optional<Integer> page,
+			@RequestParam(value = "size", required = false) Optional<Integer> size,
+			@RequestParam(value = "reportingTime", required = false) String reportingTime,@RequestParam(value = "searchVal", required = false) String searchVal, Model md) {
+
+		logger.info("Getting Report Details :" + reportid);
+		logger.info("Assigning Model Attributes :" + reportid);
+
+		md.addAttribute("menu", "XBRLReports");
+		md.addAttribute("reportid", reportid);
+		md.addAttribute("asondate", asondate);
+		md.addAttribute("fromdate", fromdate);
+		md.addAttribute("todate", todate);
+		md.addAttribute("filter", filter);
+		md.addAttribute("currency", currency);
+		md.addAttribute("dtltype", dtltype);
+		md.addAttribute("reportingTime", reportingTime);
+		// md.addAttribute("instancecode", Integer.parseInt(instancecode));
+		md.addAttribute("reportTitle", reportServices.getReportName(reportid));
+		md.addAttribute("displaymode", "detail");
+
+		int currentPage = page.orElse(0);
+		int pageSize = size.orElse(100);
+
+		logger.info("Getting ModelandView :" + reportid);
+		ModelAndView mv = regreportServices.getReportDetails(reportid, instancecode, asondate, fromdate, todate,
+				currency, reportingTime, dtltype, subreportid, secid, PageRequest.of(currentPage, pageSize), filter,searchVal);
+
+		return mv;
+
+	}
+	
+	@RequestMapping(value = "Reports/{reportid}/PrecheckRR", method = RequestMethod.GET)
+	@ResponseBody
+	public String reportPreCheckRR(@PathVariable("reportid") String reportid,
+
+			@RequestParam(required = false) String fromdate, @RequestParam("todate") String todate)
+			throws ParseException {
+
+		logger.info("Precheck for Report :" + reportid);
+
+		if (todate.length() == 10) {
+			return regreportServices.preCheckReportRBS(reportid, fromdate, todate);
+		} else {
+
+			try {
+				todate = new SimpleDateFormat("dd-MM-yyyy").format(dateFormat.parse(todate));
+
+			} catch (ParseException e) {
+
+				e.printStackTrace();
+			}
+
+			return regreportServices.preCheckReportRBS(reportid, fromdate, todate);
+		}
+
+	}
+	
+	@RequestMapping(value = "Reports/CustomerDetailEditBrf1", method = RequestMethod.POST)
+	@ResponseBody
+	public String CustomerDetailEditBrf76(
+			HttpServletRequest hs, @RequestParam("foracid") String foracid,
+			@RequestParam("report_addl_criteria_1") String report_addl_criteria_1,
+			@RequestParam("act_balance_amt_lc") BigDecimal act_balance_amt_lc,
+			@RequestParam("report_label_1") String report_label_1,
+			@RequestParam("report_name_1") String report_name_1,@RequestParam("report_date") String report_date,
+			@RequestParam(value = "reason", required = false) String reason) {
+		System.out.println("edit");
+
+		System.out.println("Acct no " + foracid);
+		
+		System.out.println("Report Date " + report_date);
+		/*
+		 * AuditReasonDTO dto = new AuditReasonDTO(); dto.setReason(reason);
+		 */
+		return BRF001ReportService.detailChanges1(foracid, report_addl_criteria_1, act_balance_amt_lc,
+				report_label_1, report_name_1,report_date);
+	}
+	 
+	@RequestMapping(value = "Reports/{reportid}/Download", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public ResponseEntity<InputStreamResource> XBRLDownload(HttpServletResponse response,
+	        @PathVariable("reportid") String reportid, @RequestParam("asondate") String asondate,
+	        @RequestParam("fromdate") String fromdate, @RequestParam("todate") String todate,
+	        @RequestParam("currency") String currency,
+	        @RequestParam(value = "subreportid", required = false) String subreportid,
+	        @RequestParam(value = "secid", required = false) String secid,
+	        @RequestParam(value = "dtltype", required = false) String dtltype,
+	        @RequestParam(value = "reportingTime", required = false) String reportingTime,
+	        @RequestParam(value = "instancecode", required = false) String instancecode,
+	        @RequestParam("filetype") String filetype, @RequestParam(value = "filter", required = false) String filter,
+	        @RequestParam(value = "pagesize", required = false, defaultValue = "A3") String pagesize)
+	        throws IOException, SQLException {
+	    response.setContentType("application/octet-stream");
+
+	    try {
+	        logger.info(
+	                "Getting download File :" + reportid + ", FileType :" + filetype + ", SubreportId :" + subreportid);
+	        
+	        HttpHeaders headers = new HttpHeaders();
+	        
+	        // Detail Excel Download
+	        if ("detailexcel".equalsIgnoreCase(filetype)) {
+
+	            byte[] excelBytes = regreportServices.detailexceldownload(reportid, todate);
+
+	            headers.setContentType(
+	                    MediaType.parseMediaType("application/vnd.ms-excel"));
+	            headers.setContentDispositionFormData("attachment",
+	                    reportid + "_Detail.xlsx");
+
+	            InputStreamResource resource = new InputStreamResource(
+	                    new ByteArrayInputStream(excelBytes));
+
+	            return ResponseEntity.ok()
+	                    .headers(headers)
+	                    .contentLength(excelBytes.length)
+	                    .body(resource);
+	        }
+	        
+	        // Detail PDF Download
+	        if ("detailpdf".equalsIgnoreCase(filetype)) {
+	        	
+	        	byte[] excelBytes = regreportServices.detailexceldownload(reportid, todate);
+	        	
+	        	byte[] pdfBytes = brf_DetailExcel_Service.convertExcelBytesToPdf(excelBytes);
+	        	
+	        	InputStreamResource resource =
+			            new InputStreamResource(new ByteArrayInputStream(pdfBytes));
+
+			    headers.setContentType(MediaType.APPLICATION_PDF);
+			    headers.setContentDispositionFormData("attachment", reportid + "_Detail.pdf");
+
+			    return ResponseEntity.ok()
+			            .headers(headers)
+			            .contentLength(pdfBytes.length)
+			            .body(resource);
+	        	        	
+	        }
+	        File repfile = null;
+	        if ("BRF".equalsIgnoreCase(filetype) || "BRFEXCELTOPDF".equalsIgnoreCase(filetype)) {
+	            repfile = regreportServices.getDownloadFile(reportid, asondate, fromdate, todate, currency,
+	                    subreportid, secid, dtltype, reportingTime, filetype, instancecode, filter);
+	            System.out.println(filter + "filter");
+	        }
+
+	        // Summary Excel
+	        if ("BRF".equalsIgnoreCase(filetype)) { 
+
+	        	headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	            headers.setContentDispositionFormData("attachment", repfile.getName());
+
+	            InputStreamResource resource = new InputStreamResource(new FileInputStream(repfile));
+
+	            return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
+	                    .contentLength(repfile.length()).body(resource);
+	        }
+
+	        if ("BRFEXCELTOPDF".equalsIgnoreCase(filetype)) {
+	        	
+	        	System.out.println("camet to excel pdf");
+
+	        	// File → byte[]
+	            byte[] excelBytes = Files.readAllBytes(repfile.toPath());
+
+	            
+	            byte[] pdfBytes = exceltopdfservice.convertExcelBytesToPdf(excelBytes, pagesize);
+
+	            InputStreamResource resource =
+	                    new InputStreamResource(new ByteArrayInputStream(pdfBytes));
+
+	            headers.setContentType(MediaType.APPLICATION_PDF);
+	            headers.setContentDispositionFormData(
+	                    "attachment",
+	                    repfile.getName().replace(".xlsx", ".pdf")
+	            );
+
+	            return ResponseEntity.ok()
+	                    .headers(headers)
+	                    .contentLength(pdfBytes.length)
+	                    .body(resource);
+	        }
+	        
+	        // **CALL COMMON AUDIT FUNCTION HERE**
+//	        auditService.saveCommonAudit(reportid, filetype,todate);
+	        	
+	        logger.warn("Unhandled filetype for reportid {} : {}", reportid, filetype);
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	        
+	    } catch (JRException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
 	}
 
 }
